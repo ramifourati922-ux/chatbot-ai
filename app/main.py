@@ -1,4 +1,4 @@
-# app/main.py
+# app/main.py — Version complète avec routes
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,7 +15,6 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# CORS : permet au frontend d'appeler l'API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,17 +22,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ── Inclure les routes ─────────────────────────────────────
+from app.api.routes import users
+from app.api.routes import chat
+
+app.include_router(users.router)
+app.include_router(chat.router)
+
+
 @app.get("/", tags=["System"])
 async def root():
-    return {
-        "message": "Bienvenue sur le Chatbot IA API",
-        "docs": "/docs"
-    }
+    return {"message": "Bienvenue sur le Chatbot IA API", "docs": "/docs"}
+
 
 @app.get("/health", tags=["System"])
 async def health_check():
-    return {
-        "status": "healthy",
-        "service": "chatbot-api",
-        "version": "1.0.0"
-    }
+    return {"status": "healthy", "version": "1.0.0"}
