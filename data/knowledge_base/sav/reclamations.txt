@@ -1,0 +1,24 @@
+# ============================================================
+# CATÉGORIE : SAV — Réclamations
+# ⚠️ CONTENU EXEMPLE — À VALIDER / REMPLACER PAR TOI
+# ⚠️ Procédures et délais 100% inventés pour la démo.
+#    NE PAS déployer en production sans validation par Liss Strike.
+# ============================================================
+
+Q: Mon produit est arrivé cassé ou défectueux, que faire ?
+R: Prenez une photo du produit et de l'emballage, puis contactez-nous sous 48h via ce chat ou par email à contact@lissstrike.tn avec votre numéro de commande. Un remplacement ou remboursement sera proposé.
+
+Q: Il manque un article dans mon colis, que faire ?
+R: Signalez-le sous 48h après réception avec votre numéro de commande. Nous vérifions avec l'entrepôt et vous renvoyons l'article manquant sans frais.
+
+Q: J'ai reçu le mauvais produit, que faire ?
+R: Contactez le service client avec une photo du produit reçu et votre numéro de commande. Nous organisons l'échange sans frais supplémentaires.
+
+Q: Combien de temps pour traiter une réclamation ?
+R: Sous 3 à 5 jours ouvrés après réception de toutes les informations nécessaires (photos, numéro de commande).
+
+Q: Comment contacter un agent humain pour une réclamation urgente ?
+R: Écrivez "je veux parler à un agent" à tout moment dans la conversation, ou appelez notre service client aux horaires d'ouverture (voir FAQ générale). Le bot transfère automatiquement les cas non résolus après 3 échanges infructueux.
+
+Q: Puis-je être remboursé sans retourner le produit défectueux ?
+R: Pour les produits de faible valeur (moins de 20 DT), un remboursement direct sur photo peut être accordé sans retour, à la discrétion du service SAV. Au-delà, un retour est généralement demandé.

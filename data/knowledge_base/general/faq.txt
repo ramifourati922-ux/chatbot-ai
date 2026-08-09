@@ -1,0 +1,35 @@
+# ============================================================
+# CATÉGORIE : Général — FAQ
+# ⚠️ CONTENU EXEMPLE — À VALIDER / REMPLACER PAR TOI
+# ⚠️ Coordonnées et horaires 100% fictifs (placeholders), inventés
+#    pour la démo uniquement — ne correspondent à aucune vraie
+#    adresse/numéro. NE PAS déployer en production sans les
+#    remplacer par les vraies coordonnées de Liss Strike.
+# ============================================================
+
+Q: Quels sont les horaires d'ouverture de la boutique ?
+R: Du lundi au samedi, de 9h00 à 18h30. Fermé le dimanche et les jours fériés.
+
+Q: Où se trouve la boutique Liss Strike ?
+R: Beb Bhar, Tunis
+
+Q: Comment contacter le service client ?
+R: Par ce chat (disponible 24/7), par email à contact.liss.strike@gmail.com, ou par téléphone aux horaires d'ouverture au +216 29943697.
+
+Q: Qui est Liss Strike ?
+R: Liss Strike est une boutique tunisienne spécialisée dans l'électronique et les composants pour makers : cartes programmables, capteurs, modules, outillage et impression 3D, pour particuliers, étudiants et professionnels.
+
+Q: Livrez-vous en dehors de Tunis ?
+R: Oui, nous livrons dans toute la Tunisie, dans les 24 gouvernorats, pas seulement dans le Grand Tunis. Les délais varient selon l'éloignement (voir la rubrique livraison).
+
+Q: Livrez-vous à l'international, en dehors de la Tunisie ?
+R: [À REMPLIR : préciser si livraison internationale disponible ou non — non traité dans l'exemple par manque d'information fiable]
+
+Q: Comment parler à un conseiller humain ?
+R: Écrivez "je veux parler à un agent" ou "agent humain" à tout moment — le bot transfère automatiquement votre conversation à un conseiller disponible aux horaires d'ouverture.
+
+Q: Avez-vous une page/un compte sur les réseaux sociaux ?
+R: [À REMPLIR : liens réels Facebook/Instagram de Liss Strike]
+
+Q: Puis-je visiter la boutique sans rendez-vous ?
+R: Oui, la boutique est ouverte à tous aux horaires indiqués, sans rendez-vous nécessaire.

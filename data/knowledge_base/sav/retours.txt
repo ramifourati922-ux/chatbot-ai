@@ -1,0 +1,27 @@
+# ============================================================
+# CATÉGORIE : SAV — Politique de retour
+# ⚠️ CONTENU EXEMPLE — À VALIDER / REMPLACER PAR TOI
+# ⚠️ Délais, conditions et procédures 100% inventés pour la démo.
+#    NE PAS déployer en production sans validation par Liss Strike.
+# ============================================================
+
+Q: Quel est le délai pour retourner un produit ?
+R: Vous disposez de 7 jours calendaires à partir de la date de réception pour retourner un produit non ouvert et non utilisé.
+
+Q: Dans quel état le produit doit-il être pour être retourné ?
+R: Le produit doit être neuf, non utilisé, dans son emballage d'origine non ouvert, avec tous les accessoires et la facture d'achat.
+
+Q: Quels produits ne peuvent pas être retournés ?
+R: Les composants électroniques déballés (résistances, capteurs, modules) ne sont pas repris une fois l'emballage ouvert, sauf défaut de fabrication. Les logiciels/licences ne sont pas remboursables après activation.
+
+Q: Comment initier une demande de retour ?
+R: Contactez le service client via ce chat, par email à contact@lissstrike.tn, ou en boutique avec votre facture. Un numéro de retour vous sera communiqué.
+
+Q: Qui paie les frais de retour ?
+R: Les frais de retour sont à la charge du client, sauf si le produit est défectueux ou si une erreur d'expédition a été commise par Liss Strike.
+
+Q: Peut-on échanger un produit au lieu de le rembourser ?
+R: Oui, l'échange contre un autre produit de valeur équivalente ou supérieure (avec complément de paiement) est possible sous les mêmes conditions que le retour.
+
+Q: Combien de temps pour être remboursé après un retour accepté ?
+R: Le remboursement est effectué sous 5 à 10 jours ouvrés après réception et vérification du produit retourné, sur le même moyen de paiement utilisé à l'achat.

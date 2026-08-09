@@ -1,0 +1,36 @@
+# ============================================================
+# CATÉGORIE : SAV — Garantie
+# ⚠️ CONTENU EXEMPLE — À VALIDER / REMPLACER PAR TOI
+# ⚠️ Durées et conditions 100% inventées pour la démo.
+#    NE PAS déployer en production sans validation par Liss Strike.
+# ============================================================
+
+Q: Quelle est la durée de garantie sur les cartes programmables (Arduino, ESP32, Raspberry Pi) ?
+R: 6 mois contre tout défaut de fabrication, à compter de la date d'achat.
+
+Q: Quelle est la durée de garantie sur les modules et capteurs ?
+R: 3 mois contre tout défaut de fabrication.
+
+Q: Quelle est la durée de garantie sur les instruments de mesure (multimètres, oscilloscopes) ?
+R: 12 mois contre tout défaut de fabrication.
+
+Q: Quelle est la durée de garantie sur l'outillage (fer à souder, pinces) ?
+R: 6 mois, hors usure normale (panne de fer à souder, lames émoussées).
+
+Q: Que couvre la garantie ?
+R: Les pannes et défauts de fabrication survenant dans des conditions normales d'utilisation.
+
+Q: Qu'est-ce qui n'est PAS couvert par la garantie ?
+R: Les dommages liés à une mauvaise manipulation (court-circuit, surtension, soudure incorrecte), l'usure normale, ou toute modification/ouverture du produit par le client.
+
+Q: Comment faire valoir la garantie ?
+R: Présentez votre facture d'achat (ou numéro de commande) et décrivez le problème via ce chat, par email, ou en boutique. Le produit sera examiné avant réparation/remplacement.
+
+Q: Le produit est-il réparé ou remplacé sous garantie ?
+R: Selon la disponibilité en stock : remplacement à l'identique si possible, sinon réparation ou avoir. Le choix final revient au service SAV après diagnostic.
+
+Q: Quelle est la différence entre un défaut constaté à la livraison et une panne survenue plus tard ?
+R: Un défaut visible dès la réception (produit cassé, ne fonctionne pas dès la sortie de l'emballage) relève de la non-conformité et donne droit à un échange immédiat sans frais. Une panne survenant après plusieurs semaines/mois d'utilisation relève de la garantie classique, avec diagnostic préalable.
+
+Q: La garantie couvre-t-elle les composants achetés en gros/lot ?
+R: Oui, chaque unité d'un lot est couverte individuellement. En cas de taux de panne anormalement élevé sur un même lot, contactez le service client : un échange du lot complet peut être étudié au cas par cas.

@@ -1,0 +1,26 @@
+# ============================================================
+# CATÉGORIE : E-commerce — Promotions
+# ⚠️ CONTENU EXEMPLE — À VALIDER / REMPLACER PAR TOI
+# ⚠️ Codes promo et offres 100% inventés pour la démo. Ce fichier a
+#    vocation à changer souvent (promos temporaires réelles) — pense
+#    à le mettre à jour régulièrement et à ré-indexer (Tâche 4).
+#    NE PAS déployer en production sans validation par Liss Strike.
+# ============================================================
+
+Q: Y a-t-il un code promo actif actuellement ?
+R: Utilisez le code BIENVENUE10 pour bénéficier de 10% de réduction sur votre première commande (hors frais de livraison).
+
+Q: Comment utiliser un code promo ?
+R: Saisissez le code dans le champ "Code promo" au moment du paiement, avant de valider votre commande. La réduction s'applique automatiquement.
+
+Q: Existe-t-il un programme de fidélité ?
+R: Oui, le programme Liss Strike Club offre 1 point par dinar dépensé, échangeable dès 100 points contre un bon d'achat de 10 DT.
+
+Q: Les codes promo sont-ils cumulables ?
+R: Non, un seul code promo est utilisable par commande, non cumulable avec d'autres offres en cours.
+
+Q: Quand ont lieu les soldes ?
+R: Des ventes flash sont organisées régulièrement sur les réseaux sociaux, ainsi que des soldes saisonnières en janvier et juillet.
+
+Q: Existe-t-il une offre de parrainage ?
+R: Oui, parrainez un ami : il reçoit 10 DT sur sa première commande, et vous recevez 10 DT de bon d'achat une fois sa commande validée.

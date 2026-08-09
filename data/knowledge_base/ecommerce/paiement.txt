@@ -1,0 +1,34 @@
+# ============================================================
+# CATÉGORIE : E-commerce — Paiement
+# ⚠️ CONTENU EXEMPLE — À VALIDER / REMPLACER PAR TOI
+# ⚠️ Moyens de paiement 100% inventés pour la démo (à confirmer
+#    selon les vrais partenaires/comptes de Liss Strike).
+#    NE PAS déployer en production sans validation par Liss Strike.
+# ============================================================
+
+Q: Quels moyens de paiement sont acceptés ?
+R: Carte bancaire (Visa/Mastercard) en ligne, paiement à la livraison en espèces (cash), D17, et Flouci.
+
+Q: Peut-on payer en plusieurs fois ?
+R: Le paiement en plusieurs fois est disponible pour les commandes de plus de 300 DT, via facilité en 3 fois sans frais avec certaines cartes bancaires partenaires.
+
+Q: Le paiement en ligne est-il sécurisé ?
+R: Oui, tous les paiements par carte sont traités via une passerelle sécurisée conforme aux normes 3D Secure. Liss Strike ne stocke aucune donnée de carte bancaire.
+
+Q: Comment obtenir une facture ?
+R: Une facture électronique est envoyée automatiquement par email après chaque commande. Une facture papier peut être demandée en boutique.
+
+Q: Le paiement à la livraison (cash) est-il disponible partout ?
+R: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.
+
+Q: Que se passe-t-il si mon paiement en ligne échoue ?
+R: Vérifiez vos informations de carte ou réessayez avec un autre moyen de paiement (D17, Flouci, cash à la livraison). Contactez le service client si le problème persiste.
+
+Q: Puis-je commander en tant qu'école, club robotique ou entreprise ?
+R: Oui, les commandes pour établissements scolaires, clubs robotique/FabLab et entreprises sont acceptées. Contactez le service client pour un devis avec facture professionnelle (matricule fiscal).
+
+Q: Proposez-vous des tarifs dégressifs pour les commandes en grande quantité ?
+R: Oui, à partir de 20 unités d'une même référence, une remise quantité peut être appliquée. Contactez le service client avec la liste souhaitée pour obtenir un devis.
+
+Q: Puis-je obtenir une facture avec matricule fiscal pour ma société ?
+R: Oui, indiquez votre matricule fiscal et raison sociale lors de la commande (ou au service client) pour recevoir une facture professionnelle conforme.

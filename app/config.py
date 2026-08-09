@@ -23,9 +23,18 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str = "redis://localhost:6379"
 
-    # OpenAI (Phase 3)
-    OPENAI_API_KEY: str = ""
-    OPENAI_MODEL: str = "gpt-3.5-turbo"
+    # Groq (Phase 3 — LLM gratuit, PAS d'OpenAI)
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "openai/gpt-oss-120b"
+    GROQ_FALLBACK_MODEL: str = "openai/gpt-oss-20b"
+
+    # ChromaDB (Phase 3 — Vector DB pour le RAG)
+    CHROMA_HOST: str = "localhost"
+    CHROMA_PORT: int = 8001
+    CHROMA_COLLECTION_NAME: str = "liss_strike_kb"
+
+    # Embeddings (Phase 3 — local, gratuit, multilingue FR/EN/AR)
+    EMBEDDING_MODEL: str = "paraphrase-multilingual-MiniLM-L12-v2"
 
     # WhatsApp (Phase 5)
     WHATSAPP_PHONE_NUMBER_ID: Optional[str] = None

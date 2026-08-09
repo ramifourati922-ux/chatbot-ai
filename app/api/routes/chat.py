@@ -1,57 +1,41 @@
 # app/api/routes/chat.py
 
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-import uuid, time, logging
+from fastapi import APIRouter
+import logging
 
-from app.db.database import get_db
 from app.schemas.chat import ChatMessage, ChatResponse
+from app.services.dialogue_manager import handle_message
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 logger = logging.getLogger(__name__)
 
 
 @router.post("/", response_model=ChatResponse)
-async def chat(
-    message: ChatMessage,
-    db: AsyncSession = Depends(get_db)
-):
+async def chat(message: ChatMessage):
     """
     Endpoint principal du chatbot.
-    Phase 1 : réponses simulées
-    Phase 2 : moteur de règles
-    Phase 3 : RAG + LLM
+    Détection de langue + intent (règles) + RAG (ChromaDB) + LLM (Groq)
+    orchestrés par dialogue_manager.handle_message().
+
+    Note : pas de dépendance Postgres ici — la session vit dans Redis
+    (session_manager), le contexte RAG dans ChromaDB, et l'appel LLM
+    va vers Groq. Persister aussi l'historique en base (via
+    ConversationRepository) est une amélioration possible mais hors
+    scope de cette tâche.
     """
-    start_time = time.time()
-    session_id = message.session_id or str(uuid.uuid4())
-
-    # Détection basique d'intent
-    text = message.message.lower()
-
-    if any(w in text for w in ["bonjour", "salut", "hello"]):
-        response = "Bonjour ! Je suis votre assistant IA. Comment puis-je vous aider ?"
-        intent = "greeting"
-    elif any(w in text for w in ["commande", "colis", "livraison"]):
-        response = "Je vais vérifier votre commande. Pouvez-vous me donner votre numéro de commande ?"
-        intent = "check_order"
-    elif any(w in text for w in ["retour", "rembours"]):
-        response = "Je vais vous aider avec votre retour. Quel est votre numéro de commande ?"
-        intent = "return_request"
-    elif any(w in text for w in ["prix", "coût", "combien"]):
-        response = "Je peux vous renseigner sur les prix. Quel produit vous intéresse ?"
-        intent = "price_inquiry"
-    else:
-        response = "Je comprends votre demande. Pouvez-vous me donner plus de détails ?"
-        intent = "unknown"
-
-    processing_time = int((time.time() - start_time) * 1000)
-    logger.info(f"💬 Intent: {intent} | Temps: {processing_time}ms")
+    result = await handle_message(
+        message=message.message,
+        session_id=message.session_id,
+        channel=message.channel,
+    )
 
     return ChatResponse(
-        response=response,
-        session_id=session_id,
-        intent=intent,
-        confidence=0.85,
-        processing_time_ms=processing_time,
-        escalated=False
+        response=result.response,
+        session_id=result.session_id,
+        intent=result.intent,
+        confidence=result.confidence,
+        sources=[s for s in result.sources if s],
+        processing_time_ms=result.processing_time_ms,
+        escalated=result.escalated,
+        escalation_reason=result.escalation_reason,
     )

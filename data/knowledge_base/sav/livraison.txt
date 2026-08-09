@@ -1,0 +1,42 @@
+# ============================================================
+# CATÉGORIE : SAV — Livraison
+# ⚠️ CONTENU EXEMPLE — À VALIDER / REMPLACER PAR TOI
+# ⚠️ Délais, zones et frais 100% inventés pour la démo.
+#    NE PAS déployer en production sans validation par Liss Strike.
+# ============================================================
+
+Q: Quel est le délai de livraison standard ?
+R: Entre 2 et 4 jours ouvrés pour le Grand Tunis, et 3 à 6 jours ouvrés pour le reste de la Tunisie.
+
+Q: Quelles régions de Tunisie sont couvertes ?
+R: Nous livrons dans toute la Tunisie, dans les 24 gouvernorats, pas seulement dans le Grand Tunis. Les zones plus éloignées (Sud, Nord-Ouest) peuvent avoir un délai légèrement plus long.
+
+Q: Livrez-vous en dehors de Tunis (autres villes/gouvernorats) ?
+R: Oui, la livraison n'est pas limitée à Tunis : Sfax, Sousse, Bizerte, Gabès, Kairouan et tous les autres gouvernorats sont couverts.
+
+Q: Quels sont les frais de livraison ?
+R: Livraison gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et 12 DT pour le reste du pays.
+
+Q: Existe-t-il une livraison express ?
+R: Oui, une option express (livraison en 24h sur le Grand Tunis) est disponible pour 15 DT supplémentaires.
+
+Q: Comment suivre ma commande ?
+R: Un lien de suivi est envoyé par SMS et email dès l'expédition du colis. Vous pouvez aussi demander le statut directement via ce chat en donnant votre numéro de commande.
+
+Q: Que faire si la livraison est en retard ?
+R: Si le délai annoncé est dépassé de plus de 2 jours, contactez le service client avec votre numéro de commande pour que nous vérifiions le statut auprès du transporteur.
+
+Q: Peut-on se faire livrer en point relais ?
+R: Cette option n'est pas encore disponible ; la livraison se fait uniquement à domicile ou en retrait boutique.
+
+Q: Peut-on retirer sa commande directement en boutique ?
+R: Oui, l'option "Retrait en boutique" est gratuite et disponible au passage de commande, généralement prête sous 24h.
+
+Q: Comment les composants électroniques fragiles sont-ils emballés ?
+R: Les composants sensibles (capteurs, cartes, écrans) sont emballés dans des sachets anti-statiques et calés avec du papier bulle ou du carton renforcé pour éviter tout choc pendant le transport.
+
+Q: Si un produit de ma commande est en rupture de stock, le reste est-il quand même livré ?
+R: Oui, nous procédons à une livraison partielle des articles disponibles ; l'article manquant est expédié séparément dès son réassort, sans frais de livraison supplémentaires.
+
+Q: Livrez-vous le week-end ?
+R: Les livraisons ont lieu du lundi au vendredi. Une commande passée le week-end est traitée dès le lundi ouvré suivant.
