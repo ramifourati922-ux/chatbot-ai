@@ -40,10 +40,14 @@ class Settings(BaseSettings):
     WHATSAPP_PHONE_NUMBER_ID: Optional[str] = None
     WHATSAPP_ACCESS_TOKEN: Optional[str] = None
     WHATSAPP_VERIFY_TOKEN: Optional[str] = None
+    # Secret d'application Meta — sert à vérifier la signature
+    # X-Hub-Signature-256 des webhooks entrants (voir routes/whatsapp.py).
+    WHATSAPP_APP_SECRET: Optional[str] = None
 
     # Messenger (Phase 5)
     MESSENGER_PAGE_ACCESS_TOKEN: Optional[str] = None
     MESSENGER_VERIFY_TOKEN: Optional[str] = None
+    MESSENGER_APP_SECRET: Optional[str] = None
 
     class Config:
         env_file = ".env"

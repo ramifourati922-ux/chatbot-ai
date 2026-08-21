@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liss Strike — Assistant</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
+
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --panel: #ffffff;
+    --border: #e2e4e9;
+    --text: #1c1f26;
+    --text-muted: #6b7280;
+    --primary: #2563eb;
+    --primary-text: #ffffff;
+    --assistant-bubble: #eef0f4;
+    --escalate-border: #f59e0b;
+    --escalate-bg: #fff7ed;
+    --escalate-text: #9a5b00;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .app {
+    max-width: 720px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+
+  header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  header .subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  #status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d1d5db;
+    display: inline-block;
+    margin-right: 6px;
+  }
+  #status-dot.connected { background: #22c55e; }
+  #status-dot.disconnected { background: #ef4444; }
+
+  #status-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+  }
+
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+    max-width: 78%;
+  }
+  .row.user { align-self: flex-end; align-items: flex-end; }
+  .row.assistant { align-self: flex-start; align-items: flex-start; }
+
+  .bubble {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    line-height: 1.45;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .row.user .bubble {
+    background: var(--primary);
+    color: var(--primary-text);
+    border-bottom-right-radius: 4px;
+  }
+  .row.assistant .bubble {
+    background: var(--assistant-bubble);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+  }
+  .row.assistant .bubble.escalated {
+    background: var(--escalate-bg);
+    border: 1.5px solid var(--escalate-border);
+  }
+
+  .meta {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .badge-escalate {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--escalate-text);
+    background: #fef3c7;
+    border: 1px solid var(--escalate-border);
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+
+  #composer {
+    display: flex;
+    gap: 8px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  #msg-input {
+    flex: 1;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 14px;
+    outline: none;
+  }
+  #msg-input:focus { border-color: var(--primary); }
+
+  #send-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #send-btn:hover:not(:disabled) { background: #1d4ed8; }
+
+  .typing {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding-left: 4px;
+  }
+
+  @media (max-width: 720px) {
+    .app { border-left: none; border-right: none; }
+    .row { max-width: 88%; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>Liss Strike — Assistant</h1>
+      <div class="subtitle">Démo WebSocket temps réel</div>
+    </div>
+    <div id="status-label"><span id="status-dot"></span><span id="status-text">Connexion…</span></div>
+  </header>
+
+  <div id="messages"></div>
+
+  <div id="composer">
+    <input id="msg-input" type="text" placeholder="Écrivez votre message…" autocomplete="off" />
+    <button id="send-btn">Envoyer</button>
+  </div>
+</div>
+
+<script>
+  const clientId = crypto.randomUUID();
+  const wsProtocol = location.protocol === "https:" ? "wss:" : "ws:";
+  const wsUrl = `${wsProtocol}//${location.host}/ws/${clientId}`;
+
+  const messagesEl = document.getElementById("messages");
+  const inputEl = document.getElementById("msg-input");
+  const sendBtn = document.getElementById("send-btn");
+  const statusDot = document.getElementById("status-dot");
+  const statusText = document.getElementById("status-text");
+
+  let ws;
+
+  function setStatus(state) {
+    statusDot.className = state;
+    statusText.textContent = state === "connected" ? "Connecté"
+      : state === "disconnected" ? "Déconnecté"
+      : "Connexion…";
+    sendBtn.disabled = state !== "connected";
+  }
+
+  function scrollToBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function addUserMessage(text) {
+    const row = document.createElement("div");
+    row.className = "row user";
+    row.innerHTML = `<div class="bubble"></div>`;
+    row.querySelector(".bubble").textContent = text;
+    messagesEl.appendChild(row);
+    scrollToBottom();
+  }
+
+  function addAssistantMessage(data) {
+    const row = document.createElement("div");
+    row.className = "row assistant";
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble" + (data.escalated ? " escalated" : "");
+    bubble.textContent = data.response;
+    row.appendChild(bubble);
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+
+    if (data.escalated) {
+      const badge = document.createElement("span");
+      badge.className = "badge-escalate";
+      badge.textContent = "🔀 transféré vers un agent" + (data.escalation_reason ? ` (${data.escalation_reason})` : "");
+      meta.appendChild(badge);
+    }
+
+    const details = document.createElement("span");
+    const parts = [];
+    if (data.intent) parts.push(`intent: ${data.intent}`);
+    if (typeof data.confidence === "number") parts.push(`confiance: ${data.confidence.toFixed(2)}`);
+    if (typeof data.processing_time_ms === "number") parts.push(`${data.processing_time_ms} ms`);
+    details.textContent = parts.join(" · ");
+    meta.appendChild(details);
+
+    row.appendChild(meta);
+    messagesEl.appendChild(row);
+    scrollToBottom();
+  }
+
+  function connect() {
+    setStatus("connecting");
+    ws = new WebSocket(wsUrl);
+
+    ws.onopen = () => setStatus("connected");
+    ws.onclose = () => setStatus("disconnected");
+    ws.onerror = () => setStatus("disconnected");
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      addAssistantMessage(data);
+    };
+  }
+
+  function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text || !ws || ws.readyState !== WebSocket.OPEN) return;
+    addUserMessage(text);
+    ws.send(text);
+    inputEl.value = "";
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  connect();
+</script>
+</body>
+</html>
