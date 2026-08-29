@@ -119,6 +119,64 @@ async def test_rag_loop_triggers_automatic_escalation():
 
 
 @pytest.mark.asyncio
+async def test_low_rag_confidence_escalates_without_llm_call():
+    """
+    Une question sans aucun rapport avec le domaine Liss Strike (donc
+    hits vides ou très faibles) doit escalader via escalation_reason
+    "low_rag_confidence", sans appel LLM.
+
+    LIMITE HONNÊTE (voir aussi le commentaire dans dialogue_manager.py,
+    étape 8) : on a cherché ~18 questions "dans le domaine électronique/
+    SAV mais mal couvertes par la KB" pour isoler ce mécanisme du
+    garde-fou hors-sujet du prompt système — aucune n'est descendue sous
+    RAG_CONFIDENCE_THRESHOLD (le catalogue de ~11 000 produits est trop
+    large, même des questions sur des services obscurs/inventés trouvent
+    un match partiel). Seules des questions clairement HORS domaine
+    (comme celle-ci) déclenchent le mécanisme en pratique — donc ce test
+    ne prouve PAS une isolation parfaite entre "hors-sujet" et "dans le
+    domaine mais mal couvert" ; il prouve que le mécanisme se déclenche
+    correctement quand la confiance RAG est réellement basse, ce qui est
+    déjà la garantie utile (filet de sécurité supplémentaire, moins cher
+    qu'un appel LLM, et qui couvre aussi le cas hits vides).
+    """
+    result = await handle_message("Quel est le sens de la vie ?", channel="web")
+    assert result.escalated is True
+    assert result.escalation_reason == "low_rag_confidence"
+    assert result.confidence < settings.RAG_CONFIDENCE_THRESHOLD
+    assert len(result.response.strip()) > 0
+    # Pas d'assertion de timing en dur (même raison que pour les autres
+    # escalades, cf. test_escalation_short_circuits_llm) : le
+    # court-circuit est garanti structurellement par le "return" avant
+    # tout appel à ask() dans dialogue_manager.handle_message.
+
+
+@pytest.mark.asyncio
+async def test_low_rag_confidence_no_regression_on_covered_question():
+    """Non-régression : une question bien couverte par la KB ne doit
+    jamais être escaladée pour faible confiance RAG."""
+    result = await handle_message("Combien coûte une carte Arduino Uno ?", channel="web")
+    assert result.escalated is False
+    assert result.escalation_reason is None
+
+
+@pytest.mark.parametrize("language,text", [
+    ("fr", "Quel est le sens de la vie ?"),
+    ("en", "What is the meaning of life?"),
+    ("tn", "9olli chnowa esm el president mte3 Amerika?"),
+])
+@pytest.mark.asyncio
+async def test_low_rag_confidence_message_in_multiple_languages(language, text):
+    """Le message canned "low_rag_confidence" doit être renvoyé dans la
+    langue détectée — testé en fr/en/tn (le fr est déjà couvert par
+    test_low_rag_confidence_escalates_without_llm_call ci-dessus)."""
+    result = await handle_message(text, channel="web")
+    assert result.language == language
+    assert result.escalated is True
+    assert result.escalation_reason == "low_rag_confidence"
+    assert len(result.response.strip()) > 0
+
+
+@pytest.mark.asyncio
 async def test_satisfaction_signal_resets_rag_loop_counter():
     # Réutilise le singleton de dialogue_manager (pas une nouvelle
     # instance de SessionManager) : sous pytest-asyncio, chaque test

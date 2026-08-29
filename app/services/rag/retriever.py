@@ -62,6 +62,22 @@ def search(query_text: str, top_k: int = 4, type_filter: Optional[str] = None) -
     return merged[:top_k]
 
 
+def get_best_confidence(hits: list) -> float:
+    """
+    Score de confiance RAG basé sur la distance cosinus du meilleur hit
+    (1 - distance) — utilisé par dialogue_manager pour décider d'une
+    escalade automatique quand le contexte trouvé est peu fiable (voir
+    RAG_CONFIDENCE_THRESHOLD). 0.0 si hits est vide (aucun document
+    trouvé du tout = confiance nulle).
+
+    hits est déjà trié par distance croissante (voir search()), donc
+    hits[0] est toujours le meilleur match.
+    """
+    if not hits:
+        return 0.0
+    return 1 - hits[0]["distance"]
+
+
 def format_context(hits: list) -> str:
     """Formate les résultats de recherche en texte à injecter dans le prompt LLM."""
     if not hits:
