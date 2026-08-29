@@ -16,12 +16,14 @@ doivent être transférées à un humain plutôt que traitées par l'IA.
 flowchart TD
     A[Message entrant] --> B[Détection de langue<br/>fr / en / ar / tn]
     B --> C[Classification d'intent<br/>escalade uniquement]
-    C -->|escalade détectée| D[Réponse canned immédiate<br/>pas d'appel LLM]
-    C -->|message normal| E[Recherche RAG<br/>ChromaDB]
-    E --> F[Appel LLM<br/>Groq]
-    F --> G{3 échecs RAG<br/>consécutifs ?}
-    G -->|oui| D
-    G -->|non| H[Réponse au client]
+    C -->|escalade détectée<br/>explicite / frustration| D[Réponse canned immédiate<br/>pas d'appel LLM]
+    C -->|message normal| L{3 échecs RAG<br/>consécutifs ?}
+    L -->|oui| D
+    L -->|non| E[Recherche RAG<br/>ChromaDB]
+    E --> M{Confiance RAG<br/>≥ seuil ?}
+    M -->|non| D
+    M -->|oui| F[Appel LLM<br/>Groq]
+    F --> H[Réponse au client]
     D --> I[Session Redis<br/>historique + compteur]
     H --> I
 ```
@@ -45,11 +47,15 @@ Quatre canaux d'entrée, un seul moteur (`dialogue_manager.handle_message`) :
   produits) ; consigne stricte de ne jamais halluciner un numéro de
   commande, un prix ou une date.
 - **Escalade humaine fiable** — détection par règles déterministes
-  (pas de ML probabiliste sur ce point précis) de 3 situations :
+  (pas de ML probabiliste sur ce point précis) de 4 situations :
   - demande explicite ("je veux parler à un agent")
   - frustration envers le service (mécontentement + contexte service,
     pas confondu avec une critique produit normale)
   - boucle d'échecs RAG répétés (3 tentatives infructueuses de suite)
+  - confiance RAG trop faible (score = 1 - distance cosinus du
+    meilleur document trouvé < seuil calibré empiriquement) — évite de
+    laisser le LLM répondre sur un contexte peu fiable plutôt que de
+    risquer une hallucination
 - **Garde-fou hors-sujet** — refuse poliment les questions sans
   rapport avec Liss Strike plutôt que de répondre avec les
   connaissances générales du LLM.
@@ -91,7 +97,7 @@ app/
 data/knowledge_base/      # politiques SAV + catalogue produits (source du RAG)
 scripts/                  # ingestion de la knowledge base, génération de données
 static/chat.html          # interface de démo
-tests/                    # suite pytest (104 tests)
+tests/                    # suite pytest (109 tests)
 docs/                     # guides (ngrok/webhooks) + captures d'écran
 ```
 
@@ -128,10 +134,10 @@ uvicorn app.main:app --reload
 pytest tests/ -v
 ```
 
-104 tests couvrant la détection de langue, la classification
+109 tests couvrant la détection de langue, la classification
 d'intent (escalade + non-régression sur faux positifs), le pipeline
-RAG, l'orchestrateur complet (appels réels Groq/ChromaDB) et la
-structure de la base de connaissances.
+RAG, l'orchestrateur complet (les 4 types d'escalade, appels réels
+Groq/ChromaDB) et la structure de la base de connaissances.
 
 ## Documentation complémentaire
 
@@ -140,7 +146,7 @@ structure de la base de connaissances.
 
 ## Limites connues
 
-Ce projet est un prototype fonctionnel et testé (104 tests
+Ce projet est un prototype fonctionnel et testé (109 tests
 automatisés + tests manuels de bout en bout, y compris navigateur
 réel et webhooks simulés au format exact Meta), mais il n'est **pas
 prêt pour un vrai lancement en production** en l'état :
@@ -161,6 +167,16 @@ prêt pour un vrai lancement en production** en l'état :
 - Le compteur anti-boucle (3 échecs RAG consécutifs) compte des
   *tentatives*, pas la *qualité* des réponses — une 3e question tout
   à fait légitime peut donc déclencher une escalade automatique.
+- **Le seuil de confiance RAG chevauche largement le garde-fou
+  hors-sujet du prompt système**, découvert lors des tests
+  d'intégration : l'intention initiale était de rattraper les
+  questions *dans le domaine* Liss Strike mais mal couvertes par le
+  RAG. En pratique, sur ~18 questions candidates testées (français +
+  tunisien, services obscurs variés), aucune question dans le domaine
+  n'est descendue sous le seuil — le catalogue de ~11 000 produits est
+  trop large. Seules des questions clairement hors domaine déclenchent
+  ce mécanisme dans les faits (voir le détail dans `config.py` et
+  `dialogue_manager.py`).
 
 ## Licence
 
