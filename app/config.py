@@ -36,6 +36,11 @@ class Settings(BaseSettings):
     # Embeddings (Phase 3 — local, gratuit, multilingue FR/EN/AR)
     EMBEDDING_MODEL: str = "paraphrase-multilingual-MiniLM-L12-v2"
 
+    # Stratégie de recherche RAG (voir retriever.search) :
+    #   "hybrid" = Advanced RAG (BM25 + dense + RRF, hybrid_retriever.py)
+    #   "basic"  = dense seul d'origine (gardé pour l'évaluation RAGas avant/après)
+    RAG_RETRIEVAL_MODE: str = "hybrid"
+
     # Seuil de confiance RAG (= 1 - distance cosinus du meilleur hit)
     # en dessous duquel on escalade automatiquement plutôt que de
     # risquer une hallucination du LLM (voir dialogue_manager.py).

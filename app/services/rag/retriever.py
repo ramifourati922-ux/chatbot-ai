@@ -10,8 +10,9 @@ proches → formatage en contexte texte à injecter dans le prompt LLM
 import logging
 from typing import Optional
 
+from app.config import settings
 from app.services.rag.embedding_service import embed
-from app.services.rag import vector_store
+from app.services.rag import vector_store, hybrid_retriever
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,21 @@ def _query_one(query_embedding, top_k, type_filter: Optional[str]) -> list:
 
 def search(query_text: str, top_k: int = 4, type_filter: Optional[str] = None) -> list:
     """
-    Retourne les chunks les plus pertinents pour `query_text`.
+    Point d'entrée unique utilisé par dialogue_manager. Aiguille selon
+    settings.RAG_RETRIEVAL_MODE :
+        - "hybrid" (défaut, Advanced RAG) : BM25 + dense fusionnés par
+          RRF, voir hybrid_retriever.py
+        - "basic" : recherche dense seule d'origine (search_basic),
+          conservée pour la comparaison RAGas avant/après.
+    """
+    if settings.RAG_RETRIEVAL_MODE == "basic":
+        return search_basic(query_text, top_k=top_k, type_filter=type_filter)
+    return hybrid_retriever.search(query_text, top_k=top_k, type_filter=type_filter)
+
+
+def search_basic(query_text: str, top_k: int = 4, type_filter: Optional[str] = None) -> list:
+    """
+    Basic RAG : retourne les chunks les plus pertinents pour `query_text`.
     type_filter : "policy" ou "product" pour restreindre la recherche.
 
     ⚠️ Quand type_filter=None, on interroge séparément policy et product
@@ -65,17 +80,18 @@ def search(query_text: str, top_k: int = 4, type_filter: Optional[str] = None) -
 def get_best_confidence(hits: list) -> float:
     """
     Score de confiance RAG basé sur la distance cosinus du meilleur hit
-    (1 - distance) — utilisé par dialogue_manager pour décider d'une
+    (1 - plus petite distance) — utilisé par dialogue_manager pour décider d'une
     escalade automatique quand le contexte trouvé est peu fiable (voir
     RAG_CONFIDENCE_THRESHOLD). 0.0 si hits est vide (aucun document
     trouvé du tout = confiance nulle).
 
-    hits est déjà trié par distance croissante (voir search()), donc
-    hits[0] est toujours le meilleur match.
+    On prend le min des distances plutôt que hits[0] : en mode hybride,
+    les hits sont triés par score RRF, pas par distance. En mode basic
+    le résultat est identique (hits[0] est déjà le min).
     """
     if not hits:
         return 0.0
-    return 1 - hits[0]["distance"]
+    return 1 - min(h["distance"] for h in hits)
 
 
 def format_context(hits: list) -> str:
