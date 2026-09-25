@@ -73,3 +73,16 @@ def test_real_reranker_prefers_relevant_multilingual():
     assert 0.0 <= out[1]["rerank_score"] <= out[0]["rerank_score"] <= 1.0
 
 
+
+def test_confidence_signal_defaults_to_cosine_and_switches_to_reranker(monkeypatch):
+    hits = [{"distance": 0.2, "rerank_score": 0.03}, {"distance": 0.6, "rerank_score": 0.01}]
+    monkeypatch.setattr(retriever.settings, "RAG_CONFIDENCE_SIGNAL", "cosine")
+    assert retriever.get_best_confidence(hits) == pytest.approx(0.8)
+    assert retriever.get_confidence_threshold(hits) == settings.RAG_CONFIDENCE_THRESHOLD
+    monkeypatch.setattr(retriever.settings, "RAG_CONFIDENCE_SIGNAL", "reranker")
+    assert retriever.get_best_confidence(hits) == pytest.approx(0.03)
+    assert retriever.get_confidence_threshold(hits) == settings.RAG_RERANK_CONFIDENCE_THRESHOLD
+    # Hits non rerankés (modes basic/hybrid) : cosinus même si "reranker" est demandé
+    plain = [{"distance": 0.3}]
+    assert retriever.get_best_confidence(plain) == pytest.approx(0.7)
+    assert retriever.get_confidence_threshold(plain) == settings.RAG_CONFIDENCE_THRESHOLD

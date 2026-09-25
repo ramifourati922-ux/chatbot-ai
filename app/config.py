@@ -52,6 +52,18 @@ class Settings(BaseSettings):
     # Seuil de confiance RAG (= 1 - distance cosinus du meilleur hit)
     # en dessous duquel on escalade automatiquement plutôt que de
     # risquer une hallucination du LLM (voir dialogue_manager.py).
+    # Utilisé dans les 3 modes tant que RAG_CONFIDENCE_SIGNAL="cosine"
+    # (défaut), voir retriever.get_best_confidence.
+    #
+    # Revérifié à l'étape 3 Advanced RAG (scripts/calibrate_threshold.py,
+    # détail dans CHANGELOG_ADVANCED_RAG.md) : produits légitimes
+    # 0.368-0.745 dans les 3 modes → 0.35 reste sous toutes les
+    # questions produit (marge réduite à 0.018). En revanche le cosinus
+    # ne sépare pas tous les hors-sujet (déjà le cas avant, cf. Figures
+    # 23-24) : "recette du couscous" = 0.500,
+    # "capitale de la France" = 0.363 → seuls 2 hors-sujet sur 4 sont
+    # sous le seuil (les autres restent couverts par le garde-fou
+    # hors-sujet du prompt système).
     #
     # Calibré empiriquement, PAS la valeur générique 0.7 du cahier des
     # charges : mesuré sur 10 vraies questions produit (10 catégories
@@ -87,6 +99,24 @@ class Settings(BaseSettings):
     # (rapide, pas d'appel LLM) et pour le cas hits vides, mais ne pas
     # présenter ce mécanisme comme isolant finement les 2 scénarios.
     RAG_CONFIDENCE_THRESHOLD: float = 0.35
+
+    # Signal de confiance en mode advanced (étape 3 Advanced RAG) :
+    #   "cosine"   (défaut) : 1 - distance cosinus, seuil RAG_CONFIDENCE_THRESHOLD
+    #   "reranker" : score cross-encoder du meilleur hit (0-1), seuil
+    #                RAG_RERANK_CONFIDENCE_THRESHOLD
+    # Mesures (40 questions fr/en/ar/tn) : le score reranker sépare
+    # beaucoup mieux — hors-sujet 0.000-0.039, légitimes avec le bon
+    # chunk en top-1 ≥ 0.051, légitimes ar/tn avec un MAUVAIS chunk en
+    # top-1 0.002-0.047 (escaladés au lieu d'envoyer un contexte faux au
+    # LLM : c'est le cas "dans le domaine mais mal couvert" que le
+    # cosinus n'isole pas, voir LIMITE CONNUE ci-dessus).
+    # PAS activé par défaut : régression sur
+    # test_normal_product_criticism_does_not_escalate ("ce produit est
+    # nul" = 0.041 < 0.045 → escalade), et aucun seuil ne sépare cette
+    # critique (0.041) de "recette du couscous" (0.039). Marges trop
+    # étroites sur un petit échantillon → à trancher avec RAGas (étape 4).
+    RAG_CONFIDENCE_SIGNAL: str = "cosine"
+    RAG_RERANK_CONFIDENCE_THRESHOLD: float = 0.045
 
     # WhatsApp (Phase 5)
     WHATSAPP_PHONE_NUMBER_ID: Optional[str] = None

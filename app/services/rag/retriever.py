@@ -86,21 +86,36 @@ def search_basic(query_text: str, top_k: int = 4, type_filter: Optional[str] = N
     return merged[:top_k]
 
 
+def _uses_rerank_confidence(hits: list) -> bool:
+    return settings.RAG_CONFIDENCE_SIGNAL == "reranker" and bool(hits) and "rerank_score" in hits[0]
+
+
 def get_best_confidence(hits: list) -> float:
     """
-    Score de confiance RAG basé sur la distance cosinus du meilleur hit
-    (1 - plus petite distance) — utilisé par dialogue_manager pour décider d'une
-    escalade automatique quand le contexte trouvé est peu fiable (voir
-    RAG_CONFIDENCE_THRESHOLD). 0.0 si hits est vide (aucun document
-    trouvé du tout = confiance nulle).
+    Score de confiance RAG — utilisé par dialogue_manager pour décider
+    d'une escalade automatique quand le contexte trouvé est peu fiable
+    (comparé à get_confidence_threshold(hits)). 0.0 si hits est vide
+    (aucun document trouvé du tout = confiance nulle).
 
-    On prend le min des distances plutôt que hits[0] : en modes hybrid et advanced,
-    les hits sont triés par score RRF / reranker, pas par distance. En mode basic
-    le résultat est identique (hits[0] est déjà le min).
+    - Par défaut : 1 - plus petite distance cosinus. On prend le min
+      plutôt que hits[0] : en modes hybrid/advanced, les hits sont triés
+      par score RRF / reranker, pas par distance (en mode basic, hits[0]
+      est déjà le min).
+    - RAG_CONFIDENCE_SIGNAL="reranker" et hits rerankés : meilleur score
+      cross-encoder (0-1), voir config.py pour le compromis.
     """
     if not hits:
         return 0.0
+    if _uses_rerank_confidence(hits):
+        return max(h["rerank_score"] for h in hits)
     return 1 - min(h["distance"] for h in hits)
+
+
+def get_confidence_threshold(hits: list) -> float:
+    """Seuil d'escalade sur la même échelle que get_best_confidence(hits)."""
+    if _uses_rerank_confidence(hits):
+        return settings.RAG_RERANK_CONFIDENCE_THRESHOLD
+    return settings.RAG_CONFIDENCE_THRESHOLD
 
 
 def format_context(hits: list) -> str:

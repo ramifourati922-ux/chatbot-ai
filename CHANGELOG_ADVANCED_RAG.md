@@ -9,7 +9,7 @@ confiance, puis évaluation RAGas avant/après.
 |---|---|---|---|
 | 1 | Recherche hybride BM25 + dense + RRF | `app/services/rag/hybrid_retriever.py` | ✅ |
 | 2 | Reranking cross-encoder multilingue (mmarco-mMiniLMv2) | `app/services/rag/reranker.py` | ✅ |
-| 3 | Recalibrage `RAG_CONFIDENCE_THRESHOLD` | `app/config.py` | à faire |
+| 3 | Recalibrage `RAG_CONFIDENCE_THRESHOLD` | `app/config.py`, `scripts/calibrate_threshold.py` | ✅ |
 | 4 | Évaluation RAGas avant/après | `scripts/evaluate_ragas.py` | à faire |
 
 Le Basic RAG reste disponible (`RAG_RETRIEVAL_MODE=basic`) pour que
@@ -173,6 +173,80 @@ tranchera chiffres à l'appui.
 Tests : 119 → 123 (4 nouveaux dans `tests/test_reranker.py`, dont un
 sur le vrai modèle avec une question arabe et des documents
 français), 0 régression en mode `advanced`.
+
+---
+
+## Étape 3 — Recalibrage de `RAG_CONFIDENCE_THRESHOLD`
+
+### Protocole
+
+`scripts/calibrate_threshold.py` : même protocole que la calibration
+d'origine (10 questions produit, une par catégorie du catalogue, + 4
+hors-sujet), rejoué sur les 3 pipelines. En mode advanced, deux
+signaux candidats : **cosinus** (`1 - distance`, signal d'origine) et
+**score reranker** (cross-encoder, 0-1). Contrôle complémentaire sur
+26 questions fr/en/ar/tn (19 légitimes, 7 hors-sujet).
+
+### Résultats — protocole d'origine (14 questions)
+
+| Pipeline / signal | Produits légitimes (min – max) | Hors-sujet (min – max) | Séparables ? |
+|---|---|---|---|
+| Basic / cosinus | 0.368 – 0.745 | 0.267 – **0.500** | ❌ marge -0.133 |
+| Hybride / cosinus | 0.368 – 0.745 | 0.267 – **0.500** | ❌ marge -0.133 |
+| Advanced / cosinus | 0.368 – 0.745 | 0.263 – 0.429 | ❌ marge -0.062 |
+| **Advanced / reranker** | **0.839 – 1.000** | **0.001 – 0.039** | ✅ **marge +0.800** |
+
+Rappel (déjà observé lors de la calibration d'origine, cf. captures
+Figures 23-24) : en cosinus, les hors-sujet ne sont pas tous sous le
+seuil. « Recette du couscous tunisien » → 0.500 (chunk « livraison à
+l'international », mot « Tunisie »), « capitale de la France » → 0.363.
+Avec 0.35, seuls 2 hors-sujet sur 4 escaladent (Jupiter, blague) ; les
+autres sont refusés par le garde-fou hors-sujet du prompt système
+(défense en profondeur). Le score reranker est le premier signal qui
+sépare les 4.
+
+Le reranker améliore aussi le top-1 sur 3 catégories : NEMA17 exact
+(au lieu de NEMA14 / driver A4988), « Contrôleur LED RGB (télécommande
+IR) » (au lieu d'un ruban LED), « Pile 18650 » (au lieu d'un chargeur).
+
+### Résultats — contrôle multilingue (score reranker)
+
+| Groupe | Scores |
+|---|---|
+| Hors-sujet, 4 langues (11 questions en tout) | 0.000 – 0.039 |
+| Légitimes, bon chunk en top-1 — fr/en | 0.189 – 1.000 |
+| Légitimes, bon chunk en top-1 — ar/tn | 0.051 – 0.580 |
+| Légitimes ar/tn, **mauvais** chunk en top-1 (5 cas) | 0.002 – 0.047 |
+| « ce produit est nul » (critique produit, ne doit pas escalader) | **0.041** |
+
+Un seuil à 0.045 sur le score reranker ferait escalader tous les
+hors-sujet et les 5 questions ar/tn mal servies (par exemple « nheb
+nraja3 produit » → résistances). Ce sont exactement les cas « dans le
+domaine mais mal couvert » que le cosinus n'a jamais su isoler (voir la
+LIMITE CONNUE dans `config.py`).
+
+### Décision : cosinus conservé par défaut, seuil 0.35 inchangé
+
+- **Défaut** : `RAG_CONFIDENCE_SIGNAL="cosine"`, `RAG_CONFIDENCE_THRESHOLD=0.35`,
+  sur la même échelle qu'avant dans les 3 modes. 0.35 reste sous toutes
+  les questions produit légitimes (minimum 0.368, marge réduite de 0.04
+  à 0.018). 0 régression : 124 tests passent.
+- **Option** : `RAG_CONFIDENCE_SIGNAL="reranker"`, seuil
+  `RAG_RERANK_CONFIDENCE_THRESHOLD=0.045` (mode advanced uniquement).
+  Pas activé par défaut pour deux raisons :
+  1. **Régression** sur `test_normal_product_criticism_does_not_escalate` :
+     « ce produit est nul » = 0.041 < 0.045 → escalade.
+  2. **Aucun seuil ne sépare** cette critique (0.041) de « recette du
+     couscous » (0.039). Les marges font ~0.006 de chaque côté, sur un
+     petit échantillon.
+
+  À trancher avec RAGas (étape 4, golden set multilingue).
+
+| | Ancien | Nouveau |
+|---|---|---|
+| Signal | 1 - distance cosinus du hit n°1 (hits triés par distance) | 1 - **plus petite** distance cosinus des hits retenus (hits triés par RRF / reranker) |
+| Seuil | 0.35 | 0.35 (revérifié) |
+| Option | — | score reranker, seuil 0.045 (`RAG_CONFIDENCE_SIGNAL=reranker`) |
 
 ---
 

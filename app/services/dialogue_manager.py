@@ -20,8 +20,10 @@ Pour chaque message reçu :
    satisfaction explicite ("merci, c'est réglé"...) réinitialise aussi
    le compteur.
 5. Si la recherche RAG aboutit mais avec une confiance trop faible
-   (1 - distance du meilleur hit < RAG_CONFIDENCE_THRESHOLD, voir
-   config.py pour la calibration) → escalade immédiate, PAS d'appel
+   (1 - distance du meilleur hit < RAG_CONFIDENCE_THRESHOLD, ou score
+   reranker si RAG_CONFIDENCE_SIGNAL="reranker", voir
+   retriever.get_confidence_threshold et config.py pour la calibration)
+   → escalade immédiate, PAS d'appel
    LLM : mieux vaut transférer que risquer une hallucination sur un
    sujet mal couvert par la base de connaissances.
 6. Sinon → appel au LLM (Groq) avec le contexte trouvé.
@@ -205,8 +207,14 @@ async def handle_message(message: str, session_id: Optional[str] = None, channel
     # est complètement vide, mais NE PAS supposer qu'il isole finement
     # "hors-sujet" de "dans le domaine mais mal couvert" — dans les
     # faits, sur ce catalogue, il attrape surtout la même chose.
+    # ⚠️ Ce constat vaut pour le signal cosinus (défaut). Le score du
+    # reranker (RAG_CONFIDENCE_SIGNAL="reranker", mode advanced) isole
+    # ce 2e cas : 5 questions légitimes en arabe/tunisien dont le
+    # meilleur chunk était faux passent sous son seuil — mais il n'est
+    # pas activé par défaut, voir config.py (calibration étape 3).
     rag_confidence = retriever.get_best_confidence(hits)
-    if rag_confidence < settings.RAG_CONFIDENCE_THRESHOLD:
+    rag_threshold = retriever.get_confidence_threshold(hits)
+    if rag_confidence < rag_threshold:
         response_text = _get_escalation_message("low_rag_confidence", language)
         await _session_manager.reset_rag_attempts(session_id)
         await _session_manager.add_message(
@@ -216,7 +224,7 @@ async def handle_message(message: str, session_id: Optional[str] = None, channel
         processing_time = int((time.time() - start) * 1000)
         logger.info(
             f"🚨 Escalade automatique (confiance RAG {rag_confidence:.3f} < "
-            f"{settings.RAG_CONFIDENCE_THRESHOLD}) | session={session_id} | langue={language}"
+            f"{rag_threshold}) | session={session_id} | langue={language}"
         )
         return DialogueResult(
             response=response_text, session_id=session_id, language=language,
