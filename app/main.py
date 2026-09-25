@@ -1,5 +1,8 @@
 # app/main.py — Version complète avec routes
 
+import asyncio
+import time
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -7,10 +10,42 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import logging
 
+from app.config import settings
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
+def _preload_rag():
+    """
+    Charge au démarrage ce qui coûte cher au premier appel : modèle
+    d'embeddings, index BM25 (6-20 s, lu depuis ChromaDB) et reranker.
+    Sans ça, la toute première question d'un client paie ce temps.
+    """
+    from app.services.rag import embedding_service, hybrid_retriever, reranker
+
+    t0 = time.time()
+    embedding_service.embed("warmup")
+    if settings.RAG_RETRIEVAL_MODE in ("hybrid", "advanced"):
+        hybrid_retriever._get_index()
+    if settings.RAG_RETRIEVAL_MODE == "advanced":
+        reranker.warmup()
+    logger.info(f"✅ RAG préchargé (mode={settings.RAG_RETRIEVAL_MODE}) en {time.time() - t0:.1f}s")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Non bloquant en cas d'échec (ex: ChromaDB pas encore démarré) :
+    # l'API démarre quand même, les composants se chargeront au premier appel.
+    try:
+        await asyncio.to_thread(_preload_rag)
+    except Exception as e:
+        logger.warning(f"⚠️ Préchargement RAG échoué, chargement différé au premier appel : {e}")
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="Chatbot IA Intelligent",
     description="API du chatbot SAV + E-commerce",
     version="1.0.0",

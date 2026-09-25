@@ -37,9 +37,17 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "paraphrase-multilingual-MiniLM-L12-v2"
 
     # Stratégie de recherche RAG (voir retriever.search) :
-    #   "hybrid" = Advanced RAG (BM25 + dense + RRF, hybrid_retriever.py)
-    #   "basic"  = dense seul d'origine (gardé pour l'évaluation RAGas avant/après)
-    RAG_RETRIEVAL_MODE: str = "hybrid"
+    #   "advanced" = hybride + reranking cross-encoder (défaut)
+    #   "hybrid"   = BM25 + dense + RRF seul (hybrid_retriever.py)
+    #   "basic"    = dense seul d'origine
+    # Les 3 modes restent sélectionnables pour l'évaluation RAGas avant/après.
+    RAG_RETRIEVAL_MODE: str = "advanced"
+
+    # Reranking (Advanced RAG) — cross-encoder MULTILINGUE, voir reranker.py
+    RERANKER_MODEL: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+    RERANKER_MAX_LENGTH: int = 512
+    # Candidats remontés par la recherche hybride avant reranking
+    RERANK_CANDIDATES: int = 20
 
     # Seuil de confiance RAG (= 1 - distance cosinus du meilleur hit)
     # en dessous duquel on escalade automatiquement plutôt que de

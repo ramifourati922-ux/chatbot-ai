@@ -8,7 +8,7 @@ confiance, puis évaluation RAGas avant/après.
 | Étape | Technique | Module | Statut |
 |---|---|---|---|
 | 1 | Recherche hybride BM25 + dense + RRF | `app/services/rag/hybrid_retriever.py` | ✅ |
-| 2 | Reranking cross-encoder multilingue | `app/services/rag/reranker.py` | à faire |
+| 2 | Reranking cross-encoder multilingue (mmarco-mMiniLMv2) | `app/services/rag/reranker.py` | ✅ |
 | 3 | Recalibrage `RAG_CONFIDENCE_THRESHOLD` | `app/config.py` | à faire |
 | 4 | Évaluation RAGas avant/après | `scripts/evaluate_ragas.py` | à faire |
 
@@ -65,15 +65,114 @@ scores sont comparables entre types).
 | « alimentation 12V 5A » | correct | correct (Bloc secteur 12V 5A en #1) |
 | « ما هي مدة الضمان » | politiques garantie | identique |
 | Hors-sujet (Jupiter, capitale de la France) | confiance 0.391 / 0.444 | identique |
-| « Raspberry Pi 4 8GB prix » | produit 8Go #1 | kit Raspberry #1, produit 8Go #2 (léger recul) |
+| « Raspberry Pi 4 8GB prix » | produit 8Go #1 | kit Raspberry #1, produit 8Go #2 (léger recul, corrigé par l'étape 2) |
 
 Latence de recherche : médiane ~300 ms dans les deux cas (machine
 chargée, mesure bruitée) — surcoût BM25 négligeable. Construction de
-l'index au premier appel : 6 à 20 s (préchargement au démarrage de
-l'API prévu à l'étape 2).
+l'index au premier appel : 6 à 20 s → préchargée au démarrage de l'API
+depuis l'étape 2.
 
 Tests : 109 → 119 (10 nouveaux dans `tests/test_hybrid_retriever.py`),
 0 régression.
+
+---
+
+## Étape 2 — Reranking cross-encoder
+
+### Quoi
+
+- `retriever.search()` en mode `advanced` (nouveau défaut) : recherche
+  hybride sur **20 candidats** (`RERANK_CANDIDATES`), puis le
+  cross-encoder note chaque paire (question, chunk) et on garde le
+  **top-4** (valeur déjà demandée par `dialogue_manager`, dans la
+  fourchette 3-5 recommandée).
+- Modèle : **`cross-encoder/mmarco-mMiniLMv2-L12-H384-v1`** (118M
+  paramètres), score passé explicitement par une sigmoïde → 0-1 (le
+  modèle renvoie sinon des logits bruts entre ~-8 et +10).
+- Préchargement au démarrage de l'API (`lifespan` dans `app/main.py`) :
+  modèle d'embeddings + index BM25 + reranker. La première requête
+  client ne paie plus les 6-20 s de construction de l'index. En cas
+  d'échec (ChromaDB éteint), l'API démarre quand même et charge au
+  premier appel.
+- La confiance RAG reste `1 - distance cosinus` (min sur les hits
+  retenus) → `RAG_CONFIDENCE_THRESHOLD` inchangé à ce stade (étape 3).
+- Les modes `basic` et `hybrid` restent sélectionnables
+  (`RAG_RETRIEVAL_MODE`) pour l'ablation RAGas.
+
+### Pourquoi (réf. cours : reranking / "retrieve then rerank")
+
+Un bi-encoder (MiniLM, retrieval) encode question et document
+séparément ; un cross-encoder les lit ensemble dans la même passe
+d'attention → jugement de pertinence bien plus fin, mais trop coûteux
+pour 11 000 chunks. D'où le schéma en deux temps : rappel large et
+bon marché (hybride, top-20), puis précision (cross-encoder, top-4).
+
+### Choix du modèle : compromis latence / précision
+
+| Modèle | Paramètres | Langues | Verdict |
+|---|---|---|---|
+| `cross-encoder/ms-marco-MiniLM-L-6-v2` | 22M | anglais uniquement | ❌ inadapté (corpus fr, questions fr/en/ar/tn) |
+| `BAAI/bge-reranker-v2-m3` | 568M | multilingue | ❌ plus précis, mais ~1-4 s ajoutées par requête sur CPU sans GPU → incompatible avec une démo en direct |
+| **`cross-encoder/mmarco-mMiniLMv2-L12-H384-v1`** | **118M** | multilingue (mMARCO : MS MARCO traduit en 14 langues, dont fr et ar) | ✅ retenu |
+
+(Au passage : le téléchargement depuis Hugging Face restait bloqué à
+0 octet avec le backend Xet de `huggingface_hub` sur cette connexion ;
+`HF_HUB_DISABLE_XET=1` a débloqué la situation.)
+
+### Latence mesurée (CPU, 8 threads, pas de GPU)
+
+9 questions de l'étape 1, top-20 candidats :
+
+| Pipeline | Médiane | Max |
+|---|---|---|
+| Basic (dense) | 220 ms | 257 ms |
+| Hybride (BM25 + dense + RRF) | 208 ms | 279 ms |
+| Reranking seul (20 paires) | 883 ms | 985 ms |
+| **Advanced (hybride top-20 + reranking)** | **1 084 ms** | **1 505 ms** |
+
+Surcoût du reranking : ~0,9 s par question, sous la limite de 1,5-2 s
+fixée. Levier si besoin : `RERANK_CANDIDATES=12` → reranking ~0,4 s
+médiane (0,8 s max) sur les questions ar/tn/fr de contrôle.
+Chargement du reranker au démarrage : ~3 s.
+
+### Impact qualitatif — mêmes questions que l'étape 1
+
+Top-1 retenu (score reranker entre parenthèses) :
+
+| Requête | Basic | Hybride | Advanced |
+|---|---|---|---|
+| « Quel est le délai pour retourner un produit ? » | ✅ délai de retour | ✅ délai de retour | ✅ délai de retour (0,99) |
+| « ESP32 wifi bluetooth » | ❌ politique paiement (1 seul hit, escalade à tort) | ≈ politique paiement #1, ESP32 en #2/#3 | ✅ 3 modules ESP32 en top-3 |
+| « Raspberry Pi 4 8GB prix » | ✅ RPi 4 8Go | ≈ kit Raspberry #1, 8Go #2 | ✅ RPi 4 8Go, puis 4Go, 2Go |
+| « alimentation 12V 5A » | ✅ bloc 12V 5A | ✅ bloc 12V 5A | ✅ bloc 12V 5A, puis alim. LED 12V 5A |
+| « What is the warranty on a multimeter? » | ❌ 3 multimètres (produits, pas la garantie) | ❌ idem | ✅ **politique garantie instruments de mesure** (remontée du rang 8) |
+| « ما هي مدة الضمان » (durée de garantie) | ≈ réclamations #1, garanties #2/#3 | ≈ idem | ≈ garantie outillage #1, puis livraison / remboursement |
+| « 3andi mochkla fil livraison » | ≈ produit #1, livraison #2/#3 | ✅ 3 politiques livraison | ❌ 3 produits sans rapport (scores < 0,04) |
+| Hors-sujet (Jupiter, capitale de la France) | produits / politiques proches | idem | idem, **scores très bas** (logits ≈ -7 à -8) |
+
+Questions de contrôle supplémentaires en arabe / tunisien (hybride →
+advanced) :
+
+| Requête | Effet du reranking |
+|---|---|
+| « chnowa el garantie mta3 el multimetre » | ✅ politique garantie instruments remontée du rang 19 (l'hybride ne remontait que des LED et multimètres) |
+| « 9adeh el livraison l sfax » | ✅ « Livrez-vous en dehors de Tunis ? » en #1 |
+| « كم تكلفة التوصيل » (coût de livraison) | = frais de livraison #1 dans les deux cas |
+| « هل يمكنني إرجاع المنتج » (puis-je retourner) | ≈ politiques voisines (garantie, non-retournables, échange) au lieu des 3 politiques de retour |
+| « nheb nraja3 produit » | = échec dans les deux cas (résistances), score reranker 0,002 |
+
+**Bilan** : gains nets en français et en anglais (termes techniques,
+questions « garantie » posées sur un produit) ; effet mitigé en
+arabe / arabizi, limite attendue d'un cross-encoder de 118M
+(bge-reranker-v2-m3 serait meilleur ici, au prix de la latence).
+Observation utile pour l'étape 3 : quand le reranker se trompe, son
+score reste très bas (< 0,05), alors que les bons top-1 sont à
+0,15-0,99. L'évaluation RAGas (étape 4, golden set sur 4 langues)
+tranchera chiffres à l'appui.
+
+Tests : 119 → 123 (4 nouveaux dans `tests/test_reranker.py`, dont un
+sur le vrai modèle avec une question arabe et des documents
+français), 0 régression en mode `advanced`.
 
 ---
 

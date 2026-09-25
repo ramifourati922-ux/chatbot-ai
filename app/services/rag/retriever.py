@@ -12,7 +12,7 @@ from typing import Optional
 
 from app.config import settings
 from app.services.rag.embedding_service import embed
-from app.services.rag import vector_store, hybrid_retriever
+from app.services.rag import vector_store, hybrid_retriever, reranker
 
 logger = logging.getLogger(__name__)
 
@@ -40,14 +40,23 @@ def search(query_text: str, top_k: int = 4, type_filter: Optional[str] = None) -
     """
     Point d'entrée unique utilisé par dialogue_manager. Aiguille selon
     settings.RAG_RETRIEVAL_MODE :
-        - "hybrid" (défaut, Advanced RAG) : BM25 + dense fusionnés par
-          RRF, voir hybrid_retriever.py
-        - "basic" : recherche dense seule d'origine (search_basic),
-          conservée pour la comparaison RAGas avant/après.
+        - "advanced" (défaut) : recherche hybride sur RERANK_CANDIDATES
+          candidats, puis reranking cross-encoder → top_k (reranker.py)
+        - "hybrid" : BM25 + dense fusionnés par RRF, sans reranking
+          (hybrid_retriever.py)
+        - "basic" : recherche dense seule d'origine (search_basic)
+    Les modes "basic" et "hybrid" sont conservés pour la comparaison
+    RAGas avant/après.
     """
-    if settings.RAG_RETRIEVAL_MODE == "basic":
+    mode = settings.RAG_RETRIEVAL_MODE
+    if mode == "basic":
         return search_basic(query_text, top_k=top_k, type_filter=type_filter)
-    return hybrid_retriever.search(query_text, top_k=top_k, type_filter=type_filter)
+    if mode == "hybrid":
+        return hybrid_retriever.search(query_text, top_k=top_k, type_filter=type_filter)
+    candidates = hybrid_retriever.search(
+        query_text, top_k=max(top_k, settings.RERANK_CANDIDATES), type_filter=type_filter,
+    )
+    return reranker.rerank(query_text, candidates, top_n=top_k)
 
 
 def search_basic(query_text: str, top_k: int = 4, type_filter: Optional[str] = None) -> list:
@@ -85,8 +94,8 @@ def get_best_confidence(hits: list) -> float:
     RAG_CONFIDENCE_THRESHOLD). 0.0 si hits est vide (aucun document
     trouvé du tout = confiance nulle).
 
-    On prend le min des distances plutôt que hits[0] : en mode hybride,
-    les hits sont triés par score RRF, pas par distance. En mode basic
+    On prend le min des distances plutôt que hits[0] : en modes hybrid et advanced,
+    les hits sont triés par score RRF / reranker, pas par distance. En mode basic
     le résultat est identique (hits[0] est déjà le min).
     """
     if not hits:
