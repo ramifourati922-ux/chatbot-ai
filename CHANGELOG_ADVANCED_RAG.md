@@ -12,6 +12,10 @@ confiance, puis évaluation RAGas avant/après.
 | 3 | Recalibrage `RAG_CONFIDENCE_THRESHOLD` | `app/config.py`, `scripts/calibrate_threshold.py` | ✅ |
 | 4 | Évaluation RAGas avant/après | `scripts/evaluate_ragas.py`, `docs/evaluation/` | ✅ |
 
+Voir aussi la section « Correctifs après la revue du projet » (mémoire,
+persistance, politesse, ordre des messages, confiance, boucle RAG) et
+les anomalies n°6 à 11.
+
 Le Basic RAG reste disponible (`RAG_RETRIEVAL_MODE=basic`) pour que
 l'évaluation compare les deux pipelines sur le même corpus et le même
 golden set.
@@ -386,7 +390,145 @@ question). Script : `scripts/evaluate_ragas.py`.
 
 ---
 
-## Anomalies découvertes pendant la migration
+## Correctifs après la revue du projet
+
+Après la migration Advanced RAG, une revue complète du projet puis un
+test manuel de bout en bout contre l'API réelle (pas seulement les
+tests automatisés) ont mis au jour des manques et des bugs. Chaque
+correctif a suivi le même protocole : un test qui reproduit le problème
+(et échoue sur l'ancien code), le correctif, la suite complète, une
+vérification sur l'API réelle, puis un commit.
+
+| # | Commit | Problème | Correctif | Tests |
+|---|---|---|---|---|
+| 1 | `f9a2c35` | Le LLM n'avait **aucune mémoire** : « et la garantie ? » après une question sur l'Arduino Uno n'avait aucun sens pour lui | Historique transmis au LLM + questions de suivi rattachées à la précédente pour la recherche | 124 → 144 |
+| 2 | `0bd1d01` | PostgreSQL **n'était pas utilisé** : les conversations disparaissaient avec la session Redis (1 h) | Chaque échange est enregistré (tâche de fond, statut `escalated`) | 144 → 148 |
+| 3 | `478a99c` | Documentation incohérente, ChromaDB en `:latest` | README de la base, `.env.example`, `ChatResponse`, ChromaDB épinglé | 148 |
+| 4 | `acd4eae` | *(test manuel)* **« bonjour », « merci » escaladaient** vers un humain | Catégorie « politesse » traitée avant le RAG | 148 → 185 |
+| 5 | `440ca05` | *(test manuel)* **Messages en base dans le désordre** (régression du correctif 2, anomalie n°9) | Horodatage de chaque message côté Python | 185 → 186 |
+| 6 | `7ef15db` | *(test manuel)* `confidence` **toujours à 0.0** sur les réponses RAG | Expose la vraie confiance RAG | 186 → 187 |
+| 7 | `d05b4ff` | *(préparation de la démo)* **3 bonnes questions d'affilée → transfert** « je n'arrive pas à répondre » | Le compteur de boucle ne compte que les vrais échecs | 187 → 204 |
+
+### 1. Mémoire conversationnelle (`f9a2c35`)
+
+- **Constat** : `llm_factory.build_messages()` n'envoyait que le prompt
+  système et le message courant ; l'historique, pourtant stocké dans
+  Redis, n'était jamais transmis au LLM.
+- **Correctif** : les 6 derniers messages de la session (3 échanges,
+  500 caractères max chacun) sont insérés entre le prompt système et la
+  question. Pour la **recherche**, une question de suivi est précédée de
+  la dernière question *autonome* du client.
+- **Choix mesurés** (sur « et la garantie ? » après « Avez-vous
+  l'Arduino Uno ? ») :
+  - question précédente **du client** plutôt que dernière réponse du
+    bot : la réponse du bot (prix, variantes) noie le sujet et fait
+    perdre la politique de garantie des résultats ;
+  - détection par règles **étroites** (connecteur en tête : et / and /
+    w / و, ou pronom dans une question de 6 mots max) : rattacher une
+    question autonome comme « frais de livraison ? » fait disparaître la
+    politique de livraison des résultats ;
+  - pas de reformulation par LLM : un appel Groq de plus par message.
+- **Résultat** : « et la garantie ? » retrouve l'Arduino Uno et la
+  garantie des cartes programmables (6 mois).
+
+### 2. Persistance des conversations (`0bd1d01`)
+
+- **Constat** : tables `users` / `conversations` / `messages` et
+  `ConversationRepository` en place, mais rien n'y écrivait.
+- **Correctif** : `handle_message()` calcule la réponse puis programme
+  l'enregistrement dans une **tâche de fond**, quelle que soit l'issue
+  (réponse RAG ou escalade, qui passe la conversation au statut
+  `escalated`). La conversation en cours est retrouvée en base (activité
+  depuis moins d'une heure), pas stockée dans la session Redis : la
+  session est réécrite en entier à chaque message, une écriture
+  concurrente aurait pu écraser un message.
+- **Latence** (escalade, médiane sur 10) : 7,2 ms sans persistance,
+  16,9 ms avec ; l'écriture (~30 ms) n'est pas attendue par le client.
+  Une panne de PostgreSQL est seulement journalisée.
+
+### 3. Cohérence documentaire (`478a99c`)
+
+- README de la base de connaissances réécrit (il disait encore « aucun
+  contenu n'est écrit » ; il affirmait aussi, à tort, que l'ingestion
+  parcourt automatiquement le dossier).
+- `.env.example` complété avec les 7 réglages RAG.
+- ChromaDB épinglé par digest sur l'image qui a indexé la base (serveur
+  1.4.1 ; le tag `1.4.1` publié aujourd'hui est une autre build) : évite
+  une régression de l'anomalie n°6.
+
+### 4. Salutations et remerciements (`acd4eae`)
+
+- **Constat** (test manuel) : « hello », « bonsoir », « bonjour »,
+  « salut », « merci », « aslema », « مرحبا » → escalade
+  `low_rag_confidence`. La base ne contient aucune salutation : la
+  confiance tombait entre 0,27 et 0,35, sous le seuil.
+- **Correctif** : catégorie `SMALL_TALK` dans le classifieur (règles
+  fr/en/ar/tn, uniquement si **tous** les mots du message sont des mots
+  de politesse), réponse toute prête dans la langue du client, sans RAG
+  ni LLM (~10 ms). « bonjour, quelle est la garantie ? » reste une
+  question normale.
+
+### 5. Ordre des messages en base (`440ca05`)
+
+Régression introduite par le correctif 2, détectée par le test manuel :
+voir anomalie n°9.
+
+### 6. Champ `confidence` (`7ef15db`)
+
+- **Constat** : `confidence` valait 0.0 sur toutes les réponses RAG : il
+  contenait la confiance du classifieur d'intentions, qui vaut 0.0 quand
+  aucune de ses règles ne s'applique.
+- **Correctif** : sur une réponse RAG, la confiance du RAG (celle déjà
+  comparée au seuil d'escalade). Vérifié avant : aucun code ne décidait
+  à partir de cette valeur (routes, interface et persistance ne font que
+  la recopier). Exemples réels : garantie fr 0,847, arabe 0,793.
+
+### 7. Compteur de boucle RAG (`d05b4ff`)
+
+- **Constat** (préparation de la démo) : le compteur augmentait à
+  chaque question RAG, même bien répondue ; la 3e question d'affilée
+  déclenchait un transfert « je n'arrive pas à répondre ». Le scénario
+  de démo devait insérer un « merci » pour l'éviter.
+- **Correctif** : le compteur n'augmente plus qu'après une réponse du
+  LLM qui dit **ne pas avoir l'information** (motifs relevés sur de
+  vraies réponses, en 4 langues) ; une réponse informative le remet à
+  zéro. Il faut donc 3 échecs **consécutifs**, et le transfert remplace
+  alors la 3e réponse « je ne sais pas ». La confiance trop faible
+  escaladait déjà immédiatement (inchangé).
+- **Limite** : détection par mots-clés, une formulation inédite n'est
+  pas comptée (le client peut toujours demander un humain).
+- **Vérification** : 4 questions RAG d'affilée sur l'API réelle →
+  aucun transfert.
+
+### Hygiène des données de test
+
+Les nouveaux tests suppriment ce qu'ils écrivent en base. Les tests
+`dialogue_manager` existants, eux, laissent encore des utilisateurs de
+test à chaque lancement de la suite : la base a été vidée avant la
+préparation de la démo (voir `docs/demo/CHECKLIST_JOUR_J.txt`).
+
+### Limites restantes (documentées, non corrigées)
+
+- **Anglais cross-lingue** : « What is the warranty on programmable
+  boards? » ne retrouve pas la politique de garantie.
+- **Tunisien en arabizi** : réponse en arabe littéraire au lieu de
+  l'arabizi du client.
+- **« 3D » pris pour de l'arabizi** : anomalie n°10.
+- **Sessions WebSocket usurpables** : l'identifiant de session est
+  choisi par le client ; une session WhatsApp ayant pour identifiant le
+  numéro de téléphone, un client web qui connaît ce numéro peut
+  rejoindre la même session. Plus sensible depuis la mémoire
+  conversationnelle (l'historique est transmis au LLM). Piste :
+  préfixer les sessions par canal et générer l'identifiant côté
+  serveur.
+- **Escalade sans humain derrière** : le statut `escalated` est en
+  base, mais aucun agent n'est notifié.
+- **Pas d'authentification ni de limite de débit** ; pas de
+  `Dockerfile` ni de CI ; pas de suivi de commande.
+
+---
+
+## Anomalies découvertes (migration et correctifs)
 
 ### Anomalie n°6 — Données ChromaDB hors du volume Docker
 
@@ -444,3 +586,69 @@ question). Script : `scripts/evaluate_ragas.py`.
 - **Pas de fix racine pour l'instant** : une ré-ingestion complète
   (`ingest_knowledge_base.py --reset`) le corrigerait probablement,
   mais n'est pas nécessaire tant que le contournement tient.
+
+### Anomalie n°8 — Un PostgreSQL natif Windows masque celui de Docker
+
+- **Symptôme** : toutes les connexions à la base échouent
+  (`ConnectionDoesNotExistError: connection was closed in the middle of
+  operation`, `WinError 64`), alors que le conteneur `chatbot_postgres`
+  tourne et répond à `psql` depuis l'intérieur.
+- **Diagnostic** : `Get-NetTCPConnection -LocalPort 5432` → le port est
+  tenu par un processus `postgres` Windows (service
+  `postgresql-x64-18`, démarrage automatique), pas par Docker. Les
+  connexions à `localhost:5432` atterrissaient sur ce serveur, qui ne
+  connaît pas l'utilisateur `chatbot_user`.
+- **Cause** : un PostgreSQL 18 installé nativement, relancé au
+  redémarrage de Windows ; avant, le port menait bien au conteneur.
+- **Correction** (hors code, en administrateur) :
+  `Stop-Service postgresql-x64-18` puis
+  `Set-Service postgresql-x64-18 -StartupType Manual`.
+- **Vérification** : port 5432 tenu par `com.docker.backend`, tests de
+  persistance au vert. Contrôle ajouté à la checklist du jour J.
+
+### Anomalie n°9 — Messages enregistrés dans le désordre
+
+- **Symptôme** (test manuel) : dans 5 conversations sur 7, les messages
+  sortaient dans l'ordre « assistant → user ».
+- **Diagnostic** : le message du client et la réponse avaient
+  exactement le même `created_at`, à la microseconde.
+- **Cause** : les deux messages sont écrits dans la même transaction, et
+  le `now()` de PostgreSQL renvoie l'heure de **début** de la
+  transaction ; le tri par date ne pouvait pas les départager. Le test
+  du correctif 2 passait par chance.
+- **Correction** (`440ca05`) : `handle_message()` date l'échange côté
+  Python (message du client = heure de réception, réponse = heure où
+  elle est prête, au moins 1 µs après) ;
+  `ConversationRepository.add_message()` accepte `created_at`.
+- **Vérification** : test dédié (4 horodatages distincts et strictement
+  croissants, échoue sur l'ancien code) ; sur l'API réelle, la réponse
+  est datée ~3,6 s après la question, soit le temps de traitement réel.
+
+### Anomalie n°10 — « 3D » pris pour de l'arabizi (non corrigée)
+
+- **Symptôme** : « Quel est le prix d'une imprimante 3D Prusa ? », posée
+  en français, reçoit une réponse en tunisien arabizi (« Prix ta3
+  l'imprimante 3D… »).
+- **Cause probable** : `language_detector` considère un chiffre collé à
+  des lettres comme un marqueur d'arabizi (« 3andi », « n7eb ») ; « 3D »
+  n'est pas couvert par l'exception des unités techniques (« 12V »,
+  « 5A »).
+- **Statut** : non corrigée (hors périmètre) ; à éviter en démonstration.
+
+### Anomalie n°11 — Suite de tests bloquée (environnement de test)
+
+- **Symptôme** : la suite complète, qui tournait en ~1 min, ne se
+  terminait plus (> 10 min) après l'ajout de la persistance ; chaque
+  fichier de test, lancé seul, passait.
+- **Diagnostic** : `faulthandler` → un test attend indéfiniment dans
+  `wait_for_pending_persistence()`, sur une tâche d'écriture créée par
+  un test précédent.
+- **Cause** : pytest-asyncio crée une boucle asyncio par test ; une
+  tâche de fond restée en attente dans la boucle (fermée) d'un test
+  précédent ne se termine jamais. Les connexions asyncpg du pool sont
+  elles aussi liées à leur boucle d'origine. N'arrive pas en production
+  (une seule boucle).
+- **Correction** : on n'attend plus que les tâches de la boucle courante
+  (`_alive_in_this_loop`) ; les fixtures de test abandonnent le pool
+  (`engine.dispose(close=False)`) au lieu de fermer des connexions liées
+  à une boucle morte.

@@ -1,0 +1,80 @@
+===============================================================================
+  TRANSCRIPTION VÉRIFIÉE — scénario de démo (plan de secours)
+===============================================================================
+
+Enregistrée le 27/09/2026 avec le code actuel (commit 7ef15db), via le
+WebSocket /ws/{client_id} utilisé par l'interface /chat-demo, dans UNE
+seule session. Passage 1 sur 3 (les passages 2 et 3 ont donné les mêmes
+intentions, sources et confiances ; seule la formulation varie).
+Mise en forme Markdown des réponses (gras, listes) retirée ici.
+
+-------------------------------------------------------------------------------
+[1] Client : Bonjour
+    Bot    : Bonjour ! Je suis l'assistant Liss Strike. Je peux vous aider sur
+             nos produits, la livraison, les retours ou la garantie. Que
+             puis-je faire pour vous ?
+    intent: greeting · confiance: 0.95 · 7 ms · pas d'escalade
+
+[2] Client : Quels sont les frais de livraison ?
+    Bot    : Les frais de livraison sont les suivants :
+             - Gratuit dès 150 DT d'achat.
+             - En dessous de ce montant : 8 DT pour le Grand Tunis et 12 DT
+               pour le reste du pays.
+    intent: general · confiance: 0.67 · 1574 ms
+    sources : sav/livraison.txt, sav/retours.txt, ecommerce/paiement.txt (x2)
+
+[3] Client : et quel est le délai ?
+    Bot    : Le délai de livraison standard est :
+             - Grand Tunis : entre 2 et 4 jours ouvrés.
+             - Reste de la Tunisie : entre 3 et 6 jours ouvrés.
+             Les livraisons sont effectuées du lundi au vendredi ; une
+             commande passée le week-end sera traitée dès le lundi ouvré
+             suivant.
+    intent: general · confiance: 0.60 · 1874 ms
+    sources : sav/livraison.txt (x3), sav/retours.txt
+    → mémoire conversationnelle : la question seule ne mentionne pas la
+      livraison.
+
+[4] Client : merci
+    Bot    : Avec plaisir ! N'hésitez pas si vous avez une autre question.
+    intent: thanks · confiance: 0.95 · 22 ms · pas d'escalade
+
+[5] Client : ما هي مدة الضمان على أجهزة القياس؟
+             (« Quelle est la durée de garantie sur les instruments de
+             mesure ? »)
+    Bot    : مدة الضمان على أجهزة القياس (مثل الملتيمترات وأجهزة الأوسيلوسكوب)
+             هي 12 شهرًا ضد أي عيب في الصنع.
+             (« La garantie sur les instruments de mesure (multimètres,
+             oscilloscopes) est de 12 mois contre tout défaut de
+             fabrication. »)
+    intent: general · confiance: 0.82 · 1667 ms
+    sources : sav/garantie.txt (x4)
+
+[6] Client : Je veux parler à un agent humain
+    Bot    : Je vous mets en relation avec un conseiller humain. Quelqu'un va
+             prendre le relais très rapidement.
+    intent: human_agent · confiance: 0.97 · 13 ms
+    ESCALADE : explicit
+
+[7] Client : Quelle est la recette du couscous tunisien ?
+    Bot    : Je suis désolé, mais je ne peux répondre qu'aux questions
+             relatives à Liss Strike (produits électroniques, commandes,
+             livraisons, garantie, paiement, etc.). Pour toute autre
+             demande, je vous invite à consulter une source appropriée.
+    intent: general · confiance: 0.43 · 1194 ms · pas d'escalade
+    → garde-fou du prompt système.
+
+[8] Client : Combien de lunes a la planète Jupiter ?
+    Bot    : Je ne dispose pas d'informations suffisamment fiables sur ce
+             sujet précis. Je préfère vous mettre en relation avec un
+             conseiller humain plutôt que de vous donner une réponse
+             imprécise.
+    intent: low_rag_confidence · confiance: 0.27 (seuil : 0.35) · 1021 ms
+    ESCALADE : low_rag_confidence (sans appel au LLM)
+
+-------------------------------------------------------------------------------
+Vérification complémentaire : avant le correctif d05b4ff, sans l'étape 4
+(« merci »), l'étape 5 déclenchait une escalade « repeated_rag_failure »
+(3e question RAG d'affilée). Depuis ce correctif : 4 questions RAG de
+suite sans transfert, et le scénario ci-dessus est inchangé (rejoué).
+-------------------------------------------------------------------------------
