@@ -127,3 +127,58 @@ class ConversationRepository:
             conv.ended_at = datetime.now(timezone.utc)
             await self.db.flush()
         return conv
+
+    async def list_escalated(self) -> List[dict]:
+        """
+        Conversations en attente d'un conseiller (statut "escalated"), la
+        plus récente escalade en premier. Pour chacune : le client, le
+        canal, la raison et l'heure de la DERNIÈRE escalade (métadonnées
+        du message de transfert, voir dialogue_manager._persist_exchange)
+        et la question du client qui l'a déclenchée.
+        """
+        from app.models.user import User
+
+        rows = await self.db.execute(
+            select(Conversation, User)
+            .join(User, User.id == Conversation.user_id)
+            .where(Conversation.status == "escalated")
+        )
+        escalations = []
+        for conv, user in rows.all():
+            messages = await self.get_messages(conv.id, limit=50)
+            transfer_index = next(
+                (i for i in range(len(messages) - 1, -1, -1)
+                 if messages[i].role == "assistant" and (messages[i].metadata_ or {}).get("escalated")),
+                None,
+            )
+            if transfer_index is None:
+                continue  # statut incohérent (aucun message de transfert) : rien à afficher
+            transfer = messages[transfer_index]
+            question = next(
+                (m.content for m in reversed(messages[:transfer_index]) if m.role == "user"), ""
+            )
+            escalations.append({
+                "conversation_id": conv.id,
+                "customer_id": user.external_id,
+                "channel": conv.channel,
+                "last_question": question,
+                "reason": (transfer.metadata_ or {}).get("escalation_reason"),
+                "escalated_at": transfer.created_at,
+            })
+        escalations.sort(key=lambda e: e["escalated_at"], reverse=True)
+        return escalations
+
+    async def resolve(self, conv_id: uuid.UUID, resolved_at: datetime) -> Optional[Conversation]:
+        """
+        Un conseiller a pris en charge l'escalade : statut "resolved" et
+        heure de résolution dans le contexte JSON (pas de migration
+        nécessaire). Si le client déclenche plus tard une nouvelle
+        escalade dans la même conversation, elle repasse à "escalated".
+        """
+        conv = await self.get_by_id(conv_id)
+        if conv:
+            conv.status = "resolved"
+            # Nouveau dict : SQLAlchemy ne détecte pas une modification en place du JSONB
+            conv.context = {**(conv.context or {}), "resolved_at": resolved_at.isoformat()}
+            await self.db.flush()
+        return conv

@@ -66,12 +66,14 @@ from app.api.routes import chat
 from app.api.routes import whatsapp
 from app.api.routes import messenger
 from app.api.routes import websocket
+from app.api.routes import admin
 
 app.include_router(users.router)
 app.include_router(chat.router)
 app.include_router(whatsapp.router)
 app.include_router(messenger.router)
 app.include_router(websocket.router)
+app.include_router(admin.router)
 
 
 @app.get("/", tags=["System"])
