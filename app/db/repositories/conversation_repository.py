@@ -53,11 +53,16 @@ class ConversationRepository:
         role: str,
         content: str,
         metadata: dict = {},
-        processing_time_ms: int = None
+        processing_time_ms: int = None,
+        created_at: Optional[datetime] = None
     ) -> Message:
         """
         Ajouter un message à une conversation.
         role = "user" ou "assistant"
+        created_at : horodatage du message. À fournir quand plusieurs
+        messages sont écrits dans la même transaction : sinon ils
+        reçoivent tous le même now() PostgreSQL (heure de DÉBUT de la
+        transaction) et leur ordre par created_at devient arbitraire.
         """
         message = Message(
             conversation_id=conversation_id,
@@ -66,6 +71,8 @@ class ConversationRepository:
             metadata_=metadata,
             processing_time_ms=processing_time_ms
         )
+        if created_at is not None:
+            message.created_at = created_at
         self.db.add(message)
         await self.db.flush()
         await self.db.refresh(message)

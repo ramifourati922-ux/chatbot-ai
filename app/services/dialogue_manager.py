@@ -237,7 +237,8 @@ def _alive_in_this_loop(task: asyncio.Task) -> bool:
 
 
 async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, channel: str,
-                            user_message: str, result: DialogueResult):
+                            user_message: str, result: DialogueResult,
+                            received_at: datetime, answered_at: datetime):
     if previous is not None and _alive_in_this_loop(previous):
         await asyncio.wait([previous])
     t0 = time.perf_counter()
@@ -258,7 +259,9 @@ async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, c
             if conv is None:
                 conv = await conversations.create(user.id, channel)
 
-            await conversations.add_message(conv.id, "user", user_message, {"language": result.language})
+            await conversations.add_message(
+                conv.id, "user", user_message, {"language": result.language}, created_at=received_at,
+            )
             await conversations.add_message(
                 conv.id, "assistant", result.response,
                 {
@@ -269,6 +272,7 @@ async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, c
                     "escalation_reason": result.escalation_reason,
                 },
                 processing_time_ms=result.processing_time_ms,
+                created_at=answered_at,
             )
             if result.escalated:
                 conv.status = "escalated"
@@ -278,9 +282,11 @@ async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, c
         logger.warning(f"⚠️ Persistance PostgreSQL échouée (réponse déjà envoyée) | session={session_id} : {e}")
 
 
-def _schedule_persist(session_id: str, channel: str, user_message: str, result: DialogueResult):
+def _schedule_persist(session_id: str, channel: str, user_message: str, result: DialogueResult,
+                      received_at: datetime, answered_at: datetime):
     task = asyncio.create_task(_persist_exchange(
         _last_persist_task.get(session_id), session_id, channel, user_message, result,
+        received_at, answered_at,
     ))
     _last_persist_task[session_id] = task
     _pending_persist_tasks.add(task)  # référence forte : évite qu'une tâche soit ramassée en cours
@@ -307,8 +313,15 @@ async def handle_message(message: str, session_id: Optional[str] = None, channel
     que soit l'issue : réponse RAG ou escalade).
     """
     session_id = session_id or str(uuid.uuid4())
+    # Horodatages de l'échange, pris ici plutôt qu'en base : les deux
+    # messages sont écrits dans la même transaction, où now() PostgreSQL
+    # renvoie la même valeur (heure de début de la transaction).
+    # Réponse au moins 1 µs après la réception : ordre strict garanti même
+    # si l'horloge renvoie deux fois la même valeur.
+    received_at = datetime.now(timezone.utc)
     result = await _handle_message(message, session_id, channel)
-    _schedule_persist(session_id, channel, message, result)
+    answered_at = max(datetime.now(timezone.utc), received_at + timedelta(microseconds=1))
+    _schedule_persist(session_id, channel, message, result, received_at, answered_at)
     return result
 
 

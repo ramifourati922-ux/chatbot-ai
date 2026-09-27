@@ -94,6 +94,28 @@ async def test_full_exchange_is_persisted(db_session_id):
 
 
 @pytest.mark.asyncio
+async def test_messages_have_distinct_increasing_timestamps(db_session_id):
+    """Régression (test manuel) : le message du client et la réponse
+    partageaient le même created_at, now() PostgreSQL de la transaction ;
+    l'ordre par created_at était donc arbitraire ("assistant → user").
+    Deux échanges sans appel LLM (politesse, puis escalade)."""
+    await handle_message("bonjour", session_id=db_session_id, channel="web")
+    await handle_message("Je veux parler à un agent humain", session_id=db_session_id, channel="web")
+    await wait_for_pending_persistence()
+
+    _, convs = await _conversations_of(db_session_id)
+    messages = await _messages_of(convs[0].id)  # triés par created_at
+    timestamps = [m.created_at for m in messages]
+
+    assert len(set(timestamps)) == 4  # tous différents
+    assert timestamps == sorted(timestamps) and all(a < b for a, b in zip(timestamps, timestamps[1:]))
+    assert [(m.role, m.content) for m in messages][::2] == [
+        ("user", "bonjour"), ("user", "Je veux parler à un agent humain"),
+    ]
+    assert [m.role for m in messages] == ["user", "assistant", "user", "assistant"]
+
+
+@pytest.mark.asyncio
 async def test_escalation_is_persisted_with_escalated_status(db_session_id):
     result = await handle_message("Je veux parler à un agent humain", session_id=db_session_id, channel="web")
     assert result.escalated
