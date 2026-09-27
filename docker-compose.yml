@@ -16,7 +16,13 @@ services:
     restart: unless-stopped
 
   chromadb:
-    image: chromadb/chroma:latest
+    # Version épinglée (serveur ChromaDB 1.4.1) : ":latest" a déjà changé
+    # le dossier de stockage (/chroma/chroma -> /data) sans prévenir, d'où
+    # des données hors du volume (anomalie n°6). Épinglé par digest = l'image
+    # exacte qui a servi à indexer la base ; le tag 1.4.1 publié aujourd'hui
+    # sur Docker Hub est une autre build. Le client Python (chromadb 1.5.9
+    # dans requirements.txt) est compatible avec ce serveur.
+    image: chromadb/chroma:1.4.1@sha256:a99b0c00d31610aac77e5e4536d7182d6981c51b1e93acf8d3b6fa7e5eb02d9a
     container_name: chatbot_chroma
     ports:
       - "8001:8000"
