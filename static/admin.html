@@ -66,6 +66,8 @@
     background: var(--panel); border: 1px solid var(--border); color: var(--primary);
     border-radius: var(--radius-sm); padding: 7px 14px; font: inherit; font-weight: 600; cursor: pointer;
   }
+  .toolbar-actions { display: flex; gap: 8px; }
+  .toolbar button:disabled { color: var(--text-muted); cursor: default; }
   .card {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -116,7 +118,10 @@
 <main>
   <div class="toolbar">
     <span id="last-refresh">Chargement…</span>
-    <button id="refresh" type="button">Actualiser</button>
+    <div class="toolbar-actions">
+      <button id="notify" type="button" hidden>Activer les notifications</button>
+      <button id="refresh" type="button">Actualiser</button>
+    </div>
   </div>
   <div class="card" id="card"></div>
   <p class="note">Liste actualisée automatiquement toutes les 10 secondes. Page interne protégée par identifiant et mot de passe (HTTP Basic).</p>
@@ -233,7 +238,9 @@
         return;
       }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      render(await response.json());
+      const escalations = await response.json();
+      render(escalations);
+      notifyNewEscalations(escalations);
       lastRefresh.textContent = `Mis à jour à ${new Date().toLocaleTimeString("fr-FR")}`;
     } catch (err) {
       counter.textContent = "—";
@@ -254,6 +261,69 @@
       return;
     }
     await load();
+  }
+
+  // ── Notifications navigateur ─────────────────────────────────────
+  // Signale une NOUVELLE escalade même si l'onglet n'est pas au premier
+  // plan. Tout est optionnel : sans l'API Notification ou sans
+  // permission, la page fonctionne exactement comme avant.
+  const notifyButton = document.getElementById("notify");
+  const notificationsSupported = "Notification" in window;
+  // Identifiants de conversation du cycle précédent. null = premier
+  // chargement : on mémorise seulement, sans notifier les escalades déjà
+  // en attente (sinon elles déclencheraient toutes une notification).
+  let knownIds = null;
+
+  function updateNotifyButton() {
+    if (!notificationsSupported) return;  // bouton laissé caché
+    notifyButton.hidden = false;
+    const permission = Notification.permission;
+    notifyButton.disabled = permission !== "default";
+    notifyButton.textContent = permission === "granted" ? "Notifications activées"
+      : permission === "denied" ? "Notifications bloquées" : "Activer les notifications";
+    notifyButton.title = permission === "denied"
+      ? "Autorisez les notifications pour ce site dans les paramètres du navigateur." : "";
+  }
+
+  async function requestNotifications() {
+    // La permission ne peut être demandée qu'après un geste de
+    // l'utilisateur (clic), jamais automatiquement au chargement.
+    try {
+      await Notification.requestPermission();
+    } catch (err) {
+      // navigateur ancien ou refus : la page reste fonctionnelle
+    }
+    updateNotifyButton();
+  }
+
+  function notifyNewEscalations(escalations) {
+    const ids = new Set(escalations.map((e) => e.conversation_id));
+    const previous = knownIds;
+    knownIds = ids;
+    if (previous === null || !notificationsSupported || Notification.permission !== "granted") return;
+    for (const e of escalations) {
+      if (previous.has(e.conversation_id)) continue;
+      try {
+        // Texte brut (pas de HTML dans une notification) ; tag = conversation :
+        // le navigateur ne l'affiche qu'une fois même en cas de doublon.
+        const notification = new Notification("Nouvelle conversation transférée", {
+          body: `${CHANNELS[e.channel] || e.channel} · ${REASONS[e.reason] || e.reason || ""}\n`
+            + `« ${e.last_question || "—"} »\nClient : ${e.customer_id || "—"}`,
+          tag: e.conversation_id,
+        });
+        notification.onclick = () => {
+          window.focus();
+          notification.close();
+        };
+      } catch (err) {
+        // échec d'affichage (système, mode focus...) : sans conséquence pour la page
+      }
+    }
+  }
+
+  if (notificationsSupported) {
+    notifyButton.addEventListener("click", requestNotifications);
+    updateNotifyButton();
   }
 
   document.getElementById("refresh").addEventListener("click", load);

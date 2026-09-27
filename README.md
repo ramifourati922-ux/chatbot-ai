@@ -97,7 +97,7 @@ app/
 data/knowledge_base/      # politiques SAV + catalogue produits (source du RAG)
 scripts/                  # ingestion de la knowledge base, génération de données
 static/chat.html          # interface de démo
-tests/                    # suite pytest (204 tests)
+tests/                    # suite pytest (224 tests)
 docs/                     # guides (ngrok/webhooks) + captures d'écran
 ```
 
@@ -180,7 +180,7 @@ intactes, quelle que soit l'option utilisée pour arrêter — **tant que
 pytest tests/ -v
 ```
 
-204 tests couvrant la détection de langue, la classification
+224 tests couvrant la détection de langue, la classification
 d'intent (escalade, politesse + non-régression sur faux positifs), le
 pipeline RAG (recherche hybride, reranking), l'orchestrateur complet
 (les 4 types d'escalade, mémoire conversationnelle, compteur
@@ -196,7 +196,7 @@ la structure de la base de connaissances.
 
 ## Limites connues
 
-Ce projet est un prototype fonctionnel et testé (204 tests
+Ce projet est un prototype fonctionnel et testé (224 tests
 automatisés + tests manuels de bout en bout, y compris navigateur
 réel et webhooks simulés au format exact Meta), mais il n'est **pas
 prêt pour un vrai lancement en production** en l'état :

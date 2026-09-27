@@ -11,6 +11,13 @@ Prévoir 15 minutes avant l'entrée du jury.
 -------------------------------------------------------------------------------
 LA VEILLE (une seule fois)
 -------------------------------------------------------------------------------
+[ ] Vérifier que ADMIN_USERNAME et ADMIN_PASSWORD sont bien définis dans
+    .env (voir .env.example) : SANS ADMIN_PASSWORD, L'API REFUSE DE
+    DÉMARRER (« ADMIN_PASSWORD manquant … Application startup failed »).
+        Select-String -Path .env -Pattern "^ADMIN_(USERNAME|PASSWORD)="
+    → doit afficher les deux lignes, avec un mot de passe non vide.
+    Les noter : ce sont les identifiants demandés par le navigateur sur
+    http://127.0.0.1:8000/admin (tableau de bord des conseillers).
 [ ] Faire une répétition complète du scénario (SCENARIO_DEMO_JURY.txt)
     et l'ENREGISTRER EN VIDÉO : c'est le plan de secours n°1.
     Windows : Win + Alt + R (Xbox Game Bar) démarre/arrête
