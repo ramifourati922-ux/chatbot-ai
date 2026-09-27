@@ -16,6 +16,7 @@ import pytest
 import pytest_asyncio
 from sqlalchemy import delete, select, text
 
+from app.config import settings
 from app.db import database
 from app.main import app
 from app.models import Conversation, User
@@ -46,8 +47,15 @@ async def prefix():
 
 
 @pytest_asyncio.fixture
-async def client():
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
+async def client(monkeypatch):
+    """Client authentifié (routes /admin protégées par HTTP Basic, voir
+    tests/test_admin_auth.py pour les refus)."""
+    monkeypatch.setattr(settings, "ADMIN_USERNAME", "conseiller-test")
+    monkeypatch.setattr(settings, "ADMIN_PASSWORD", "mot-de-passe-test")
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app), base_url="http://test",
+        auth=("conseiller-test", "mot-de-passe-test"),
+    ) as c:
         yield c
 
 

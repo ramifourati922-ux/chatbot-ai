@@ -131,6 +131,14 @@ class Settings(BaseSettings):
     MESSENGER_VERIFY_TOKEN: Optional[str] = None
     MESSENGER_APP_SECRET: Optional[str] = None
 
+    # Tableau de bord des conseillers (/admin), protégé par HTTP Basic.
+    # Pas de valeur par défaut pour le mot de passe : l'API refuse de
+    # démarrer s'il est absent (voir main.lifespan). Il n'est pas exigé
+    # ici, sinon les scripts (ingestion, évaluation) et les tests qui
+    # importent la configuration échoueraient aussi.
+    ADMIN_USERNAME: str = "admin"
+    ADMIN_PASSWORD: Optional[str] = None
+
     class Config:
         env_file = ".env"
 

@@ -113,6 +113,7 @@ pip install -r requirements.txt
 
 # 2. Variables d'environnement
 # Copier .env.example vers .env et renseigner au minimum GROQ_API_KEY
+# et ADMIN_PASSWORD (sans lui, l'API refuse de démarrer, voir plus bas)
 
 # 3. Services (Redis, PostgreSQL, ChromaDB, Adminer)
 docker compose up -d
@@ -126,7 +127,32 @@ uvicorn app.main:app --reload
 
 - API + docs Swagger : http://localhost:8000/docs
 - Interface de démo : http://localhost:8000/chat-demo
+- Tableau de bord des conseillers (conversations transférées) : http://localhost:8000/admin
 - Admin base de données : http://localhost:8080 (Adminer)
+
+### Accès au tableau de bord des conseillers (`/admin`)
+
+Les routes `/admin`, `/admin/escalations` et
+`/admin/escalations/{id}/resolve` sont protégées par **HTTP Basic** : elles
+exposent les identifiants (numéros WhatsApp…) et les questions des clients.
+Définir dans `.env` :
+
+```env
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=un-vrai-mot-de-passe
+```
+
+- `ADMIN_PASSWORD` est **obligatoire** : s'il est absent ou vide, l'API
+  refuse de démarrer avec un message explicite (plutôt que d'exposer ces
+  données). `ADMIN_USERNAME` vaut `admin` par défaut.
+- En ouvrant http://localhost:8000/admin, le navigateur affiche sa propre
+  invite de connexion.
+
+⚠️ **Ce n'est qu'une première barrière** : un seul compte partagé entre
+tous les conseillers, pas de vrais comptes ni de rôles, pas de journal de
+qui a traité quoi. Et HTTP Basic transmet les identifiants simplement
+encodés (base64), pas chiffrés : **HTTPS indispensable** en dehors d'une
+machine locale.
 
 ### ⚠️ Ne jamais utiliser `docker compose down -v`
 

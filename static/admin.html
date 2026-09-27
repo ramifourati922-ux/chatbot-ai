@@ -119,7 +119,7 @@
     <button id="refresh" type="button">Actualiser</button>
   </div>
   <div class="card" id="card"></div>
-  <p class="note">Liste actualisée automatiquement toutes les 10 secondes. Page interne, sans authentification pour l'instant (démo).</p>
+  <p class="note">Liste actualisée automatiquement toutes les 10 secondes. Page interne protégée par identifiant et mot de passe (HTTP Basic).</p>
 </main>
 
 <script>
@@ -224,7 +224,14 @@
 
   async function load() {
     try {
+      // Le navigateur renvoie les identifiants saisis à l'invite de
+      // connexion (HTTP Basic) ; 401 = ils ne sont plus valides.
       const response = await fetch("/admin/escalations");
+      if (response.status === 401) {
+        counter.textContent = "—";
+        message("error", "", "Identifiants refusés : rechargez la page pour vous reconnecter.");
+        return;
+      }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       render(await response.json());
       lastRefresh.textContent = `Mis à jour à ${new Date().toLocaleTimeString("fr-FR")}`;

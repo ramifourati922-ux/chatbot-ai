@@ -35,6 +35,14 @@ def _preload_rag():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Bloquant : sans mot de passe, /admin (données des clients) ne peut
+    # pas être protégé, on refuse de démarrer plutôt que de l'exposer.
+    if not settings.ADMIN_PASSWORD:
+        raise RuntimeError(
+            "ADMIN_PASSWORD manquant : définissez ADMIN_USERNAME et ADMIN_PASSWORD "
+            "dans le fichier .env (voir .env.example) pour protéger le tableau de "
+            "bord des conseillers (/admin)."
+        )
     # Non bloquant en cas d'échec (ex: ChromaDB pas encore démarré) :
     # l'API démarre quand même, les composants se chargeront au premier appel.
     try:
