@@ -165,6 +165,8 @@ la structure de la base de connaissances.
 
 - [`docs/webhooks_ngrok_setup.md`](docs/webhooks_ngrok_setup.md) — exposer le serveur local en HTTPS et configurer les webhooks WhatsApp/Messenger dans l'interface Meta Developer.
 - [`docs/screenshots/`](docs/screenshots/) — captures d'écran de l'interface de démo.
+  - [`admin_1_liste.png`](docs/screenshots/admin_1_liste.png) — tableau de bord des conseillers (`/admin`) : 4 conversations transférées, avec la raison, la question du client et le temps d'attente (la 1re ligne montre une tentative d'injection HTML affichée comme du texte).
+  - [`admin_2_apres_resolution.png`](docs/screenshots/admin_2_apres_resolution.png) — après un clic sur « Marquer traitée » : la conversation « Client mécontent » disparaît de la liste (4 → 3 en attente).
 
 ## Limites connues
 
