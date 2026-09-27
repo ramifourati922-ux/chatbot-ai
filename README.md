@@ -97,7 +97,7 @@ app/
 data/knowledge_base/      # politiques SAV + catalogue produits (source du RAG)
 scripts/                  # ingestion de la knowledge base, génération de données
 static/chat.html          # interface de démo
-tests/                    # suite pytest (109 tests)
+tests/                    # suite pytest (204 tests)
 docs/                     # guides (ngrok/webhooks) + captures d'écran
 ```
 
@@ -154,10 +154,12 @@ intactes, quelle que soit l'option utilisée pour arrêter — **tant que
 pytest tests/ -v
 ```
 
-109 tests couvrant la détection de langue, la classification
-d'intent (escalade + non-régression sur faux positifs), le pipeline
-RAG, l'orchestrateur complet (les 4 types d'escalade, appels réels
-Groq/ChromaDB) et la structure de la base de connaissances.
+204 tests couvrant la détection de langue, la classification
+d'intent (escalade, politesse + non-régression sur faux positifs), le
+pipeline RAG (recherche hybride, reranking), l'orchestrateur complet
+(les 4 types d'escalade, mémoire conversationnelle, compteur
+anti-boucle, appels réels Groq/ChromaDB), la persistance PostgreSQL et
+la structure de la base de connaissances.
 
 ## Documentation complémentaire
 
@@ -166,7 +168,7 @@ Groq/ChromaDB) et la structure de la base de connaissances.
 
 ## Limites connues
 
-Ce projet est un prototype fonctionnel et testé (109 tests
+Ce projet est un prototype fonctionnel et testé (204 tests
 automatisés + tests manuels de bout en bout, y compris navigateur
 réel et webhooks simulés au format exact Meta), mais il n'est **pas
 prêt pour un vrai lancement en production** en l'état :
@@ -181,12 +183,23 @@ prêt pour un vrai lancement en production** en l'état :
   réelles (quota, fenêtre de 24h WhatsApp, etc.).
 - **Aucune authentification ni rate-limiting** sur les endpoints
   publics (`/chat/`, `/ws/{client_id}`).
-- **`user_repository.py` / PostgreSQL** existent dans le code mais ne
-  sont pas branchés au flux de conversation réel (l'état vit
-  uniquement dans Redis).
-- Le compteur anti-boucle (3 échecs RAG consécutifs) compte des
-  *tentatives*, pas la *qualité* des réponses — une 3e question tout
-  à fait légitime peut donc déclencher une escalade automatique.
+- Le compteur anti-boucle ne compte plus que les échecs réels (les
+  réponses où le bot dit ne pas avoir l'information), mais il les
+  **reconnaît par mots-clés** : une formulation inédite du LLM n'est
+  pas comptée (le client peut toujours demander un humain).
+- **Recherche cross-lingue anglais → français imparfaite** : la base
+  est rédigée en français, et certaines questions en anglais ne
+  retrouvent pas la bonne politique (ex. « What is the warranty on
+  programmable boards? » ne trouve pas la garantie ; « What is the
+  warranty on a multimeter? » la trouve).
+- **Tunisien en arabizi** : le contenu de la réponse est correct, mais
+  le bot répond souvent en arabe littéraire au lieu de l'écriture
+  latine (arabizi) utilisée par le client.
+- **« 3D » pris pour de l'arabizi** : un chiffre collé à des lettres
+  est un marqueur d'arabizi (« 3andi », « n7eb ») ; « imprimante 3D »
+  dans une question en français fait donc répondre le bot en tunisien
+  (même famille que les unités techniques « 12V », « 5A », déjà
+  gérées).
 - **Le seuil de confiance RAG chevauche largement le garde-fou
   hors-sujet du prompt système**, découvert lors des tests
   d'intégration : l'intention initiale était de rattraper les
