@@ -30,7 +30,9 @@ Pour chaque message reçu :
    messages de la session (mémoire conversationnelle). Une question de
    suivi ("et la garantie ?") est aussi rattachée à la question
    précédente du client pour la recherche RAG (_build_retrieval_query).
-7. Persistance de l'échange dans la session Redis (session_manager).
+7. Persistance de l'échange dans la session Redis (session_manager),
+   puis dans PostgreSQL (conversation + messages) par une tâche de fond
+   qui ne retarde pas la réponse (voir _persist_exchange).
 
 Les appels bloquants (embeddings, requête ChromaDB, appel Groq) sont
 exécutés dans un thread (asyncio.to_thread) pour ne pas bloquer la
@@ -43,9 +45,13 @@ import re
 import time
 import uuid
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from app.config import settings
+from app.db.database import AsyncSessionLocal
+from app.db.repositories.conversation_repository import ConversationRepository
+from app.db.repositories.user_repository import UserRepository
 from app.services.language_detector import detect_language
 from app.services.intent_classifier import IntentClassifier
 from app.services.session_manager import SessionManager
@@ -175,9 +181,106 @@ class DialogueResult:
     escalation_reason: Optional[str] = None
 
 
+# ── Persistance PostgreSQL ─────────────────────────────────────────────
+# Redis garde la session vivante (1 h) ; PostgreSQL garde la trace de
+# toutes les conversations (suivi SAV, statistiques). L'écriture se fait
+# dans une tâche de fond, APRÈS le calcul de la réponse : elle n'ajoute
+# aucune latence au client, et une panne de PostgreSQL n'empêche pas le
+# chatbot de répondre (erreur journalisée seulement).
+#
+# Dernière tâche d'écriture par session : chaque échange attend la
+# précédente, pour que les messages d'une même conversation soient
+# écrits dans l'ordre et que la conversation ne soit créée qu'une fois.
+_last_persist_task: dict = {}
+_pending_persist_tasks: set = set()
+
+
+def _alive_in_this_loop(task: asyncio.Task) -> bool:
+    """Tâche encore en cours ET liée à la boucle courante. Une tâche d'une
+    autre boucle (déjà fermée) ne se terminera jamais : l'attendre
+    bloquerait indéfiniment. N'arrive pas en production (une seule
+    boucle), mais sous pytest-asyncio chaque test a sa propre boucle."""
+    return not task.done() and task.get_loop() is asyncio.get_running_loop()
+
+
+async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, channel: str,
+                            user_message: str, result: DialogueResult):
+    if previous is not None and _alive_in_this_loop(previous):
+        await asyncio.wait([previous])
+    t0 = time.perf_counter()
+    try:
+        async with AsyncSessionLocal() as db:
+            conversations = ConversationRepository(db)
+            # external_id = identifiant de session du canal : numéro
+            # WhatsApp, PSID Messenger, client_id WebSocket...
+            user, _ = await UserRepository(db).get_or_create(session_id, channel)
+            # Conversation en cours = dernière conversation active depuis
+            # moins que la durée d'une session Redis ; sinon, nouvelle
+            # conversation. Retrouvée en base plutôt que stockée dans la
+            # session Redis : session_manager réécrit la session entière à
+            # chaque message, une écriture depuis cette tâche de fond
+            # pourrait écraser (ou être écrasée par) celle du message suivant.
+            active_since = datetime.now(timezone.utc) - timedelta(seconds=_session_manager.SESSION_TTL)
+            conv = await conversations.get_recent_for_user(user.id, active_since)
+            if conv is None:
+                conv = await conversations.create(user.id, channel)
+
+            await conversations.add_message(conv.id, "user", user_message, {"language": result.language})
+            await conversations.add_message(
+                conv.id, "assistant", result.response,
+                {
+                    "intent": result.intent,
+                    "confidence": result.confidence,
+                    "sources": [s for s in result.sources if s],
+                    "escalated": result.escalated,
+                    "escalation_reason": result.escalation_reason,
+                },
+                processing_time_ms=result.processing_time_ms,
+            )
+            if result.escalated:
+                conv.status = "escalated"
+            await db.commit()
+        logger.debug(f"🗄️ Échange persisté en {(time.perf_counter() - t0) * 1000:.0f}ms | session={session_id}")
+    except Exception as e:
+        logger.warning(f"⚠️ Persistance PostgreSQL échouée (réponse déjà envoyée) | session={session_id} : {e}")
+
+
+def _schedule_persist(session_id: str, channel: str, user_message: str, result: DialogueResult):
+    task = asyncio.create_task(_persist_exchange(
+        _last_persist_task.get(session_id), session_id, channel, user_message, result,
+    ))
+    _last_persist_task[session_id] = task
+    _pending_persist_tasks.add(task)  # référence forte : évite qu'une tâche soit ramassée en cours
+
+    def _done(t: asyncio.Task):
+        _pending_persist_tasks.discard(t)
+        if _last_persist_task.get(session_id) is t:
+            del _last_persist_task[session_id]
+    task.add_done_callback(_done)
+
+
+async def wait_for_pending_persistence():
+    """Attend la fin des écritures PostgreSQL en cours (tests, arrêt propre)."""
+    pending = [t for t in _pending_persist_tasks if _alive_in_this_loop(t)]
+    _pending_persist_tasks.difference_update(t for t in list(_pending_persist_tasks) if t not in pending)
+    if pending:
+        await asyncio.wait(pending)
+
+
 async def handle_message(message: str, session_id: Optional[str] = None, channel: str = "web") -> DialogueResult:
-    start = time.time()
+    """
+    Point d'entrée de tous les canaux : calcule la réponse, puis programme
+    l'enregistrement de l'échange dans PostgreSQL (tâche de fond, quelle
+    que soit l'issue : réponse RAG ou escalade).
+    """
     session_id = session_id or str(uuid.uuid4())
+    result = await _handle_message(message, session_id, channel)
+    _schedule_persist(session_id, channel, message, result)
+    return result
+
+
+async def _handle_message(message: str, session_id: str, channel: str) -> DialogueResult:
+    start = time.time()
 
     # 1. Langue — détection rapide, pas de blocage nécessaire (pas d'I/O)
     language = detect_language(message)

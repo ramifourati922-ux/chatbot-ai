@@ -1,7 +1,8 @@
 # app/db/repositories/conversation_repository.py
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from datetime import datetime
+from sqlalchemy import func, select
 from typing import Optional, List
 import uuid
 import logging
@@ -69,6 +70,31 @@ class ConversationRepository:
         await self.db.flush()
         await self.db.refresh(message)
         return message
+
+    async def get_recent_for_user(
+        self,
+        user_id: uuid.UUID,
+        active_since: datetime
+    ) -> Optional[Conversation]:
+        """
+        Dernière conversation de l'utilisateur, si elle a eu de l'activité
+        (dernier message, ou démarrage) depuis active_since ; sinon None.
+        Sert à rattacher un nouveau message à la conversation en cours.
+        """
+        last_activity = (
+            select(func.coalesce(func.max(Message.created_at), Conversation.started_at))
+            .where(Message.conversation_id == Conversation.id)
+            .correlate(Conversation)
+            .scalar_subquery()
+        )
+        result = await self.db.execute(
+            select(Conversation)
+            .where(Conversation.user_id == user_id, Conversation.status != "closed")
+            .where(last_activity >= active_since)
+            .order_by(Conversation.started_at.desc())
+            .limit(1)
+        )
+        return result.scalar_one_or_none()
 
     async def get_messages(
         self,
