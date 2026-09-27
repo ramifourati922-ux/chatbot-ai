@@ -26,7 +26,10 @@ Pour chaque message reçu :
    → escalade immédiate, PAS d'appel
    LLM : mieux vaut transférer que risquer une hallucination sur un
    sujet mal couvert par la base de connaissances.
-6. Sinon → appel au LLM (Groq) avec le contexte trouvé.
+6. Sinon → appel au LLM (Groq) avec le contexte trouvé ET les derniers
+   messages de la session (mémoire conversationnelle). Une question de
+   suivi ("et la garantie ?") est aussi rattachée à la question
+   précédente du client pour la recherche RAG (_build_retrieval_query).
 7. Persistance de l'échange dans la session Redis (session_manager).
 
 Les appels bloquants (embeddings, requête ChromaDB, appel Groq) sont
@@ -36,6 +39,7 @@ boucle d'événements FastAPI pendant qu'ils tournent.
 
 import asyncio
 import logging
+import re
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -95,6 +99,67 @@ def _get_escalation_message(reason: Optional[str], language: str) -> str:
     "explicit"/fr si la raison ou la langue est inconnue."""
     by_language = ESCALATION_MESSAGES.get(reason) or ESCALATION_MESSAGES["explicit"]
     return by_language.get(language, by_language["fr"])
+
+
+# ── Mémoire conversationnelle ──────────────────────────────────────────
+# Nombre de messages précédents (user + assistant) renvoyés au LLM :
+# 6 = les 3 derniers échanges, assez pour une question de suivi sans
+# alourdir chaque appel Groq (voir llm_factory.build_messages).
+HISTORY_MESSAGES_FOR_LLM = 6
+
+# Détection d'une question de suivi, par règles volontairement étroites.
+# Choix documenté : pas de reformulation par LLM (un appel Groq de plus
+# par message, latence et quota) ; une règle simple suffit pour les
+# suivis typiques d'un SAV. Et la règle doit rester ÉTROITE : testé,
+# concaténer la question précédente à une question autonome ("frais de
+# livraison ?" après "avez-vous l'Arduino Uno ?") fait disparaître la
+# politique de livraison des résultats.
+# 1) Connecteur en tête de message : "et la garantie ?", "and the price?",
+#    "w el prix ?", "و الضمان" / "والضمان".
+_FOLLOW_UP_CONNECTORS = {"et", "ou", "sinon", "aussi", "and", "or", "also", "w", "wel", "و"}
+# 2) Pronom renvoyant à ce qui précède, dans une question courte
+#    ("il coûte combien ?", "is it in stock?"). Limité aux questions
+#    courtes : "est-ce qu'il y a une livraison express ?" est autonome.
+_FOLLOW_UP_PRONOUNS = {
+    "il", "elle", "ils", "elles", "ça", "ca", "celui", "celle", "ceux", "celles",
+    "it", "its", "they", "them", "this", "that",
+    "hedha", "hedhi", "hadha", "hadhi", "هذا", "هذه", "ذلك",
+}
+_FOLLOW_UP_MAX_WORDS = 6
+_WORD_RE = re.compile(r"\w+", re.UNICODE)
+
+
+def _is_follow_up(message: str) -> bool:
+    """Vrai si le message n'a pas de sens sans la question précédente."""
+    words = _WORD_RE.findall(message.lower())
+    if not words:
+        return False
+    first = words[0]
+    if first in _FOLLOW_UP_CONNECTORS or (first.startswith("وال") and len(first) > 3):
+        return True
+    return len(words) <= _FOLLOW_UP_MAX_WORDS and any(w in _FOLLOW_UP_PRONOUNS for w in words)
+
+
+def _build_retrieval_query(message: str, previous_messages: list) -> str:
+    """
+    Requête envoyée au RAG. Pour une question de suivi, on la fait
+    précéder de la dernière question AUTONOME du client (qui porte le
+    sujet), en remontant au-delà des suivis successifs ("et la
+    garantie ?" puis "et le prix ?" → toujours rattachés à "avez-vous
+    l'Arduino Uno ?").
+
+    Question précédente du CLIENT plutôt que dernière réponse du bot :
+    testé sur "et la garantie ?" après l'Arduino Uno, la question du
+    client retrouve la politique de garantie des cartes programmables
+    ET les produits Arduino, alors que la réponse du bot (prix,
+    variantes...) noie le sujet et fait perdre la politique de garantie.
+    """
+    if not _is_follow_up(message):
+        return message
+    for past in reversed(previous_messages):
+        if past.get("role") == "user" and not _is_follow_up(past.get("content", "")):
+            return f"{past['content']}\n{message}"
+    return message
 
 
 @dataclass
@@ -180,7 +245,15 @@ async def handle_message(message: str, session_id: Optional[str] = None, channel
     # Pas de filtre par catégorie : retriever.search() sans type_filter
     # interroge déjà policy + product séparément puis fusionne (voir
     # retriever.py), ce qui couvre tous les cas sans distinction d'intent.
-    hits = await asyncio.to_thread(retriever.search, message, 4)
+    # Mémoire : messages précédents de la session (le message courant,
+    # déjà ajouté à l'étape 3, est retiré). Une question de suivi est
+    # rattachée à la question précédente pour la recherche, et
+    # l'historique récent est transmis au LLM (étape 9).
+    previous_messages = (await _session_manager.get_history(session_id))[:-1]
+    rag_query = _build_retrieval_query(message, previous_messages)
+    if rag_query != message:
+        logger.info(f"🧠 Question de suivi, requête RAG enrichie : {rag_query!r}")
+    hits = await asyncio.to_thread(retriever.search, rag_query, 4)
     context = retriever.format_context(hits)
     sources = [hit["metadata"].get("source") or hit["metadata"].get("sku") for hit in hits]
 
@@ -234,7 +307,9 @@ async def handle_message(message: str, session_id: Optional[str] = None, channel
         )
 
     # 9. Appel LLM (bloquant → thread)
-    response_text = await asyncio.to_thread(ask, message, language, context)
+    response_text = await asyncio.to_thread(
+        ask, message, language, context, previous_messages[-HISTORY_MESSAGES_FOR_LLM:],
+    )
 
     # 10. Persistance session
     await _session_manager.add_message(

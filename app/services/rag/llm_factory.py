@@ -24,7 +24,7 @@ from functools import lru_cache
 from typing import Optional
 
 from langchain_groq import ChatGroq
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from groq import RateLimitError, APIStatusError
 
 from app.config import settings
@@ -103,26 +103,49 @@ def get_llm(model: Optional[str] = None) -> ChatGroq:
     return _get_client(model or settings.GROQ_MODEL)
 
 
-def build_messages(user_text: str, language: str, extra_context: str = "") -> list:
-    """Construit la liste de messages (system + user) pour l'appel LLM."""
+# Longueur max d'un message d'historique renvoyé au LLM : les réponses
+# du bot peuvent être longues (tableaux de variantes) ; le début suffit
+# pour savoir de quoi on parlait, sans gonfler chaque appel Groq.
+HISTORY_MESSAGE_MAX_CHARS = 500
+
+
+def build_messages(user_text: str, language: str, extra_context: str = "",
+                   history: Optional[list] = None) -> list:
+    """
+    Construit la liste de messages pour l'appel LLM : system, puis
+    l'historique récent de la conversation (mémoire), puis le message
+    courant.
+
+    history : messages précédents de la session, du plus ancien au plus
+    récent, au format session_manager ({"role": "user"|"assistant",
+    "content": ...}), SANS le message courant. Sans cet historique, une
+    question de suivi ("et la garantie ?") n'a aucun sens pour le LLM.
+    """
     lang_instruction = _LANGUAGE_INSTRUCTIONS.get(language, _LANGUAGE_INSTRUCTIONS["fr"])
     system_content = f"{BASE_SYSTEM_PROMPT}\n\n{lang_instruction}"
     if extra_context:
         system_content += f"\n\nContexte utile (base de connaissances) :\n{extra_context}"
 
-    return [
-        SystemMessage(content=system_content),
-        HumanMessage(content=user_text),
-    ]
+    messages = [SystemMessage(content=system_content)]
+    for past in history or []:
+        content = past.get("content", "")[:HISTORY_MESSAGE_MAX_CHARS]
+        if past.get("role") == "assistant":
+            messages.append(AIMessage(content=content))
+        elif past.get("role") == "user":
+            messages.append(HumanMessage(content=content))
+    messages.append(HumanMessage(content=user_text))
+    return messages
 
 
-def ask(user_text: str, language: str = "fr", extra_context: str = "") -> str:
+def ask(user_text: str, language: str = "fr", extra_context: str = "",
+        history: Optional[list] = None) -> str:
     """
     Envoie un message au LLM et retourne sa réponse texte.
     Bascule automatiquement sur le modèle de secours si le modèle
     principal est rate-limité ou indisponible.
+    history : voir build_messages.
     """
-    messages = build_messages(user_text, language, extra_context)
+    messages = build_messages(user_text, language, extra_context, history)
 
     try:
         llm = get_llm(settings.GROQ_MODEL)
