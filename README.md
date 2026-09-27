@@ -128,6 +128,26 @@ uvicorn app.main:app --reload
 - Interface de démo : http://localhost:8000/chat-demo
 - Admin base de données : http://localhost:8080 (Adminer)
 
+### ⚠️ Ne jamais utiliser `docker compose down -v`
+
+Le flag `-v` supprime les **volumes Docker nommés** — ça effacerait
+définitivement les ~11 000 documents indexés dans ChromaDB (obligeant
+à relancer `ingest_knowledge_base.py`, plusieurs minutes) ainsi que
+les données PostgreSQL.
+
+Pour arrêter les services sans rien perdre :
+
+```bash
+docker compose stop     # arrête les conteneurs, garde tout (recommandé)
+docker compose down     # arrête ET supprime les conteneurs, mais les
+                         # volumes nommés (chroma_data, postgres_data)
+                         # survivent — sans -v, c'est sans risque aussi
+```
+
+`docker compose up -d` redémarre ensuite normalement avec les données
+intactes, quelle que soit l'option utilisée pour arrêter — **tant que
+`-v` n'a jamais été ajouté**.
+
 ## Tests
 
 ```bash
