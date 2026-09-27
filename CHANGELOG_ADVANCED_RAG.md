@@ -10,7 +10,7 @@ confiance, puis évaluation RAGas avant/après.
 | 1 | Recherche hybride BM25 + dense + RRF | `app/services/rag/hybrid_retriever.py` | ✅ |
 | 2 | Reranking cross-encoder multilingue (mmarco-mMiniLMv2) | `app/services/rag/reranker.py` | ✅ |
 | 3 | Recalibrage `RAG_CONFIDENCE_THRESHOLD` | `app/config.py`, `scripts/calibrate_threshold.py` | ✅ |
-| 4 | Évaluation RAGas avant/après | `scripts/evaluate_ragas.py` | à faire |
+| 4 | Évaluation RAGas avant/après | `scripts/evaluate_ragas.py`, `docs/evaluation/` | ✅ |
 
 Le Basic RAG reste disponible (`RAG_RETRIEVAL_MODE=basic`) pour que
 l'évaluation compare les deux pipelines sur le même corpus et le même
@@ -247,6 +247,142 @@ LIMITE CONNUE dans `config.py`).
 | Signal | 1 - distance cosinus du hit n°1 (hits triés par distance) | 1 - **plus petite** distance cosinus des hits retenus (hits triés par RRF / reranker) |
 | Seuil | 0.35 | 0.35 (revérifié) |
 | Option | — | score reranker, seuil 0.045 (`RAG_CONFIDENCE_SIGNAL=reranker`) |
+
+---
+
+## Étape 4 — Évaluation RAGas : Basic RAG vs Advanced RAG
+
+Résultats complets : `docs/evaluation/ragas_results.md` (tableaux) et
+`ragas_results.json` (réponses, contextes et scores bruts, question par
+question). Script : `scripts/evaluate_ragas.py`.
+
+### Protocole d'évaluation
+
+- **Pipelines comparés** : Basic (dense seul, `RAG_RETRIEVAL_MODE=basic`)
+  et Advanced (hybride top-20 puis reranking top-4). Même corpus, même
+  golden set, même prompt de génération (`llm_factory.build_messages`),
+  même modèle générateur.
+- **Golden set** : 25 questions reprises des étapes 1-3 (continuité avec
+  ce qui est déjà documenté) — 11 fr (8 produits, 3 SAV), 4 en, 4 ar,
+  3 tn, 3 hors-sujet. Référence et sources attendues rédigées à partir
+  de la knowledge base (en français, langue du corpus).
+- **Métriques RAGas 0.4.3** (API `ragas.metrics.collections`) : Context
+  Precision, Context Recall, Faithfulness, Answer Relevancy
+  (`strictness=1`). Plus une métrique sans LLM : source attendue dans le
+  top-4 (hit@4). Les 3 hors-sujet ne sont pas notés par RAGas (pas de
+  référence) : on vérifie seulement le comportement (refus ou escalade).
+- **Modèles** : générateur `openai/gpt-oss-120b` (celui du chatbot) ;
+  juge `openai/gpt-oss-20b` (Groq) ; embeddings pour Answer Relevancy :
+  le modèle local du projet.
+  - **Juge ≠ générateur** : évite le biais d'auto-évaluation, et chaque
+    modèle a son propre quota Groq.
+  - La génération n'utilise pas `llm_factory.ask()` : en cas de 429,
+    elle basculerait silencieusement sur le modèle de secours, et une
+    partie des réponses viendrait d'un autre modèle.
+
+### Résultats globaux (22 questions notées)
+
+| Métrique | Basic RAG | Advanced RAG | Écart |
+|---|---|---|---|
+| Context Precision | 0.645 | **0.913** | **+0.268** |
+| Context Recall | 0.599 | **0.800** | **+0.202** |
+| Faithfulness | 0.532 | **0.689** | **+0.156** |
+| Answer Relevancy | 0.485 | **0.600** | **+0.115** |
+| Source attendue dans le top-4 | 77 % | **95 %** | +18 pts |
+| Latence de recherche (médiane) | 177 ms | 1 214 ms | +1,0 s |
+| Hors-sujet refusés (escalade ou garde-fou du prompt) | 3/3 | 3/3 | = |
+| Métriques en échec (parsing) | 1 / 88 | 0 / 88 | |
+
+### Par langue
+
+| Langue (n) | Basic — CP / CR / F / AR | Advanced — CP / CR / F / AR | Lecture |
+|---|---|---|---|
+| fr (11) | 0.74 / 0.73 / 0.55 / 0.57 | **1.00 / 0.95 / 0.80 / 0.66** | ✅ gain net sur les 4 métriques |
+| en (4) | 0.65 / 0.38 / 0.71 / 0.50 | **1.00 / 0.85 / 0.92 / 0.68** | ✅ gain net |
+| ar (4) | **0.86 / 0.92 / 0.72 / 0.59** | 0.81 / 0.55 / 0.53 / 0.58 | ❌ **régression** (recall, faithfulness) |
+| tn (3) | 0.00 / 0.00 / 0.00 / 0.00 | 0.61 / 0.50 / 0.17 / 0.30 | ✅ gain en recherche, génération faible |
+
+### Analyse
+
+- **D'où vient le gain.** 4 questions où Basic ne retrouve pas la bonne
+  source et Advanced si :
+  - « piles 18650 » : Basic remonte des chargeurs ;
+  - « NEMA17 » : Basic remonte des NEMA14 et d'autres moteurs ;
+  - « ESP32 wifi bluetooth » : Basic remonte la politique de paiement ;
+  - « warranty on a multimeter » : Basic remonte des fiches produits
+    au lieu de la politique de garantie.
+
+  Le LLM répond alors honnêtement « je ne trouve pas l'information »
+  et RAGas note 0 partout. Sur les autres questions fr/en, les deux
+  pipelines font jeu égal (CP/CR déjà à 1.0 en Basic).
+- **Régression en arabe**, cohérente avec l'étape 2 (constat
+  qualitatif, désormais chiffré). Sur « هل يمكنني إرجاع المنتج »
+  (retour) et « ما هي مدة الضمان » (garantie), le reranker mmarco écarte
+  les bons chunks : Context Recall 1.00 → 0.00 et 0.67 → 0.20. Limite
+  d'un cross-encoder de 118M paramètres en cross-lingue ar → fr ; c'est
+  le prix du choix « latence » de l'étape 2 (bge-reranker-v2-m3 écarté).
+- **Tunisien** : la recherche progresse (Basic ne trouve rien sur 3/3),
+  mais la génération reste faible. Sur « 9adeh el livraison l sfax »,
+  le contexte est bon (CP 0.83) mais le LLM répond qu'il n'a pas
+  d'information pour Sfax (le chunk dit « 12 DT hors Grand Tunis » sans
+  nommer Sfax) → Faithfulness et Answer Relevancy à 0.
+- **Seul échec de recherche d'Advanced** : « 3andi mochkla fil
+  livraison » (question vague, en arabizi) → produits sans rapport. Les
+  deux pipelines demandent des précisions au client, ce qui est
+  raisonnable ; la référence (« produit arrivé cassé ») était elle-même
+  une interprétation.
+- **Hors-sujet** : défense en profondeur confirmée dans les deux
+  pipelines. « Jupiter » escalade au seuil de confiance ; « couscous » et
+  « capitale de la France » sont refusés par le garde-fou du prompt
+  système.
+- **Coût** : +1 s de recherche par question (reranking sur CPU, cf.
+  étape 2).
+
+### Limites de l'évaluation (à citer dans le rapport)
+
+- **Petit échantillon** : 22 questions notées, dont seulement 3-4 en ar
+  et en tn. Les écarts par langue sont des tendances, pas des mesures
+  statistiquement solides.
+- **Golden set construit par l'auteur**, à partir de questions déjà
+  testées aux étapes 1-3 : risque de biais, même si ces questions ont
+  été choisies avant l'évaluation.
+- **Answer Relevancy bruitée** avec `strictness=1` (1 question générée
+  au lieu de 3, pour économiser le quota). Exemple : « analyseur logique »,
+  réponses quasi identiques notées 0.63 (Basic) et 0.17 (Advanced).
+- **Biais de RAGas** : une réponse honnête « je n'ai pas l'information »
+  obtient 0 en Answer Relevancy et en Faithfulness, alors que c'est le
+  bon comportement pour un chatbot SAV quand le contexte manque.
+- **Juge plus petit que le générateur** (20b vs 120b) : choix contraint
+  par les quotas. Un seul échec de parsing sur 176 notations (sortie
+  vide du juge), réessayé ensuite automatiquement.
+
+### Coût et déroulé
+
+- **Volume** : 802 requêtes au juge (dont 403 refusées en 429 et
+  réessayées), 679 k tokens ; génération : 62 requêtes, 59 k tokens.
+  71,6 min de calcul effectif.
+- **Quota** : offre gratuite Groq limitée à **200 000 tokens par jour et
+  par modèle** (fenêtre glissante de 24 h) → le calcul a été étalé sur
+  3 jours (25 au 27 septembre). Le script sauvegarde après chaque
+  question (`docs/evaluation/ragas_results.partial.json`), s'arrête
+  proprement sur le quota journalier et reprend avec `--resume` ; il
+  refuse de reprendre avec un autre juge.
+- **Dépendances** : `ragas==0.4.3` rétrograde `tenacity` (9.1 → 8.5),
+  `rich` et `fsspec`, sans impact sur les 124 tests. Il importe aussi
+  sans condition un module Vertex AI retiré de `langchain-community`
+  0.4 → module factice injecté dans le script d'évaluation uniquement.
+
+### Perspectives
+
+- **Reranking conditionné à la langue** : le reranker seulement pour
+  fr/en (déjà détectée par `language_detector`), hybride seul pour
+  ar/tn. D'après ces chiffres, ça garderait le gain fr/en sans la
+  régression en arabe.
+- Reranker plus fort en arabe (bge-reranker-v2-m3) si un GPU est
+  disponible.
+- Normalisation ou traduction de l'arabizi avant la recherche.
+- Élargir le golden set (≥ 10 questions par langue) et repasser
+  Answer Relevancy avec `strictness=3`.
 
 ---
 

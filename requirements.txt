@@ -21,3 +21,6 @@ chromadb==1.5.9
 sentence-transformers==5.7.0
 rank-bm25==0.2.2
 fpdf2==2.8.7
+
+# Évaluation Advanced RAG (scripts/evaluate_ragas.py uniquement)
+ragas==0.4.3

@@ -1,0 +1,1831 @@
+{
+  "meta": {
+    "date": "2026-09-27T19:26:16",
+    "n_scored": 22,
+    "n_offtopic": 3,
+    "generator_model": "openai/gpt-oss-120b",
+    "judge_model": "openai/gpt-oss-20b",
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "reranker_model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+    "rerank_candidates": 20,
+    "confidence_signal": "cosine",
+    "judge_requests": 802,
+    "judge_429": 403,
+    "judge_tokens": 678697,
+    "gen_requests": 62,
+    "gen_429": 1,
+    "gen_tokens": 58797,
+    "duration_min": 71.6
+  },
+  "results": [
+    {
+      "id": "p-vl53l0x",
+      "lang": "fr",
+      "category": "produit",
+      "question": "Avez-vous un capteur de distance VL53L0X ?",
+      "reference": "Oui, le capteur VL53L0X est en stock en trois versions : capteur seul (nu) à 32,98 DT, breakout board à 50,93 DT et module complet à 54,04 DT.",
+      "sources": [
+        "LS-CA-000034",
+        "LS-CA-000035",
+        "LS-CA-000036"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 185,
+          "contexts": [
+            "Capteur VL53L0X (capteur seul (nu)) | Catégorie: Capteurs | Prix: 32.98 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version capteur seul (nu).",
+            "Capteur VL53L0X (module complet) | Catégorie: Capteurs | Prix: 54.04 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version module complet.",
+            "Capteur VL53L0X (breakout board) | Catégorie: Capteurs | Prix: 50.93 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version breakout board.",
+            "Module NRF24L01+PA+LNA | Catégorie: Modules | Prix: 39.02 DT | Disponibilité: en stock | Caractéristiques: RF 2.4GHz longue portée | Module NRF24L01+PA+LNA — RF 2.4GHz longue portée."
+          ],
+          "retrieved_sources": [
+            "LS-CA-000035",
+            "LS-CA-000034",
+            "LS-CA-000036",
+            "LS-MO-000066"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.626,
+          "would_escalate": false,
+          "answer": "Oui, nous proposons le capteur de distance VL53L0X sous trois déclinaisons :\n\n| Variante | Prix | Disponibilité |\n|----------|------|----------------|\n| Capteur VL53L0X (seul, nu) | 32,98 DT | En stock |\n| Capteur VL53L0X (module complet) | 54,04 DT | En stock |\n| Capteur VL53L0X (breakout board) | 50,93 DT | En stock |\n\nN’hésitez pas à nous préciser la version qui vous intéresse ou à poser d’autres questions sur nos produits.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8,
+              "answer_relevancy": 0.6503
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 1104,
+          "contexts": [
+            "Capteur VL53L0X (capteur seul (nu)) | Catégorie: Capteurs | Prix: 32.98 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version capteur seul (nu).",
+            "Capteur VL53L0X (breakout board) | Catégorie: Capteurs | Prix: 50.93 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version breakout board.",
+            "Capteur VL53L0X (module complet) | Catégorie: Capteurs | Prix: 54.04 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version module complet.",
+            "Capteur Sharp GP2Y0A21 (breakout board) | Catégorie: Capteurs | Prix: 10.95 DT | Disponibilité: en stock | Caractéristiques: Distance infrarouge 10-80cm | Capteur Sharp GP2Y0A21 — Distance infrarouge 10-80cm. Livré en version breakout board."
+          ],
+          "retrieved_sources": [
+            "LS-CA-000035",
+            "LS-CA-000036",
+            "LS-CA-000034",
+            "LS-CA-000039"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.626,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nOui, nous proposons le capteur de distance VL53L0X sous trois déclinaisons, toutes en stock :\n\n| Variante | Prix | Disponibilité |\n|----------|------|----------------|\n| Capteur VL53L0X (seul, nu) | 32,98 DT | En stock |\n| Capteur VL53L0X (breakout board) | 50,93 DT | En stock |\n| Capteur VL53L0X (module complet) | 54,04 DT | En stock |\n\nN’hésitez pas à me dire laquelle vous intéresse ou si vous avez besoin d’informations complémentaires (caractéristiques, mode de paiement, etc.).",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.7143,
+              "answer_relevancy": 0.6044
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "p-18650",
+      "lang": "fr",
+      "category": "produit",
+      "question": "Vous avez des piles 18650 en stock ?",
+      "reference": "Oui, les piles/batteries 18650 sont en stock en packs de 4 (9,44 DT), de 10 (23,43 DT) et de 20 (6,32 DT).",
+      "sources": [
+        "LS-AL-000031",
+        "LS-AL-000032",
+        "LS-AL-000033"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 155,
+          "contexts": [
+            "Chargeur batteries 18650 (2 slots) | Catégorie: Alimentation | Prix: 18.76 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Chargeur batteries 18650 (2 slots).",
+            "Support batterie 18650 (x1) avec fil | Catégorie: Alimentation | Prix: 2.46 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Support batterie 18650 (x1) avec fil.",
+            "Chargeur batteries 18650 (4 slots) | Catégorie: Alimentation | Prix: 28.06 DT | Disponibilité: sur commande | Caractéristiques: Voir fiche technique | Chargeur batteries 18650 (4 slots).",
+            "Support batterie 18650 (x2) avec fil | Catégorie: Alimentation | Prix: 4.11 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Support batterie 18650 (x2) avec fil."
+          ],
+          "retrieved_sources": [
+            "LS-AL-000049",
+            "LS-AL-000064",
+            "LS-AL-000050",
+            "LS-AL-000065"
+          ],
+          "hit_at_4": false,
+          "confidence": 0.676,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nJe ne vois aucune référence de piles 18650 dans les informations dont je dispose ; seules les fiches de chargeurs et de supports sont mentionnées. Je ne peux donc pas confirmer leur disponibilité pour le moment.\n\nSouhaitez‑vous que je vérifie cela pour vous auprès de notre service logistique ou que je vous mette en relation avec un conseiller ?",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.5,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.8295
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 1411,
+          "contexts": [
+            "Pile/Batterie 18650 (pack de 10) | Catégorie: Alimentation | Prix: 23.43 DT | Disponibilité: en stock | Caractéristiques: Type 18650, pack de 10 | Piles/batteries 18650, conditionnement pack de 10.",
+            "Pile/Batterie 18650 (pack de 4) | Catégorie: Alimentation | Prix: 9.44 DT | Disponibilité: en stock | Caractéristiques: Type 18650, pack de 4 | Piles/batteries 18650, conditionnement pack de 4.",
+            "Pile/Batterie 18650 (pack de 20) | Catégorie: Alimentation | Prix: 6.32 DT | Disponibilité: en stock | Caractéristiques: Type 18650, pack de 20 | Piles/batteries 18650, conditionnement pack de 20.",
+            "Batterie 18650 2200mAh (générique) | Catégorie: Alimentation | Prix: 11.92 DT | Disponibilité: en stock | Caractéristiques: Li-ion 3.7V, 2200mAh, générique | Batterie rechargeable 18650 2200mAh, version générique."
+          ],
+          "retrieved_sources": [
+            "LS-AL-000032",
+            "LS-AL-000031",
+            "LS-AL-000033",
+            "LS-AL-000004"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.597,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nOui, nous avons des piles 18650 en stock :\n\n- **Pack de 10** – 23,43 DT  \n- **Pack de 4** – 9,44 DT  \n- **Pack de 20** – 6,32 DT  \n\nNous proposons également une **batterie 18650 2200 mAh (générique)** à 11,92 DT.\n\nN’hésitez pas si vous avez besoin de précisions ou si vous souhaitez passer commande.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8333,
+              "answer_relevancy": 0.8008
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "p-nema17",
+      "lang": "fr",
+      "category": "produit",
+      "question": "Combien coute un moteur pas-a-pas NEMA17 ?",
+      "reference": "Les moteurs pas-à-pas NEMA17 coûtent entre 21,59 DT et 58,09 DT selon la variante (pas de 0,9° ou 1,8°, courant de 1 A à 2,5 A) ; certaines variantes sont en stock, d'autres sur commande.",
+      "sources": [
+        "LS-MR-000011",
+        "LS-MR-000012",
+        "LS-MR-000013",
+        "LS-MR-000014",
+        "LS-MR-000015",
+        "LS-MR-000016",
+        "LS-MR-000017",
+        "LS-MR-000018"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 177,
+          "contexts": [
+            "Moteur pas-à-pas NEMA14 mini (1.5A) | Catégorie: Moteurs & Roues | Prix: 51.83 DT | Disponibilité: en stock | Caractéristiques: Angle de pas selon modèle, courant 1.5A | Moteur pas-à-pas NEMA14 mini, courant nominal 1.5A.",
+            "Driver moteur A4988 (1 moteur) | Catégorie: Modules | Prix: 17.34 DT | Disponibilité: rupture de stock | Caractéristiques: Driver A4988 | Module de pilotage moteur A4988, 1 moteur.",
+            "Moteur pas-à-pas NEMA14 mini (2.5A) | Catégorie: Moteurs & Roues | Prix: 16.35 DT | Disponibilité: en stock | Caractéristiques: Angle de pas selon modèle, courant 2.5A | Moteur pas-à-pas NEMA14 mini, courant nominal 2.5A.",
+            "Moteur pas-à-pas NEMA23 (1.5A) | Catégorie: Moteurs & Roues | Prix: 53.52 DT | Disponibilité: stock faible | Caractéristiques: Angle de pas selon modèle, courant 1.5A | Moteur pas-à-pas NEMA23, courant nominal 1.5A."
+          ],
+          "retrieved_sources": [
+            "LS-MR-000024",
+            "LS-MO-000084",
+            "LS-MR-000026",
+            "LS-MR-000020"
+          ],
+          "hit_at_4": false,
+          "confidence": 0.591,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nJe suis désolé, mais le catalogue que j’ai sous les yeux ne mentionne pas de moteur pas‑à‑pas NEMA 17, donc je ne dispose pas de son prix.\n\nJe peux transmettre votre demande à un conseiller afin qu’il vérifie la disponibilité et le tarif exacts pour vous.\n\nCordialement,\nService client Liss Strike",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.0
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 663,
+          "contexts": [
+            "Moteur pas-à-pas NEMA17 1.8° (1.5A) | Catégorie: Moteurs & Roues | Prix: 44.0 DT | Disponibilité: sur commande | Caractéristiques: Angle de pas selon modèle, courant 1.5A | Moteur pas-à-pas NEMA17 1.8°, courant nominal 1.5A.",
+            "Moteur pas-à-pas NEMA17 0.9° (1.5A) | Catégorie: Moteurs & Roues | Prix: 29.93 DT | Disponibilité: sur commande | Caractéristiques: Angle de pas selon modèle, courant 1.5A | Moteur pas-à-pas NEMA17 0.9°, courant nominal 1.5A.",
+            "Moteur pas-à-pas NEMA17 1.8° (2.5A) | Catégorie: Moteurs & Roues | Prix: 21.59 DT | Disponibilité: stock faible | Caractéristiques: Angle de pas selon modèle, courant 2.5A | Moteur pas-à-pas NEMA17 1.8°, courant nominal 2.5A.",
+            "Moteur pas-à-pas NEMA17 0.9° (2.5A) | Catégorie: Moteurs & Roues | Prix: 26.33 DT | Disponibilité: sur commande | Caractéristiques: Angle de pas selon modèle, courant 2.5A | Moteur pas-à-pas NEMA17 0.9°, courant nominal 2.5A."
+          ],
+          "retrieved_sources": [
+            "LS-MR-000016",
+            "LS-MR-000012",
+            "LS-MR-000018",
+            "LS-MR-000014"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.507,
+          "would_escalate": false,
+          "answer": "Voici les prix des différents modèles de moteurs pas‑à‑pas NEMA 17 que nous proposons :\n\n| Modèle | Courant nominal | Angle de pas | Prix (DT) | Disponibilité |\n|--------|----------------|--------------|-----------|----------------|\n| NEMA 17 1.8° | 1,5 A | 1,8° | **44,00 DT** | sur commande |\n| NEMA 17 0.9° | 1,5 A | 0,9° | **29,93 DT** | sur commande |\n| NEMA 17 1.8° | 2,5 A | 1,8° | **21,59 DT** | stock faible |\n| NEMA 17 0.9° | 2,5 A | 0,9° | **26,33 DT** | sur commande |\n\nSi vous avez besoin de précisions sur un modèle en particulier (par ex. disponibilité exacte ou délai de livraison), n’hésitez pas à me le préciser ou à contacter un conseiller.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 0.5,
+              "faithfulness": 0.7143,
+              "answer_relevancy": 0.7339
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "p-analyseur",
+      "lang": "fr",
+      "category": "produit",
+      "question": "Vous vendez des analyseurs logiques 8 canaux ?",
+      "reference": "Oui, l'analyseur logique 8 canaux est en stock à 39,76 DT.",
+      "sources": [
+        "LS-IM-000031"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 171,
+          "contexts": [
+            "Analyseur logique 8 canaux | Catégorie: Instruments de Mesure | Prix: 39.76 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Analyseur logique 8 canaux.",
+            "Analyseur logique 16 canaux | Catégorie: Instruments de Mesure | Prix: 75.3 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Analyseur logique 16 canaux.",
+            "Q: Existe-t-il une offre de parrainage ?\nR: Oui, parrainez un ami : il reçoit 10 DT sur sa première commande, et vous recevez 10 DT de bon d'achat une fois sa commande validée.",
+            "Module relais 8 canal(aux) 12V | Catégorie: Modules | Prix: 14.88 DT | Disponibilité: en stock | Caractéristiques: 8 relais, alimentation 12V, optocouplé | Permet de piloter 8 appareil(s) électrique(s) depuis une carte programmable."
+          ],
+          "retrieved_sources": [
+            "LS-IM-000031",
+            "LS-IM-000032",
+            "ecommerce/promotions.txt",
+            "LS-MO-000011"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.702,
+          "would_escalate": false,
+          "answer": "Oui, nous proposons un **analyseur logique 8 canaux**.  \n- **Catégorie** : Instruments de mesure  \n- **Prix** : 39,76 DT  \n- **Disponibilité** : en stock  \n\nN’hésitez pas si vous avez besoin de plus d’informations ou si vous souhaitez passer commande.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8,
+              "answer_relevancy": 0.6348
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 1310,
+          "contexts": [
+            "Analyseur logique 8 canaux | Catégorie: Instruments de Mesure | Prix: 39.76 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Analyseur logique 8 canaux.",
+            "Analyseur logique 16 canaux | Catégorie: Instruments de Mesure | Prix: 75.3 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Analyseur logique 16 canaux.",
+            "Module relais 8 canal(aux) 12V | Catégorie: Modules | Prix: 14.88 DT | Disponibilité: en stock | Caractéristiques: 8 relais, alimentation 12V, optocouplé | Permet de piloter 8 appareil(s) électrique(s) depuis une carte programmable.",
+            "Module relais 8 canal(aux) 24V | Catégorie: Modules | Prix: 15.94 DT | Disponibilité: en stock | Caractéristiques: 8 relais, alimentation 24V, optocouplé | Permet de piloter 8 appareil(s) électrique(s) depuis une carte programmable."
+          ],
+          "retrieved_sources": [
+            "LS-IM-000031",
+            "LS-IM-000032",
+            "LS-MO-000011",
+            "LS-MO-000012"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.702,
+          "would_escalate": false,
+          "answer": "Oui, nous proposons un **analyseur logique 8 canaux**.  \n- **Catégorie** : Instruments de mesure  \n- **Prix** : 39,76 DT  \n- **Disponibilité** : en stock  \n- **Caractéristiques** : voir la fiche technique disponible sur notre site.  \n\nN’hésitez pas si vous avez besoin de plus d’informations ou si vous souhaitez passer commande.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.6667,
+              "answer_relevancy": 0.1725
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "p-arduino-due",
+      "lang": "fr",
+      "category": "produit",
+      "question": "Est-ce que la carte Arduino Due est disponible ?",
+      "reference": "Oui : la version compatible (clone) est en stock à 54,75 DT ; la version originale est disponible sur commande à 88,73 DT.",
+      "sources": [
+        "LS-CP-000013",
+        "LS-CP-000014"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 159,
+          "contexts": [
+            "Carte Arduino Due (compatible (clone)) | Catégorie: Cartes Programmables | Prix: 54.75 DT | Disponibilité: en stock | Caractéristiques: Microcontrôleur AVR/SAM selon modèle, variante compatible (clone) | Carte de développement Arduino Due, compatible (clone), idéale pour prototypage électronique.",
+            "Kit de démarrage Arduino — niveau avancé | Catégorie: Kits & Prototypage | Prix: 212.16 DT | Disponibilité: en stock | Caractéristiques: Kit avancé orienté Arduino | Kit complet avancé pour démarrer un projet Arduino.",
+            "Carte Arduino Due (original) | Catégorie: Cartes Programmables | Prix: 88.73 DT | Disponibilité: sur commande | Caractéristiques: Microcontrôleur AVR/SAM selon modèle, variante original | Carte de développement Arduino Due, original, idéale pour prototypage électronique.",
+            "Kit de démarrage Arduino — niveau intermédiaire | Catégorie: Kits & Prototypage | Prix: 80.21 DT | Disponibilité: en stock | Caractéristiques: Kit intermédiaire orienté Arduino | Kit complet intermédiaire pour démarrer un projet Arduino."
+          ],
+          "retrieved_sources": [
+            "LS-CP-000014",
+            "LS-KP-000020",
+            "LS-CP-000013",
+            "LS-KP-000015"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.599,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nOui, la carte **Arduino Due** est disponible sous deux versions :\n\n- **Version clone** – en stock.  \n- **Version originale** – disponible sur commande.\n\nN’hésitez pas si vous avez besoin de précisions ou si vous souhaitez passer commande.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.8333,
+              "context_recall": 1.0,
+              "faithfulness": null,
+              "answer_relevancy": 0.7919
+            },
+            "errors": {
+              "faithfulness": "BadRequestError: Error code: 400 - {'error': {'message': \"Failed to validate JSON. Please adjust your prompt. See 'failed_generation' for more details.\", 'type': 'invalid_request_error', 'code': 'json_validate_failed', 'failed_generation': ''}}"
+            }
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 1493,
+          "contexts": [
+            "Carte Arduino Due (original) | Catégorie: Cartes Programmables | Prix: 88.73 DT | Disponibilité: sur commande | Caractéristiques: Microcontrôleur AVR/SAM selon modèle, variante original | Carte de développement Arduino Due, original, idéale pour prototypage électronique.",
+            "Carte Arduino Due (compatible (clone)) | Catégorie: Cartes Programmables | Prix: 54.75 DT | Disponibilité: en stock | Caractéristiques: Microcontrôleur AVR/SAM selon modèle, variante compatible (clone) | Carte de développement Arduino Due, compatible (clone), idéale pour prototypage électronique.",
+            "Carte Arduino Micro (original) | Catégorie: Cartes Programmables | Prix: 75.91 DT | Disponibilité: en stock | Caractéristiques: Microcontrôleur AVR/SAM selon modèle, variante original | Carte de développement Arduino Micro, original, idéale pour prototypage électronique.",
+            "Carte Arduino Nano (original) | Catégorie: Cartes Programmables | Prix: 70.67 DT | Disponibilité: en stock | Caractéristiques: Microcontrôleur AVR/SAM selon modèle, variante original | Carte de développement Arduino Nano, original, idéale pour prototypage électronique."
+          ],
+          "retrieved_sources": [
+            "LS-CP-000013",
+            "LS-CP-000014",
+            "LS-CP-000007",
+            "LS-CP-000003"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.599,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\n- **Arduino Due (original)** : elle est **disponible sur commande**.\n- **Arduino Due (compatible / clone)** : elle est **en stock** et prête à être expédiée.\n\nN’hésitez pas si vous avez besoin de précisions ou si vous souhaitez passer commande.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.6667,
+              "answer_relevancy": 0.7224
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "p-esp32",
+      "lang": "fr",
+      "category": "produit",
+      "question": "ESP32 wifi bluetooth",
+      "reference": "Plusieurs modules ESP32 (Wi-Fi + Bluetooth) sont proposés, par exemple le Module ESP32 DevKitC en 4MB Flash (41,91 DT) et en 8MB Flash (40,57 DT), tous deux en stock.",
+      "sources": [
+        "LS-CP-000017",
+        "LS-CP-000018",
+        "LS-CP-000019",
+        "LS-CP-000020",
+        "LS-CP-000021",
+        "LS-CP-000022",
+        "LS-CP-000027",
+        "LS-CP-000028"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "en",
+          "retrieval_ms": 189,
+          "contexts": [
+            "Q: Le paiement en ligne est-il sécurisé ?\nR: Oui, tous les paiements par carte sont traités via une passerelle sécurisée conforme aux normes 3D Secure. Liss Strike ne stocke aucune donnée de carte bancaire."
+          ],
+          "retrieved_sources": [
+            "ecommerce/paiement.txt"
+          ],
+          "hit_at_4": false,
+          "confidence": 0.252,
+          "would_escalate": true,
+          "answer": "I’m sorry, but I don’t have specific information about the ESP32 Wi‑Fi/Bluetooth product in our catalog. Would you like me to check the details for you or connect you with a sales representative?",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.0
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "en",
+          "retrieval_ms": 1370,
+          "contexts": [
+            "Module ESP32 DevKitC (8MB Flash) | Catégorie: Cartes Programmables | Prix: 40.57 DT | Disponibilité: en stock | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 8MB Flash | Carte ESP32 DevKitC pour projets IoT connectés, 8MB Flash de stockage.",
+            "Module ESP32-S3 (8MB Flash) | Catégorie: Cartes Programmables | Prix: 45.73 DT | Disponibilité: stock faible | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 8MB Flash | Carte ESP32-S3 pour projets IoT connectés, 8MB Flash de stockage.",
+            "Module ESP32 DevKitC (4MB Flash) | Catégorie: Cartes Programmables | Prix: 41.91 DT | Disponibilité: en stock | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 4MB Flash | Carte ESP32 DevKitC pour projets IoT connectés, 4MB Flash de stockage.",
+            "Module ESP32-S3 (4MB Flash) | Catégorie: Cartes Programmables | Prix: 45.88 DT | Disponibilité: stock faible | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 4MB Flash | Carte ESP32-S3 pour projets IoT connectés, 4MB Flash de stockage."
+          ],
+          "retrieved_sources": [
+            "LS-CP-000018",
+            "LS-CP-000020",
+            "LS-CP-000017",
+            "LS-CP-000019"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.563,
+          "would_escalate": false,
+          "answer": "Sure! Here’s a quick overview of the ESP32 boards we have that include both Wi‑Fi (802.11 b/g/n) and Bluetooth:\n\n| Model | Flash | Price (DT) | Availability | Key features |\n|-------|-------|------------|--------------|--------------|\n| **ESP32 DevKitC** | 8 MB | 40.57 DT | In stock | Wi‑Fi 802.11 b/g/n, Bluetooth (model‑dependent) |\n| **ESP32 DevKitC** | 4 MB | 41.91 DT | In stock | Wi‑Fi 802.11 b/g/n, Bluetooth (model‑dependent) |\n| **ESP32‑S3** | 8 MB | 45.73 DT | Low stock | Wi‑Fi 802.11 b/g/n, Bluetooth (model‑dependent) |\n| **ESP32‑S3** | 4 MB | 45.88 DT | Low stock | Wi‑Fi 802.11 b/g/n, Bluetooth (model‑dependent) |\n\nAll four boards are suitable for IoT projects that need wireless connectivity and Bluetooth support. Let me know if you’d like more details about a specific model or assistance with an order!",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8571,
+              "answer_relevancy": 0.8289
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "p-12v5a",
+      "lang": "fr",
+      "category": "produit",
+      "question": "alimentation 12V 5A",
+      "reference": "Le bloc secteur 12V 5A est disponible en stock à 24,73 DT.",
+      "sources": [
+        "LS-AL-000060"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 156,
+          "contexts": [
+            "Bloc secteur 12V 5A | Catégorie: Alimentation | Prix: 24.73 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Bloc secteur 12V 5A.",
+            "Bloc secteur 5V 2A | Catégorie: Alimentation | Prix: 12.46 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Bloc secteur 5V 2A.",
+            "Panneau solaire 12V 5W | Catégorie: Alimentation | Prix: 45.17 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Panneau solaire 12V 5W.",
+            "Fiche alimentation DC 5.5x2.1mm mâle | Catégorie: Connectique | Prix: 1.17 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Fiche alimentation DC 5.5x2.1mm mâle."
+          ],
+          "retrieved_sources": [
+            "LS-AL-000060",
+            "LS-AL-000057",
+            "LS-AL-000046",
+            "LS-CN-001057"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.671,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nVoici les informations concernant le bloc secteur 12 V 5 A :\n\n- **Catégorie** : Alimentation  \n- **Prix** : 24,73 DT  \n- **Disponibilité** : En stock  \n- **Caractéristiques** : Voir la fiche technique (connecteur standard, protection contre les courts‑circuits, etc.)\n\nN’hésitez pas à me dire si vous avez besoin de la fiche technique, d’un devis, ou de toute autre assistance (commande, paiement, livraison, etc.).",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.5714,
+              "answer_relevancy": 0.5314
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 1503,
+          "contexts": [
+            "Bloc secteur 12V 5A | Catégorie: Alimentation | Prix: 24.73 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Bloc secteur 12V 5A.",
+            "Alimentation dédiée ruban LED 12V 5A | Catégorie: Éclairage LED | Prix: 20.35 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Alimentation dédiée ruban LED 12V 5A.",
+            "Convertisseur DC-DC XL4015 step-down 5A (sortie fixe 12V) | Catégorie: Modules | Prix: 7.28 DT | Disponibilité: en stock | Caractéristiques: Module XL4015 step-down 5A, sortie fixe 12V | Régulateur de tension XL4015 step-down 5A pour adapter une source d'alimentation.",
+            "Panneau solaire 12V 5W | Catégorie: Alimentation | Prix: 45.17 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Panneau solaire 12V 5W."
+          ],
+          "retrieved_sources": [
+            "LS-AL-000060",
+            "LS-EL-000468",
+            "LS-MO-000057",
+            "LS-AL-000046"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.671,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nVoici les deux alimentations 12 V / 5 A que nous proposons :\n\n| Produit | Catégorie | Prix | Disponibilité |\n|---|---|---|---|\n| **Bloc secteur 12V 5A** | Alimentation | 24,73 DT | En stock |\n| **Alimentation dédiée ruban LED 12V 5A** | Éclairage LED | 20,35 DT | En stock |\n\nLes deux sont disponibles immédiatement. Si vous avez besoin de précisions supplémentaires (fiche technique, compatibilité, etc.) ou si vous souhaitez passer commande, n’hésitez pas à me le faire savoir.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.5714,
+              "answer_relevancy": 0.437
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "p-rpi4",
+      "lang": "fr",
+      "category": "produit",
+      "question": "Raspberry Pi 4 8GB prix",
+      "reference": "Le Raspberry Pi 4 Model B (8Go) coûte 246,64 DT, mais il est actuellement en rupture de stock.",
+      "sources": [
+        "LS-CP-000039"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "en",
+          "retrieval_ms": 145,
+          "contexts": [
+            "Raspberry Pi 4 Model B (8Go) | Catégorie: Cartes Programmables | Prix: 246.64 DT | Disponibilité: rupture de stock | Caractéristiques: Mini-ordinateur monocarte, WiFi/Bluetooth selon modèle | Raspberry Pi 4 Model B (8Go) pour projets avancés (serveur, robotique, vision).",
+            "Raspberry Pi 4 Model B (2Go) | Catégorie: Cartes Programmables | Prix: 164.2 DT | Disponibilité: stock faible | Caractéristiques: Mini-ordinateur monocarte, WiFi/Bluetooth selon modèle | Raspberry Pi 4 Model B (2Go) pour projets avancés (serveur, robotique, vision).",
+            "Kit de démarrage Raspberry Pi — niveau avancé | Catégorie: Kits & Prototypage | Prix: 80.75 DT | Disponibilité: en stock | Caractéristiques: Kit avancé orienté Raspberry Pi | Kit complet avancé pour démarrer un projet Raspberry Pi.",
+            "Raspberry Pi 5 (8Go) | Catégorie: Cartes Programmables | Prix: 322.08 DT | Disponibilité: en stock | Caractéristiques: Mini-ordinateur monocarte, WiFi/Bluetooth selon modèle | Raspberry Pi 5 (8Go) pour projets avancés (serveur, robotique, vision)."
+          ],
+          "retrieved_sources": [
+            "LS-CP-000039",
+            "LS-CP-000037",
+            "LS-KP-000022",
+            "LS-CP-000041"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.69,
+          "would_escalate": false,
+          "answer": "The Raspberry Pi 4 Model B (8 GB) is listed at **246.64 DT**. Please note that it is currently marked as “rupture de stock.” If you’d like to be notified when it’s back in stock or need help with an alternative, just let me know!",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.5,
+              "answer_relevancy": 0.8113
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "en",
+          "retrieval_ms": 711,
+          "contexts": [
+            "Raspberry Pi 4 Model B (8Go) | Catégorie: Cartes Programmables | Prix: 246.64 DT | Disponibilité: rupture de stock | Caractéristiques: Mini-ordinateur monocarte, WiFi/Bluetooth selon modèle | Raspberry Pi 4 Model B (8Go) pour projets avancés (serveur, robotique, vision).",
+            "Raspberry Pi 4 Model B (4Go) | Catégorie: Cartes Programmables | Prix: 205.34 DT | Disponibilité: en stock | Caractéristiques: Mini-ordinateur monocarte, WiFi/Bluetooth selon modèle | Raspberry Pi 4 Model B (4Go) pour projets avancés (serveur, robotique, vision).",
+            "Raspberry Pi 4 Model B (2Go) | Catégorie: Cartes Programmables | Prix: 164.2 DT | Disponibilité: stock faible | Caractéristiques: Mini-ordinateur monocarte, WiFi/Bluetooth selon modèle | Raspberry Pi 4 Model B (2Go) pour projets avancés (serveur, robotique, vision).",
+            "Raspberry Pi 5 (8Go) | Catégorie: Cartes Programmables | Prix: 322.08 DT | Disponibilité: en stock | Caractéristiques: Mini-ordinateur monocarte, WiFi/Bluetooth selon modèle | Raspberry Pi 5 (8Go) pour projets avancés (serveur, robotique, vision)."
+          ],
+          "retrieved_sources": [
+            "LS-CP-000039",
+            "LS-CP-000038",
+            "LS-CP-000037",
+            "LS-CP-000041"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.69,
+          "would_escalate": false,
+          "answer": "The Raspberry Pi 4 Model B (8 GB) is priced at **246.64 DT**.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.8687
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "s-retour",
+      "lang": "fr",
+      "category": "sav",
+      "question": "Quel est le délai pour retourner un produit ?",
+      "reference": "Vous disposez de 7 jours calendaires à partir de la date de réception pour retourner un produit non ouvert et non utilisé.",
+      "sources": [
+        "sav/retours.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 166,
+          "contexts": [
+            "Q: Quel est le délai pour retourner un produit ?\nR: Vous disposez de 7 jours calendaires à partir de la date de réception pour retourner un produit non ouvert et non utilisé.",
+            "Q: Combien de temps pour être remboursé après un retour accepté ?\nR: Le remboursement est effectué sous 5 à 10 jours ouvrés après réception et vérification du produit retourné, sur le même moyen de paiement utilisé à l'achat.",
+            "Q: Dans quel état le produit doit-il être pour être retourné ?\nR: Le produit doit être neuf, non utilisé, dans son emballage d'origine non ouvert, avec tous les accessoires et la facture d'achat.",
+            "Q: Puis-je être remboursé sans retourner le produit défectueux ?\nR: Pour les produits de faible valeur (moins de 20 DT), un remboursement direct sur photo peut être accordé sans retour, à la discrétion du service SAV. Au-delà, un retour est généralement demandé."
+          ],
+          "retrieved_sources": [
+            "sav/retours.txt",
+            "sav/retours.txt",
+            "sav/retours.txt",
+            "sav/reclamations.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.908,
+          "would_escalate": false,
+          "answer": "Vous avez **7 jours calendaires** à compter de la date de réception pour retourner un produit non ouvert et non utilisé.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.8144
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 660,
+          "contexts": [
+            "Q: Quel est le délai pour retourner un produit ?\nR: Vous disposez de 7 jours calendaires à partir de la date de réception pour retourner un produit non ouvert et non utilisé.",
+            "Q: Combien de temps pour être remboursé après un retour accepté ?\nR: Le remboursement est effectué sous 5 à 10 jours ouvrés après réception et vérification du produit retourné, sur le même moyen de paiement utilisé à l'achat.",
+            "Q: Dans quel état le produit doit-il être pour être retourné ?\nR: Le produit doit être neuf, non utilisé, dans son emballage d'origine non ouvert, avec tous les accessoires et la facture d'achat.",
+            "Q: Quels produits ne peuvent pas être retournés ?\nR: Les composants électroniques déballés (résistances, capteurs, modules) ne sont pas repris une fois l'emballage ouvert, sauf défaut de fabrication. Les logiciels/licences ne sont pas remboursables après activation."
+          ],
+          "retrieved_sources": [
+            "sav/retours.txt",
+            "sav/retours.txt",
+            "sav/retours.txt",
+            "sav/retours.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.908,
+          "would_escalate": false,
+          "answer": "Le délai de retour est de **7 jours calendaires** à compter de la date de réception du produit, à condition qu’il soit neuf, non utilisé et dans son emballage d’origine.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.8914
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "s-frais",
+      "lang": "fr",
+      "category": "sav",
+      "question": "Quels sont les frais de livraison ?",
+      "reference": "La livraison est gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et de 12 DT pour le reste du pays.",
+      "sources": [
+        "sav/livraison.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 147,
+          "contexts": [
+            "Q: Quels sont les frais de livraison ?\nR: Livraison gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et 12 DT pour le reste du pays.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Peut-on se faire livrer en point relais ?\nR: Cette option n'est pas encore disponible ; la livraison se fait uniquement à domicile ou en retrait boutique.",
+            "Q: Quels moyens de paiement sont acceptés ?\nR: Carte bancaire (Visa/Mastercard) en ligne, paiement à la livraison en espèces (cash), D17, et Flouci."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "ecommerce/paiement.txt",
+            "sav/livraison.txt",
+            "ecommerce/paiement.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.667,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nLes frais de livraison sont les suivants :\n\n- **Livraison gratuite** dès 150 DT d’achat.  \n- En dessous de ce montant : **8 DT** pour le Grand Tunis et **12 DT** pour le reste du pays.\n\nN’hésitez pas si vous avez d’autres questions.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8,
+              "answer_relevancy": 0.626
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 492,
+          "contexts": [
+            "Q: Quels sont les frais de livraison ?\nR: Livraison gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et 12 DT pour le reste du pays.",
+            "Q: Qui paie les frais de retour ?\nR: Les frais de retour sont à la charge du client, sauf si le produit est défectueux ou si une erreur d'expédition a été commise par Liss Strike.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Peut-on payer en plusieurs fois ?\nR: Le paiement en plusieurs fois est disponible pour les commandes de plus de 300 DT, via facilité en 3 fois sans frais avec certaines cartes bancaires partenaires."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "sav/retours.txt",
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.667,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nLa livraison est gratuite dès 150 DT d’achat. En dessous de ce montant, les frais sont :\n\n- 8 DT pour le Grand Tunis  \n- 12 DT pour le reste du pays  \n\nN’hésitez pas si vous avez d’autres questions.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8,
+              "answer_relevancy": 0.626
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "s-cash",
+      "lang": "fr",
+      "category": "sav",
+      "question": "Le paiement à la livraison est-il possible ?",
+      "reference": "Oui, le paiement à la livraison en espèces est disponible dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande.",
+      "sources": [
+        "ecommerce/paiement.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 361,
+          "contexts": [
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Peut-on se faire livrer en point relais ?\nR: Cette option n'est pas encore disponible ; la livraison se fait uniquement à domicile ou en retrait boutique.",
+            "Q: Quels moyens de paiement sont acceptés ?\nR: Carte bancaire (Visa/Mastercard) en ligne, paiement à la livraison en espèces (cash), D17, et Flouci.",
+            "Q: Peut-on payer en plusieurs fois ?\nR: Le paiement en plusieurs fois est disponible pour les commandes de plus de 300 DT, via facilité en 3 fois sans frais avec certaines cartes bancaires partenaires."
+          ],
+          "retrieved_sources": [
+            "ecommerce/paiement.txt",
+            "sav/livraison.txt",
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.728,
+          "would_escalate": false,
+          "answer": "Oui, le paiement à la livraison (en espèces) est disponible dans toute la Tunisie. Aucun frais supplémentaire n’est appliqué, avec un plafond de 500 DT par commande.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.8333,
+              "context_recall": 1.0,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.6076
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 876,
+          "contexts": [
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Peut-on échanger un produit au lieu de le rembourser ?\nR: Oui, l'échange contre un autre produit de valeur équivalente ou supérieure (avec complément de paiement) est possible sous les mêmes conditions que le retour.",
+            "Q: Peut-on payer en plusieurs fois ?\nR: Le paiement en plusieurs fois est disponible pour les commandes de plus de 300 DT, via facilité en 3 fois sans frais avec certaines cartes bancaires partenaires.",
+            "Q: Qui paie les frais de retour ?\nR: Les frais de retour sont à la charge du client, sauf si le produit est défectueux ou si une erreur d'expédition a été commise par Liss Strike."
+          ],
+          "retrieved_sources": [
+            "ecommerce/paiement.txt",
+            "sav/retours.txt",
+            "ecommerce/paiement.txt",
+            "sav/retours.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.728,
+          "would_escalate": false,
+          "answer": "Oui, le paiement à la livraison (cash) est disponible dans toute la Tunisie. Aucun frais supplémentaire n’est appliqué, mais le montant de la commande ne doit pas dépasser 500 DT.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.6054
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "en-warranty",
+      "lang": "en",
+      "category": "sav",
+      "question": "What is the warranty on a multimeter?",
+      "reference": "Les instruments de mesure (multimètres, oscilloscopes) sont garantis 12 mois contre tout défaut de fabrication.",
+      "sources": [
+        "sav/garantie.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "en",
+          "retrieval_ms": 341,
+          "contexts": [
+            "Multimètre numérique (professionnelle, True-RMS) | Catégorie: Instruments de Mesure | Prix: 39.05 DT | Disponibilité: en stock | Caractéristiques: Gamme professionnelle, mesure True-RMS | Multimètre professionnelle, fonction True-RMS.",
+            "Multimètre numérique (milieu de gamme, True-RMS) | Catégorie: Instruments de Mesure | Prix: 125.01 DT | Disponibilité: en stock | Caractéristiques: Gamme milieu de gamme, mesure True-RMS | Multimètre milieu de gamme, fonction True-RMS.",
+            "Multimètre numérique (milieu de gamme, basique) | Catégorie: Instruments de Mesure | Prix: 113.53 DT | Disponibilité: en stock | Caractéristiques: Gamme milieu de gamme, mesure basique | Multimètre milieu de gamme, fonction basique.",
+            "Multimètre numérique (entrée de gamme, True-RMS) | Catégorie: Instruments de Mesure | Prix: 96.13 DT | Disponibilité: en stock | Caractéristiques: Gamme entrée de gamme, mesure True-RMS | Multimètre entrée de gamme, fonction True-RMS."
+          ],
+          "retrieved_sources": [
+            "LS-IM-000006",
+            "LS-IM-000004",
+            "LS-IM-000003",
+            "LS-IM-000002"
+          ],
+          "hit_at_4": false,
+          "confidence": 0.508,
+          "would_escalate": false,
+          "answer": "I’m sorry, but I don’t have the specific warranty details for our multimeters in the information I have right now. Would you like me to check this for you or connect you with one of our advisors?",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.0
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "en",
+          "retrieval_ms": 558,
+          "contexts": [
+            "Q: Quelle est la durée de garantie sur les instruments de mesure (multimètres, oscilloscopes) ?\nR: 12 mois contre tout défaut de fabrication.",
+            "Multimètre numérique (milieu de gamme, True-RMS) | Catégorie: Instruments de Mesure | Prix: 125.01 DT | Disponibilité: en stock | Caractéristiques: Gamme milieu de gamme, mesure True-RMS | Multimètre milieu de gamme, fonction True-RMS.",
+            "Multimètre numérique (entrée de gamme, True-RMS) | Catégorie: Instruments de Mesure | Prix: 96.13 DT | Disponibilité: en stock | Caractéristiques: Gamme entrée de gamme, mesure True-RMS | Multimètre entrée de gamme, fonction True-RMS.",
+            "Résistance 5.1MΩ 1/4W ±10% (CMS 0603) | Catégorie: Composants | Prix: 0.2 DT | Disponibilité: en stock | Caractéristiques: 5.1MΩ, 1/4W, tolérance ±10%, CMS 0603 | Résistance 5.1MΩ, 1/4W, ±10%, boîtier CMS 0603."
+          ],
+          "retrieved_sources": [
+            "sav/garantie.txt",
+            "LS-IM-000004",
+            "LS-IM-000002",
+            "LS-CO-006024"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.504,
+          "would_escalate": false,
+          "answer": "The warranty for multimeters (as well as other measurement instruments) is **12 months** against any manufacturing defect.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.7438
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "en-shipping",
+      "lang": "en",
+      "category": "sav",
+      "question": "How much is shipping?",
+      "reference": "La livraison est gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et de 12 DT pour le reste du pays.",
+      "sources": [
+        "sav/livraison.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "en",
+          "retrieval_ms": 216,
+          "contexts": [
+            "Q: Quels sont les frais de livraison ?\nR: Livraison gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et 12 DT pour le reste du pays.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Existe-t-il une livraison express ?\nR: Oui, une option express (livraison en 24h sur le Grand Tunis) est disponible pour 15 DT supplémentaires.",
+            "Q: Proposez-vous des tarifs dégressifs pour les commandes en grande quantité ?\nR: Oui, à partir de 20 unités d'une même référence, une remise quantité peut être appliquée. Contactez le service client avec la liste souhaitée pour obtenir un devis."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "ecommerce/paiement.txt",
+            "sav/livraison.txt",
+            "ecommerce/paiement.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.532,
+          "would_escalate": false,
+          "answer": "Shipping is free for orders of 150 DT or more.  \nFor orders below that amount the fees are:\n\n* **Grand Tunis:** 8 DT  \n* **Rest of Tunisia:** 12 DT  \n\nIf you need faster delivery, an express option (24 h delivery in Grand Tunis) is available for an additional 15 DT.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.6086
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "en",
+          "retrieval_ms": 533,
+          "contexts": [
+            "Q: Quels sont les frais de livraison ?\nR: Livraison gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et 12 DT pour le reste du pays.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Peut-on payer en plusieurs fois ?\nR: Le paiement en plusieurs fois est disponible pour les commandes de plus de 300 DT, via facilité en 3 fois sans frais avec certaines cartes bancaires partenaires.",
+            "Q: Quel est le délai de livraison standard ?\nR: Entre 2 et 4 jours ouvrés pour le Grand Tunis, et 3 à 6 jours ouvrés pour le reste de la Tunisie."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt",
+            "sav/livraison.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.532,
+          "would_escalate": false,
+          "answer": "Shipping is free for orders of 150 DT or more.  \nFor orders below that amount the cost is:\n\n- **Grand Tunis:** 8 DT  \n- **Rest of Tunisia:** 12 DT  \n\nIf you let me know your delivery region, I can confirm the exact amount for your order.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.6201
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "en-return",
+      "lang": "en",
+      "category": "sav",
+      "question": "Can I return a product?",
+      "reference": "Oui, sous 7 jours calendaires après réception, si le produit n'est ni ouvert ni utilisé. Les composants électroniques déballés ne sont pas repris sauf défaut de fabrication.",
+      "sources": [
+        "sav/retours.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "en",
+          "retrieval_ms": 239,
+          "contexts": [
+            "Q: Puis-je être remboursé sans retourner le produit défectueux ?\nR: Pour les produits de faible valeur (moins de 20 DT), un remboursement direct sur photo peut être accordé sans retour, à la discrétion du service SAV. Au-delà, un retour est généralement demandé.",
+            "Q: Dans quel état le produit doit-il être pour être retourné ?\nR: Le produit doit être neuf, non utilisé, dans son emballage d'origine non ouvert, avec tous les accessoires et la facture d'achat.",
+            "Q: Quel est le délai pour retourner un produit ?\nR: Vous disposez de 7 jours calendaires à partir de la date de réception pour retourner un produit non ouvert et non utilisé.",
+            "Q: J'ai reçu le mauvais produit, que faire ?\nR: Contactez le service client avec une photo du produit reçu et votre numéro de commande. Nous organisons l'échange sans frais supplémentaires."
+          ],
+          "retrieved_sources": [
+            "sav/reclamations.txt",
+            "sav/retours.txt",
+            "sav/retours.txt",
+            "sav/reclamations.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.685,
+          "would_escalate": false,
+          "answer": "Yes, you can return a product provided it meets our return conditions:\n\n- The item must be brand‑new, unused, and still in its original, unopened packaging.  \n- All accessories and the purchase invoice must be included.  \n- The return must be initiated within **7 calendar days** from the date you received the product.\n\nIf the product is of low value (under 20 DT), we may be able to process a refund based solely on a photo, at the discretion of our SAV team.  \n\nPlease let us know if you’d like to start a return, and we’ll guide you through the next steps.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.5833,
+              "context_recall": 0.5,
+              "faithfulness": 1.0,
+              "answer_relevancy": 0.8206
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "en",
+          "retrieval_ms": 1214,
+          "contexts": [
+            "Q: Quels produits ne peuvent pas être retournés ?\nR: Les composants électroniques déballés (résistances, capteurs, modules) ne sont pas repris une fois l'emballage ouvert, sauf défaut de fabrication. Les logiciels/licences ne sont pas remboursables après activation.",
+            "Q: Dans quel état le produit doit-il être pour être retourné ?\nR: Le produit doit être neuf, non utilisé, dans son emballage d'origine non ouvert, avec tous les accessoires et la facture d'achat.",
+            "Q: Puis-je être remboursé sans retourner le produit défectueux ?\nR: Pour les produits de faible valeur (moins de 20 DT), un remboursement direct sur photo peut être accordé sans retour, à la discrétion du service SAV. Au-delà, un retour est généralement demandé.",
+            "Q: Quel est le délai pour retourner un produit ?\nR: Vous disposez de 7 jours calendaires à partir de la date de réception pour retourner un produit non ouvert et non utilisé."
+          ],
+          "retrieved_sources": [
+            "sav/retours.txt",
+            "sav/retours.txt",
+            "sav/reclamations.txt",
+            "sav/retours.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.685,
+          "would_escalate": false,
+          "answer": "Yes, you can return a product provided it meets our return conditions:\n\n* The item must be **new, unused, and in its original, unopened packaging** with all accessories and the purchase invoice.\n* Returns must be initiated **within 7 calendar days** from the date you received the item.\n* Certain items cannot be returned once opened, such as electronic components (e.g., resistors, sensors, modules) and software/licenses after activation.\n\nIf the product is low‑value (under 20 DT), we may be able to process a refund based on a photo without requiring a physical return, at the discretion of our SAV team.\n\nLet us know the specific item you’d like to return, and we can guide you through the next steps.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8333,
+              "answer_relevancy": 0.8206
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "en-esp32",
+      "lang": "en",
+      "category": "produit",
+      "question": "Do you sell ESP32 boards?",
+      "reference": "Oui, plusieurs modules ESP32 sont vendus : DevKitC (4MB à 41,91 DT, 8MB à 40,57 DT), ESP32-S3, ESP32-C3 et ESP32-CAM.",
+      "sources": [
+        "LS-CP-000017",
+        "LS-CP-000018",
+        "LS-CP-000019",
+        "LS-CP-000020",
+        "LS-CP-000021",
+        "LS-CP-000022",
+        "LS-CP-000027",
+        "LS-CP-000028"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "en",
+          "retrieval_ms": 168,
+          "contexts": [
+            "Module ESP32-CAM (4MB Flash) | Catégorie: Cartes Programmables | Prix: 67.92 DT | Disponibilité: en stock | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 4MB Flash | Carte ESP32-CAM pour projets IoT connectés, 4MB Flash de stockage.",
+            "Module ESP32-S3 (4MB Flash) | Catégorie: Cartes Programmables | Prix: 45.88 DT | Disponibilité: stock faible | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 4MB Flash | Carte ESP32-S3 pour projets IoT connectés, 4MB Flash de stockage.",
+            "Module ESP32-CAM (8MB Flash) | Catégorie: Cartes Programmables | Prix: 66.22 DT | Disponibilité: en stock | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 8MB Flash | Carte ESP32-CAM pour projets IoT connectés, 8MB Flash de stockage.",
+            "Module ESP32 DevKitC (4MB Flash) | Catégorie: Cartes Programmables | Prix: 41.91 DT | Disponibilité: en stock | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 4MB Flash | Carte ESP32 DevKitC pour projets IoT connectés, 4MB Flash de stockage."
+          ],
+          "retrieved_sources": [
+            "LS-CP-000027",
+            "LS-CP-000019",
+            "LS-CP-000028",
+            "LS-CP-000017"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.45,
+          "would_escalate": false,
+          "answer": "Yes, we have several ESP32 boards in stock:\n\n| Model | Flash | Price (DT) | Availability |\n|-------|-------|------------|--------------|\n| ESP32‑CAM (4 MB) | 4 MB | 67.92 DT | in stock |\n| ESP32‑CAM (8 MB) | 8 MB | 66.22 DT | in stock |\n| ESP32‑S3 | 4 MB | 45.88 DT | low stock |\n| ESP32 DevKitC | 4 MB | 41.91 DT | in stock |\n\nLet me know if you need more details or would like to place an order.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.8333,
+              "answer_relevancy": 0.5599
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "en",
+          "retrieval_ms": 1494,
+          "contexts": [
+            "Kit de démarrage ESP32/IoT — niveau avancé | Catégorie: Kits & Prototypage | Prix: 132.12 DT | Disponibilité: en stock | Caractéristiques: Kit avancé orienté ESP32/IoT | Kit complet avancé pour démarrer un projet ESP32/IoT.",
+            "Kit de démarrage ESP32/IoT — niveau intermédiaire | Catégorie: Kits & Prototypage | Prix: 112.86 DT | Disponibilité: en stock | Caractéristiques: Kit intermédiaire orienté ESP32/IoT | Kit complet intermédiaire pour démarrer un projet ESP32/IoT.",
+            "Module ESP32-CAM (4MB Flash) | Catégorie: Cartes Programmables | Prix: 67.92 DT | Disponibilité: en stock | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 4MB Flash | Carte ESP32-CAM pour projets IoT connectés, 4MB Flash de stockage.",
+            "Module ESP32-CAM (8MB Flash) | Catégorie: Cartes Programmables | Prix: 66.22 DT | Disponibilité: en stock | Caractéristiques: WiFi 802.11 b/g/n, Bluetooth (selon modèle), 8MB Flash | Carte ESP32-CAM pour projets IoT connectés, 8MB Flash de stockage."
+          ],
+          "retrieved_sources": [
+            "LS-KP-000021",
+            "LS-KP-000016",
+            "LS-CP-000027",
+            "LS-CP-000028"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.45,
+          "would_escalate": false,
+          "answer": "Yes, we do. We currently have the following ESP‑based products in stock:\n\n| Product | Flash | Price (DT) | Availability |\n|---|---|---|---|\n| ESP32‑CAM module | 4 MB | 67.92 DT | In stock |\n| ESP32‑CAM module | 8 MB | 66.22 DT | In stock |\n| ESP32/IOT starter kit – intermediate level | – | 112.86 DT | In stock |\n| ESP32/IOT starter kit – advanced level | – | 132.12 DT | In stock |\n\nLet me know if you’d like more details or assistance with an order.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 0.4,
+              "faithfulness": 0.8571,
+              "answer_relevancy": 0.5308
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "ar-frais",
+      "lang": "ar",
+      "category": "sav",
+      "question": "كم تكلفة التوصيل",
+      "reference": "La livraison est gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et de 12 DT pour le reste du pays.",
+      "sources": [
+        "sav/livraison.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "ar",
+          "retrieval_ms": 145,
+          "contexts": [
+            "Q: Quels sont les frais de livraison ?\nR: Livraison gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et 12 DT pour le reste du pays.",
+            "Q: Proposez-vous des tarifs dégressifs pour les commandes en grande quantité ?\nR: Oui, à partir de 20 unités d'une même référence, une remise quantité peut être appliquée. Contactez le service client avec la liste souhaitée pour obtenir un devis.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Existe-t-il une livraison express ?\nR: Oui, une option express (livraison en 24h sur le Grand Tunis) est disponible pour 15 DT supplémentaires."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt",
+            "sav/livraison.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.621,
+          "would_escalate": false,
+          "answer": "تكلفة التوصيل تعتمد على قيمة طلبكم وموقعكم:\n\n- **الطلبات التي تبلغ قيمتها 150 د.ت أو أكثر**: توصيل مجاني في جميع أنحاء تونس.  \n- **الطلبات التي تقل عن 150 د.ت**:  \n  - **المنطقة الكبرى (Grand Tunis)**: 8 د.ت.  \n  - **بقية أنحاء البلاد**: 12 د.ت.\n\nيرجى إبلاغنا بموقعكم لتحديد الرسوم بدقة. إذا كان لديكم أي استفسار آخر، نحن في خدمتكم.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.5714,
+              "answer_relevancy": 0.5177
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "ar",
+          "retrieval_ms": 425,
+          "contexts": [
+            "Q: Quels sont les frais de livraison ?\nR: Livraison gratuite à partir de 150 DT d'achat. En dessous, les frais sont de 8 DT pour le Grand Tunis et 12 DT pour le reste du pays.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Câble ruban 50 conducteurs (5m) | Catégorie: Connectique | Prix: 9.82 DT | Disponibilité: en stock | Caractéristiques: 50 conducteurs, 5m | Câble plat ruban 50 conducteurs, 5m.",
+            "Câble ruban 20 conducteurs (5m) | Catégorie: Connectique | Prix: 12.74 DT | Disponibilité: en stock | Caractéristiques: 20 conducteurs, 5m | Câble plat ruban 20 conducteurs, 5m."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "ecommerce/paiement.txt",
+            "LS-CN-001004",
+            "LS-CN-000992"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.621,
+          "would_escalate": false,
+          "answer": "تكلفة التوصيل تعتمد على قيمة طلبك وموقعك:\n\n- **الطلبات التي قيمتها 150 د.ت أو أكثر**: توصيل مجاني في جميع أنحاء تونس.  \n- **الطلبات التي قيمتها أقل من 150 د.ت**:  \n  - **المنطقة الكبرى (Grand Tunis)**: 8 د.ت.  \n  - **بقية أنحاء البلاد**: 12 د.ت.  \n\nإذا كان لديك أي سؤال آخر أو تحتاج مساعدة في إتمام طلبك، فأنا هنا للمساعدة.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8,
+              "answer_relevancy": 0.5349
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "ar-retour",
+      "lang": "ar",
+      "category": "sav",
+      "question": "هل يمكنني إرجاع المنتج",
+      "reference": "Oui, sous 7 jours calendaires après réception, si le produit n'est ni ouvert ni utilisé.",
+      "sources": [
+        "sav/retours.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "ar",
+          "retrieval_ms": 212,
+          "contexts": [
+            "Q: Dans quel état le produit doit-il être pour être retourné ?\nR: Le produit doit être neuf, non utilisé, dans son emballage d'origine non ouvert, avec tous les accessoires et la facture d'achat.",
+            "Q: Quel est le délai pour retourner un produit ?\nR: Vous disposez de 7 jours calendaires à partir de la date de réception pour retourner un produit non ouvert et non utilisé.",
+            "Q: Mon produit est arrivé cassé ou défectueux, que faire ?\nR: Prenez une photo du produit et de l'emballage, puis contactez-nous sous 48h via ce chat ou par email à contact@lissstrike.tn avec votre numéro de commande. Un remplacement ou remboursement sera proposé.",
+            "Q: Puis-je être remboursé sans retourner le produit défectueux ?\nR: Pour les produits de faible valeur (moins de 20 DT), un remboursement direct sur photo peut être accordé sans retour, à la discrétion du service SAV. Au-delà, un retour est généralement demandé."
+          ],
+          "retrieved_sources": [
+            "sav/retours.txt",
+            "sav/retours.txt",
+            "sav/reclamations.txt",
+            "sav/reclamations.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.645,
+          "would_escalate": false,
+          "answer": "نعم، يمكنك إرجاع المنتج شريطة استيفائه للشروط التالية:\n\n1. **حالة المنتج**: يجب أن يكون المنتج جديدًا غير مُستَخدم، داخل عبوته الأصلية غير المفتوحة، مع جميع الملحقات وفاتورة الشراء.  \n2. **المهلة الزمنية**: يحق لك إرجاع المنتج خلال **7 أيام تقويمية** من تاريخ استلامه.  \n3. **الإجراءات**: يُرجى التواصل معنا عبر هذا الدردشة أو عبر البريد الإلكتروني **contact@lissstrike.tn** مع ذكر رقم طلبك لتلقي تعليمات الإرجاع (عنوان الإرجاع، طريقة الشحن، إلخ).\n\nإذا كان المنتج وصلكم معطوبًا أو به عيب، يرجى التقاط صورة للمنتج والعبوة وإبلاغنا خلال 48 ساعة لتقديم بديل أو استرداد وفقًا لسياسة الضمان.\n\nنحن في خدمتك لأي استفسار إضافي.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8889,
+              "answer_relevancy": 0.6674
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "ar",
+          "retrieval_ms": 1219,
+          "contexts": [
+            "Q: Le produit est-il réparé ou remplacé sous garantie ?\nR: Selon la disponibilité en stock : remplacement à l'identique si possible, sinon réparation ou avoir. Le choix final revient au service SAV après diagnostic.",
+            "Q: Quels produits ne peuvent pas être retournés ?\nR: Les composants électroniques déballés (résistances, capteurs, modules) ne sont pas repris une fois l'emballage ouvert, sauf défaut de fabrication. Les logiciels/licences ne sont pas remboursables après activation.",
+            "Q: Peut-on échanger un produit au lieu de le rembourser ?\nR: Oui, l'échange contre un autre produit de valeur équivalente ou supérieure (avec complément de paiement) est possible sous les mêmes conditions que le retour.",
+            "Q: Puis-je être remboursé sans retourner le produit défectueux ?\nR: Pour les produits de faible valeur (moins de 20 DT), un remboursement direct sur photo peut être accordé sans retour, à la discrétion du service SAV. Au-delà, un retour est généralement demandé."
+          ],
+          "retrieved_sources": [
+            "sav/garantie.txt",
+            "sav/retours.txt",
+            "sav/retours.txt",
+            "sav/reclamations.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.598,
+          "would_escalate": false,
+          "answer": "نعم، يمكن إرجاع المنتج شريطة استيفائه لشروط سياسة الإرجاع لدينا.  \n\n- **المنتجات القابلة للإرجاع**: يجب أن تكون غير مفتوحة وغير مستخدمة، وأن تُعاد في حالتها الأصلية مع جميع الملحقات وعبوتها.  \n- **المنتجات غير القابلة للإرجاع**:  \n  - المكوّنات الإلكترونية (مثل المقاومات، الحساسات، الوحدات) التي تم فتح عبوتها، ما لم يكن هناك عيب تصنيع.  \n  - البرمجيات أو التراخيص التي تم تفعيلها.  \n\nإذا كان المنتج غير مفتوح أو يواجه عيبًا في الصنع، يمكنك إرساله إلى قسم الخدمة بعد التواصل معنا للحصول على رقم إرجاع وإرشادات الشحن.  \n\nكما يمكننا استبدال المنتج بمنتج آخر من قيمته مساوية أو أعلى (مع دفع الفارق) إذا رغبت في ذلك.  \n\nللبدء بعملية الإرجاع أو الاستفسار عن حالة طلبك، يرجى التواصل مع فريق الدعم عبر البريد الإلكتروني أو رقم الهاتف المتوفر على موقعنا. نحن هنا لمساعدتك.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.5,
+              "context_recall": 0.0,
+              "faithfulness": 0.375,
+              "answer_relevancy": 0.6674
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "ar-garantie",
+      "lang": "ar",
+      "category": "sav",
+      "question": "ما هي مدة الضمان",
+      "reference": "La garantie dépend du produit : 6 mois pour les cartes programmables et l'outillage, 3 mois pour les modules et capteurs, 12 mois pour les instruments de mesure, contre tout défaut de fabrication.",
+      "sources": [
+        "sav/garantie.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "ar",
+          "retrieval_ms": 162,
+          "contexts": [
+            "Q: Combien de temps pour traiter une réclamation ?\nR: Sous 3 à 5 jours ouvrés après réception de toutes les informations nécessaires (photos, numéro de commande).",
+            "Q: Quelle est la durée de garantie sur l'outillage (fer à souder, pinces) ?\nR: 6 mois, hors usure normale (panne de fer à souder, lames émoussées).",
+            "Q: Quelle est la durée de garantie sur les instruments de mesure (multimètres, oscilloscopes) ?\nR: 12 mois contre tout défaut de fabrication.",
+            "Q: Quelle est la durée de garantie sur les modules et capteurs ?\nR: 3 mois contre tout défaut de fabrication."
+          ],
+          "retrieved_sources": [
+            "sav/reclamations.txt",
+            "sav/garantie.txt",
+            "sav/garantie.txt",
+            "sav/garantie.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.646,
+          "would_escalate": false,
+          "answer": "تحية طيبة،  \n\nمدة الضمان تختلف حسب نوع المنتج:\n\n- **الأدوات اليدوية (مثل مكواة اللحام والملقط)**: 6 أشهر – باستثناء الاستهلاك الطبيعي.  \n- **أجهزة القياس (مثل الملتيمترات وأجهزة الأوسيلوسكوب)**: 12 شهرًا ضد أي عيب تصنيعي.  \n- **الوحدات والحساسات**: 3 أشهر ضد أي عيب تصنيعي.  \n\nإذا كان لديك منتج محدد ترغب في معرفة مدة ضمانه، يرجى تزويدنا باسمه أو رقم الطلب لنتمكن من توضيح ذلك بدقة.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.6389,
+              "context_recall": 0.6667,
+              "faithfulness": 0.6667,
+              "answer_relevancy": 0.5485
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "ar",
+          "retrieval_ms": 1219,
+          "contexts": [
+            "Q: Quelle est la durée de garantie sur l'outillage (fer à souder, pinces) ?\nR: 6 mois, hors usure normale (panne de fer à souder, lames émoussées).",
+            "Q: Livrez-vous le week-end ?\nR: Les livraisons ont lieu du lundi au vendredi. Une commande passée le week-end est traitée dès le lundi ouvré suivant.",
+            "Q: Combien de temps pour être remboursé après un retour accepté ?\nR: Le remboursement est effectué sous 5 à 10 jours ouvrés après réception et vérification du produit retourné, sur le même moyen de paiement utilisé à l'achat.",
+            "Q: Combien de temps pour traiter une réclamation ?\nR: Sous 3 à 5 jours ouvrés après réception de toutes les informations nécessaires (photos, numéro de commande)."
+          ],
+          "retrieved_sources": [
+            "sav/garantie.txt",
+            "sav/livraison.txt",
+            "sav/retours.txt",
+            "sav/reclamations.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.646,
+          "would_escalate": false,
+          "answer": "مدة الضمان تختلف حسب نوع المنتج. وفقًا للمعلومات المتوفرة لدينا، فإن الضمان على الأدوات (مثل مكواة اللحام والملقط) هو **ستة أشهر**، ولا يشمل البلى العادي. \n\nبالنسبة لبقية المنتجات (اللوحات القابلة للبرمجة، الحساسات، الوحدات، إلخ) لا تتوفر لدينا تفاصيل محددة حول مدة الضمان. إذا رغبت في معرفة الضمان الخاص بمنتج معين، يرجى تزويدنا باسم المنتج أو رقم الطلب وسنقوم بالتحقق من ذلك أو تحويلك إلى أحد المستشارين.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 0.2,
+              "faithfulness": 0.3333,
+              "answer_relevancy": 0.4515
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "ar-paiement",
+      "lang": "ar",
+      "category": "sav",
+      "question": "ما هي طرق الدفع المتاحة",
+      "reference": "Les moyens de paiement acceptés sont la carte bancaire (Visa/Mastercard) en ligne, le paiement à la livraison en espèces, D17 et Flouci.",
+      "sources": [
+        "ecommerce/paiement.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "ar",
+          "retrieval_ms": 154,
+          "contexts": [
+            "Q: Quels moyens de paiement sont acceptés ?\nR: Carte bancaire (Visa/Mastercard) en ligne, paiement à la livraison en espèces (cash), D17, et Flouci.",
+            "Q: Peut-on payer en plusieurs fois ?\nR: Le paiement en plusieurs fois est disponible pour les commandes de plus de 300 DT, via facilité en 3 fois sans frais avec certaines cartes bancaires partenaires.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Que se passe-t-il si mon paiement en ligne échoue ?\nR: Vérifiez vos informations de carte ou réessayez avec un autre moyen de paiement (D17, Flouci, cash à la livraison). Contactez le service client si le problème persiste."
+          ],
+          "retrieved_sources": [
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.684,
+          "would_escalate": false,
+          "answer": "تحية طيبة،  \n\nطرق الدفع المتاحة في متجر Liss Strike هي:\n\n- **بطاقة بنكية** (Visa / Mastercard) عبر الدفع الإلكتروني.  \n- **الدفع عند التسليم** نقداً (Cash) في جميع أنحاء تونس، بحد أقصى 500 د.ت. لكل طلب.  \n- **بطاقة D17**.  \n- **بطاقة Flouci**.  \n\nبالإضافة إلى ذلك، يمكن للطلبات التي تتجاوز قيمتها 300 د.ت. الاستفادة من خيار **الدفع بالتقسيط 3 مرات بدون فائدة** مع البطاقات البنكية الشريكة.  \n\nإذا كان لديك أي استفسار آخر، يسعدنا مساعدتك.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.8056,
+              "context_recall": 1.0,
+              "faithfulness": 0.75,
+              "answer_relevancy": 0.6448
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "ar",
+          "retrieval_ms": 1121,
+          "contexts": [
+            "Q: Quels moyens de paiement sont acceptés ?\nR: Carte bancaire (Visa/Mastercard) en ligne, paiement à la livraison en espèces (cash), D17, et Flouci.",
+            "Q: Comment obtenir une facture ?\nR: Une facture électronique est envoyée automatiquement par email après chaque commande. Une facture papier peut être demandée en boutique.",
+            "Q: Peut-on payer en plusieurs fois ?\nR: Le paiement en plusieurs fois est disponible pour les commandes de plus de 300 DT, via facilité en 3 fois sans frais avec certaines cartes bancaires partenaires.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement."
+          ],
+          "retrieved_sources": [
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt",
+            "ecommerce/paiement.txt"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.684,
+          "would_escalate": false,
+          "answer": "تحية طيبة،  \n\nطرق الدفع المتاحة في متجر Liss Strike هي:\n\n- **بطاقة بنكية** (Visa / Mastercard) عبر الدفع الإلكتروني.  \n- **الدفع عند التسليم** نقدًا (Cash) في جميع أنحاء تونس، بدون رسوم إضافية وبحد أقصى 500 د.ت. لكل طلب.  \n- **بطاقة D17**.  \n- **بطاقة Flouci**.  \n\nبالإضافة إلى ذلك، يمكن للطلبات التي تتجاوز 300 د.ت. الاستفادة من خيار **الدفع بالتقسيط** على ثلاث دفعات دون فوائد، وذلك عبر بطاقات بنكية شريكة.  \n\nإذا كان لديك أي استفسار آخر، فأنا في خدمتك.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.75,
+              "context_recall": 1.0,
+              "faithfulness": 0.625,
+              "answer_relevancy": 0.6448
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "tn-garantie",
+      "lang": "tn",
+      "category": "sav",
+      "question": "chnowa el garantie mta3 el multimetre",
+      "reference": "Les instruments de mesure comme les multimètres sont garantis 12 mois contre tout défaut de fabrication.",
+      "sources": [
+        "sav/garantie.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "tn",
+          "retrieval_ms": 198,
+          "contexts": [
+            "LED UV 3mm (diffusé) | Catégorie: Composants | Prix: 0.71 DT | Disponibilité: en stock | Caractéristiques: UV, 3mm, diffusé | LED UV 3mm, finition diffusé.",
+            "LED blanc 3mm (diffusé) | Catégorie: Composants | Prix: 0.17 DT | Disponibilité: en stock | Caractéristiques: blanc, 3mm, diffusé | LED blanc 3mm, finition diffusé.",
+            "Ruban LED WS2812B adressable 3m (144 LED/m, IP65 (résistant éclaboussures)) | Catégorie: Éclairage LED | Prix: 64.8 DT | Disponibilité: en stock | Caractéristiques: 3m, 144 LED/m, IP65 (résistant éclaboussures), adressable individuellement | Ruban LED RGB adressable WS2812B, 3m, 144 LED/m, IP65 (résistant éclaboussures).",
+            "Ruban LED WS2812B adressable 3m (74 LED/m, IP65 (résistant éclaboussures)) | Catégorie: Éclairage LED | Prix: 58.79 DT | Disponibilité: en stock | Caractéristiques: 3m, 74 LED/m, IP65 (résistant éclaboussures), adressable individuellement | Ruban LED RGB adressable WS2812B, 3m, 74 LED/m, IP65 (résistant éclaboussures)."
+          ],
+          "retrieved_sources": [
+            "LS-CO-008314",
+            "LS-CO-008298",
+            "LS-EL-000089",
+            "LS-EL-000083"
+          ],
+          "hit_at_4": false,
+          "confidence": 0.438,
+          "would_escalate": false,
+          "answer": "Saha, ma nجمش نعطيك معلومات دقيقة على الضمان متاع الـmultimetre من قاعدة المعطيات اللي عنا. نجّم نتحقق من الموضوع ولا نحولك لمستشار الخدمة بش يعطيك التفاصيل الكاملة. إذا تحب، نبعثلك إيميل أو نكلمك مباشرة. ;)",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.0
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "tn",
+          "retrieval_ms": 2092,
+          "contexts": [
+            "Q: Quelle est la durée de garantie sur les instruments de mesure (multimètres, oscilloscopes) ?\nR: 12 mois contre tout défaut de fabrication.",
+            "Gaine thermorétractable Ø3mm (transparent, 1m) | Catégorie: Connectique | Prix: 1.1 DT | Disponibilité: en stock | Caractéristiques: Diamètre 3mm, transparent, ratio 2:1 | Gaine thermorétractable Ø3mm, couleur transparent.",
+            "Multimètre numérique (milieu de gamme, basique) | Catégorie: Instruments de Mesure | Prix: 113.53 DT | Disponibilité: en stock | Caractéristiques: Gamme milieu de gamme, mesure basique | Multimètre milieu de gamme, fonction basique.",
+            "Multimètre numérique (entrée de gamme, basique) | Catégorie: Instruments de Mesure | Prix: 44.05 DT | Disponibilité: en stock | Caractéristiques: Gamme entrée de gamme, mesure basique | Multimètre entrée de gamme, fonction basique."
+          ],
+          "retrieved_sources": [
+            "sav/garantie.txt",
+            "LS-CN-000899",
+            "LS-IM-000003",
+            "LS-IM-000001"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.404,
+          "would_escalate": false,
+          "answer": "الضمان على الملتيمتر هو 12 شهر ضد أي عيب تصنيعي. إذا تحتاج أي مساعدة أخرى، راني موجود.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.5,
+              "answer_relevancy": 0.3977
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "tn-sfax",
+      "lang": "tn",
+      "category": "sav",
+      "question": "9adeh el livraison l sfax",
+      "reference": "Oui, Liss Strike livre à Sfax. Hors Grand Tunis, les frais sont de 12 DT (gratuit à partir de 150 DT d'achat) et le délai est de 3 à 6 jours ouvrés.",
+      "sources": [
+        "sav/livraison.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "tn",
+          "retrieval_ms": 204,
+          "contexts": [
+            "Q: Existe-t-il une livraison express ?\nR: Oui, une option express (livraison en 24h sur le Grand Tunis) est disponible pour 15 DT supplémentaires.",
+            "Q: Livrez-vous le week-end ?\nR: Les livraisons ont lieu du lundi au vendredi. Une commande passée le week-end est traitée dès le lundi ouvré suivant.",
+            "Q: Il manque un article dans mon colis, que faire ?\nR: Signalez-le sous 48h après réception avec votre numéro de commande. Nous vérifions avec l'entrepôt et vous renvoyons l'article manquant sans frais.",
+            "Bouton d'arrêt d'urgence | Catégorie: Composants | Prix: 11.69 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Bouton d'arrêt d'urgence."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "sav/livraison.txt",
+            "sav/reclamations.txt",
+            "LS-CO-008460"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.482,
+          "would_escalate": false,
+          "answer": "Ma3lich, ma 3andich ma3loumet d9i9a 3la thaman el livraison le Sfax. Najem n3ayetlek l’équipe ta3na w ykounou y3touk el ma3loumet el moudakika. T9adar tba3athna message w n3awdou n9aymouha m3ak. Merci!",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.0
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "tn",
+          "retrieval_ms": 1263,
+          "contexts": [
+            "Q: Livrez-vous en dehors de Tunis (autres villes/gouvernorats) ?\nR: Oui, la livraison n'est pas limitée à Tunis : Sfax, Sousse, Bizerte, Gabès, Kairouan et tous les autres gouvernorats sont couverts.",
+            "Q: Livrez-vous le week-end ?\nR: Les livraisons ont lieu du lundi au vendredi. Une commande passée le week-end est traitée dès le lundi ouvré suivant.",
+            "Q: Quel est le délai de livraison standard ?\nR: Entre 2 et 4 jours ouvrés pour le Grand Tunis, et 3 à 6 jours ouvrés pour le reste de la Tunisie.",
+            "Barrette 9 broches (coudé 90°, pas 2.0mm) | Catégorie: Connectique | Prix: 1.56 DT | Disponibilité: en stock | Caractéristiques: 9 broches, coudé 90°, pas 2.0mm | Barrette de connecteurs 9 broches, coudé 90°, pas 2.0mm."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "sav/livraison.txt",
+            "sav/livraison.txt",
+            "LS-CN-000341"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.47,
+          "would_escalate": false,
+          "answer": "ما عنديش معلومات دقيقة على ثمن التوصيل لسفكس. نجم نتحقق من الموضوع أو نحولك لمستشار الخدمة بش يعطيك التفاصيل اللازمة. إذا تحب، نبعثلك إيميل أو نكلمك على الرقم متاعنا. شكراً لتفهمك.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.8333,
+              "context_recall": 0.5,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.0
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "off-couscous",
+      "lang": "fr",
+      "category": "hors-sujet",
+      "question": "Quelle est la recette du couscous tunisien ?",
+      "reference": null,
+      "sources": [],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 178,
+          "contexts": [
+            "Q: Livrez-vous à l'international, en dehors de la Tunisie ?\nR: [À REMPLIR : préciser si livraison internationale disponible ou non — non traité dans l'exemple par manque d'information fiable]",
+            "Q: Livrez-vous en dehors de Tunis (autres villes/gouvernorats) ?\nR: Oui, la livraison n'est pas limitée à Tunis : Sfax, Sousse, Bizerte, Gabès, Kairouan et tous les autres gouvernorats sont couverts.",
+            "Q: Livrez-vous en dehors de Tunis ?\nR: Oui, nous livrons dans toute la Tunisie, dans les 24 gouvernorats, pas seulement dans le Grand Tunis. Les délais varient selon l'éloignement (voir la rubrique livraison).",
+            "Q: Quel est le délai de livraison standard ?\nR: Entre 2 et 4 jours ouvrés pour le Grand Tunis, et 3 à 6 jours ouvrés pour le reste de la Tunisie."
+          ],
+          "retrieved_sources": [
+            "general/faq.txt",
+            "sav/livraison.txt",
+            "general/faq.txt",
+            "sav/livraison.txt"
+          ],
+          "hit_at_4": null,
+          "confidence": 0.5,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nJe suis désolé, mais je ne peux répondre qu'aux questions relatives à Liss Strike (livraison, garantie, produits électroniques, paiement, etc.).  \n\nSi vous avez une demande concernant une commande, un produit ou un service de notre boutique, n’hésitez pas à me le préciser, je serai ravi de vous aider.  \n\nBonne journée.",
+          "ragas": {
+            "scores": {},
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 954,
+          "contexts": [
+            "Q: Qui est Liss Strike ?\nR: Liss Strike est une boutique tunisienne spécialisée dans l'électronique et les composants pour makers : cartes programmables, capteurs, modules, outillage et impression 3D, pour particuliers, étudiants et professionnels.",
+            "Q: Le paiement à la livraison (cash) est-il disponible partout ?\nR: Oui, dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande pour ce mode de paiement.",
+            "Q: Où se trouve la boutique Liss Strike ?\nR: Beb Bhar, Tunis",
+            "Panneau solaire 5V 0.5W | Catégorie: Alimentation | Prix: 10.5 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Panneau solaire 5V 0.5W."
+          ],
+          "retrieved_sources": [
+            "general/faq.txt",
+            "ecommerce/paiement.txt",
+            "general/faq.txt",
+            "LS-AL-000043"
+          ],
+          "hit_at_4": null,
+          "confidence": 0.429,
+          "would_escalate": false,
+          "answer": "Je suis désolé, mais je ne peux répondre qu'aux questions concernant Liss Strike (produits électroniques, commandes, livraisons, SAV, etc.). Pour toute autre demande, je vous invite à consulter une source appropriée.",
+          "ragas": {
+            "scores": {},
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "off-jupiter",
+      "lang": "fr",
+      "category": "hors-sujet",
+      "question": "Combien de lunes a la planete Jupiter ?",
+      "reference": null,
+      "sources": [],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 235,
+          "contexts": [
+            "Câbles Dupont Mâle-Femelle 5cm (lot de 100) | Catégorie: Connectique | Prix: 15.87 DT | Disponibilité: en stock | Caractéristiques: Mâle-Femelle, 5cm, lot de 100 | Câbles de prototypage Dupont Mâle-Femelle, 5cm.",
+            "Câbles Dupont Mâle-Mâle 5cm (lot de 100) | Catégorie: Connectique | Prix: 13.79 DT | Disponibilité: en stock | Caractéristiques: Mâle-Mâle, 5cm, lot de 100 | Câbles de prototypage Dupont Mâle-Mâle, 5cm.",
+            "Câbles Dupont Mâle-Mâle 30cm (lot de 100) | Catégorie: Connectique | Prix: 7.8 DT | Disponibilité: en stock | Caractéristiques: Mâle-Mâle, 30cm, lot de 100 | Câbles de prototypage Dupont Mâle-Mâle, 30cm.",
+            "Potentiomètre 470kΩ (linéaire) | Catégorie: Composants | Prix: 3.63 DT | Disponibilité: en stock | Caractéristiques: 470kΩ, linéaire | Potentiomètre 470kΩ, réponse linéaire."
+          ],
+          "retrieved_sources": [
+            "LS-CN-000088",
+            "LS-CN-000008",
+            "LS-CN-000048",
+            "LS-CO-008367"
+          ],
+          "hit_at_4": null,
+          "confidence": 0.267,
+          "would_escalate": true,
+          "answer": "Je suis désolé, mais je ne peux répondre qu'aux questions concernant les produits, les commandes, la livraison, la garantie ou le service après‑vente de Liss Strike. Si vous avez une demande à ce sujet, n’hésitez pas !",
+          "ragas": {
+            "scores": {},
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 1786,
+          "contexts": [
+            "Potentiomètre 470kΩ (linéaire) | Catégorie: Composants | Prix: 3.63 DT | Disponibilité: en stock | Caractéristiques: 470kΩ, linéaire | Potentiomètre 470kΩ, réponse linéaire.",
+            "Câbles Dupont Mâle-Mâle 15cm (lot de 100) | Catégorie: Connectique | Prix: 5.81 DT | Disponibilité: en stock | Caractéristiques: Mâle-Mâle, 15cm, lot de 100 | Câbles de prototypage Dupont Mâle-Mâle, 15cm.",
+            "Câbles Dupont Mâle-Mâle 5cm (lot de 10) | Catégorie: Connectique | Prix: 14.76 DT | Disponibilité: en stock | Caractéristiques: Mâle-Mâle, 5cm, lot de 10 | Câbles de prototypage Dupont Mâle-Mâle, 5cm.",
+            "Câbles Dupont Mâle-Mâle 40cm (lot de 100) | Catégorie: Connectique | Prix: 4.13 DT | Disponibilité: en stock | Caractéristiques: Mâle-Mâle, 40cm, lot de 100 | Câbles de prototypage Dupont Mâle-Mâle, 40cm."
+          ],
+          "retrieved_sources": [
+            "LS-CO-008367",
+            "LS-CN-000024",
+            "LS-CN-000001",
+            "LS-CN-000056"
+          ],
+          "hit_at_4": null,
+          "confidence": 0.263,
+          "would_escalate": true,
+          "answer": "Je suis désolé, mais je ne peux répondre qu'aux questions concernant Liss Strike (SAV, commandes, livraison, garantie, produits électroniques, paiement, etc.). Pour toute autre information, je vous invite à consulter une source appropriée.",
+          "ragas": {
+            "scores": {},
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "off-capitale",
+      "lang": "fr",
+      "category": "hors-sujet",
+      "question": "Quelle est la capitale de la France ?",
+      "reference": null,
+      "sources": [],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 173,
+          "contexts": [
+            "Q: Livrez-vous en dehors de Tunis (autres villes/gouvernorats) ?\nR: Oui, la livraison n'est pas limitée à Tunis : Sfax, Sousse, Bizerte, Gabès, Kairouan et tous les autres gouvernorats sont couverts.",
+            "Q: Où se trouve la boutique Liss Strike ?\nR: Beb Bhar, Tunis",
+            "Q: Livrez-vous en dehors de Tunis ?\nR: Oui, nous livrons dans toute la Tunisie, dans les 24 gouvernorats, pas seulement dans le Grand Tunis. Les délais varient selon l'éloignement (voir la rubrique livraison).",
+            "Q: Quelles régions de Tunisie sont couvertes ?\nR: Nous livrons dans toute la Tunisie, dans les 24 gouvernorats, pas seulement dans le Grand Tunis. Les zones plus éloignées (Sud, Nord-Ouest) peuvent avoir un délai légèrement plus long."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "general/faq.txt",
+            "general/faq.txt",
+            "sav/livraison.txt"
+          ],
+          "hit_at_4": null,
+          "confidence": 0.363,
+          "would_escalate": false,
+          "answer": "Je suis désolé, mais je ne peux répondre qu'aux questions relatives à Liss Strike (livraison, produits, SAV, etc.). Pour toute autre information, je vous invite à consulter une source appropriée.",
+          "ragas": {
+            "scores": {},
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 306,
+          "contexts": [
+            "Q: Livrez-vous en dehors de Tunis (autres villes/gouvernorats) ?\nR: Oui, la livraison n'est pas limitée à Tunis : Sfax, Sousse, Bizerte, Gabès, Kairouan et tous les autres gouvernorats sont couverts.",
+            "Q: Livrez-vous en dehors de Tunis ?\nR: Oui, nous livrons dans toute la Tunisie, dans les 24 gouvernorats, pas seulement dans le Grand Tunis. Les délais varient selon l'éloignement (voir la rubrique livraison).",
+            "Q: Où se trouve la boutique Liss Strike ?\nR: Beb Bhar, Tunis",
+            "Q: Quelles régions de Tunisie sont couvertes ?\nR: Nous livrons dans toute la Tunisie, dans les 24 gouvernorats, pas seulement dans le Grand Tunis. Les zones plus éloignées (Sud, Nord-Ouest) peuvent avoir un délai légèrement plus long."
+          ],
+          "retrieved_sources": [
+            "sav/livraison.txt",
+            "general/faq.txt",
+            "general/faq.txt",
+            "sav/livraison.txt"
+          ],
+          "hit_at_4": null,
+          "confidence": 0.363,
+          "would_escalate": false,
+          "answer": "Je suis désolé, mais je ne peux répondre qu'aux questions concernant Liss Strike (livraison, produits, SAV, etc.). Pour toute autre information, je vous invite à consulter une source appropriée.",
+          "ragas": {
+            "scores": {},
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "tn-probleme",
+      "lang": "tn",
+      "category": "sav",
+      "question": "3andi mochkla fil livraison",
+      "reference": "Si le produit est arrivé cassé ou défectueux, prenez une photo du produit et de l'emballage et contactez Liss Strike sous 48h via le chat ou à contact@lissstrike.tn avec le numéro de commande ; un remplacement ou un remboursement sera proposé.",
+      "sources": [
+        "sav/reclamations.txt",
+        "sav/livraison.txt"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "tn",
+          "retrieval_ms": 179,
+          "contexts": [
+            "Pompe à dessouder | Catégorie: Outillage | Prix: 4.87 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Pompe à dessouder.",
+            "Q: Peut-on se faire livrer en point relais ?\nR: Cette option n'est pas encore disponible ; la livraison se fait uniquement à domicile ou en retrait boutique.",
+            "Q: Existe-t-il une livraison express ?\nR: Oui, une option express (livraison en 24h sur le Grand Tunis) est disponible pour 15 DT supplémentaires.",
+            "Tresse à dessouder | Catégorie: Outillage | Prix: 3.43 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Tresse à dessouder."
+          ],
+          "retrieved_sources": [
+            "LS-OU-000027",
+            "sav/livraison.txt",
+            "sav/livraison.txt",
+            "LS-OU-000028"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.498,
+          "would_escalate": false,
+          "answer": "سْلام، نعتذر على الإزعاج. باش نجموا نعاونواك في مشكلة التوصيل، يلزمنا شوية تفاصيل إضافية:\n\n- رقم الطلبية (order number) إذا كان متوفر.\n- واش صاير بالضبط مع التوصيل (مثلاً: ما وصلتش، وصلت متأخرة، العنوان موش صحيح…).\n- العنوان اللي تمّ توصيل الطلبية إليه.\n\nكي تبعثلنا هالمعلومات، نجموا نتحققوا من حالة الشحنة ونقدموك الحل المناسب. إذا تحب تتواصل مباشرة مع أحد المستشارين، نقترح عليك الاتصال بخدمة الحرفاء على الرقم الموجود في موقعنا. شكراً لتفهمك.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.0
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "tn",
+          "retrieval_ms": 830,
+          "contexts": [
+            "Barrette 3 broches (droit, pas 2.0mm) | Catégorie: Connectique | Prix: 3.88 DT | Disponibilité: en stock | Caractéristiques: 3 broches, droit, pas 2.0mm | Barrette de connecteurs 3 broches, droit, pas 2.0mm.",
+            "Pince brucelles courbée | Catégorie: Outillage | Prix: 4.49 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Pince brucelles courbée.",
+            "Troisième main avec loupe | Catégorie: Outillage | Prix: 19.87 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Troisième main avec loupe.",
+            "Flux de soudure (pot) | Catégorie: Outillage | Prix: 5.87 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Flux de soudure (pot)."
+          ],
+          "retrieved_sources": [
+            "LS-CN-000266",
+            "LS-OU-000016",
+            "LS-OU-000021",
+            "LS-OU-000026"
+          ],
+          "hit_at_4": false,
+          "confidence": 0.449,
+          "would_escalate": false,
+          "answer": "عسلامة، نأسف على المشكلة في التوصيل. باش نجموا نعاونك أسرع، يلزمنا شوية تفاصيل إضافية:\n\n- رقم الطلب (الـ Order ID) إذا كان متوفر\n- تاريخ الطلب أو تاريخ الشحن المتوقع\n- وصف للمشكلة (مثلاً: ما وصلش الطلب، وصل متأخر، أو وصل بضاعة ناقصة)\n\nمن بعد ما توصلنا بالمعلومات هاذي، نتحققوا من حالة الشحنة ونرجعوا لك بأسرع وقت. إذا تحب، تنجم تبعثهم لينا هنا أو تتصل بخدمة الحرفاء على الرقم 71 555 555. شكراً لتفهمك.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.4904
+            },
+            "errors": {}
+          }
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "basic": {
+      "context_precision": 0.6452,
+      "context_recall": 0.5985,
+      "faithfulness": 0.5325,
+      "answer_relevancy": 0.4848,
+      "hit_at_4": 0.7727,
+      "retrieval_ms_median": 177,
+      "metric_failures": 1,
+      "lang_fr": {
+        "context_precision": 0.7424,
+        "context_recall": 0.7273,
+        "faithfulness": 0.5471,
+        "answer_relevancy": 0.5725
+      },
+      "lang_en": {
+        "context_precision": 0.6458,
+        "context_recall": 0.375,
+        "faithfulness": 0.7083,
+        "answer_relevancy": 0.4973
+      },
+      "lang_ar": {
+        "context_precision": 0.8611,
+        "context_recall": 0.9167,
+        "faithfulness": 0.7192,
+        "answer_relevancy": 0.5946
+      },
+      "lang_tn": {
+        "context_precision": 0.0,
+        "context_recall": 0.0,
+        "faithfulness": 0.0,
+        "answer_relevancy": 0.0
+      },
+      "offtopic_escalated": 1,
+      "offtopic_total": 3
+    },
+    "advanced": {
+      "context_precision": 0.9129,
+      "context_recall": 0.8,
+      "faithfulness": 0.6885,
+      "answer_relevancy": 0.5997,
+      "hit_at_4": 0.9545,
+      "retrieval_ms_median": 1214,
+      "metric_failures": 0,
+      "lang_fr": {
+        "context_precision": 1.0,
+        "context_recall": 0.9545,
+        "faithfulness": 0.8022,
+        "answer_relevancy": 0.6629
+      },
+      "lang_en": {
+        "context_precision": 1.0,
+        "context_recall": 0.85,
+        "faithfulness": 0.9226,
+        "answer_relevancy": 0.6788
+      },
+      "lang_ar": {
+        "context_precision": 0.8125,
+        "context_recall": 0.55,
+        "faithfulness": 0.5333,
+        "answer_relevancy": 0.5746
+      },
+      "lang_tn": {
+        "context_precision": 0.6111,
+        "context_recall": 0.5,
+        "faithfulness": 0.1667,
+        "answer_relevancy": 0.296
+      },
+      "offtopic_escalated": 1,
+      "offtopic_total": 3
+    }
+  }
+}

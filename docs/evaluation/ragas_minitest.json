@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "date": "2026-09-25T15:02:14",
+    "n_scored": 2,
+    "n_offtopic": 0,
+    "generator_model": "openai/gpt-oss-120b",
+    "judge_model": "openai/gpt-oss-120b",
+    "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+    "reranker_model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+    "rerank_candidates": 20,
+    "confidence_signal": "cosine",
+    "judge_requests": 49,
+    "judge_429": 17,
+    "gen_requests": 5,
+    "gen_429": 1,
+    "duration_min": 6.9
+  },
+  "results": [
+    {
+      "id": "p-vl53l0x",
+      "lang": "fr",
+      "category": "produit",
+      "question": "Avez-vous un capteur de distance VL53L0X ?",
+      "reference": "Oui, le capteur VL53L0X est en stock en trois versions : capteur seul (nu) à 32,98 DT, breakout board à 50,93 DT et module complet à 54,04 DT.",
+      "sources": [
+        "LS-CA-000034",
+        "LS-CA-000035",
+        "LS-CA-000036"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 3066,
+          "contexts": [
+            "Capteur VL53L0X (capteur seul (nu)) | Catégorie: Capteurs | Prix: 32.98 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version capteur seul (nu).",
+            "Capteur VL53L0X (module complet) | Catégorie: Capteurs | Prix: 54.04 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version module complet.",
+            "Capteur VL53L0X (breakout board) | Catégorie: Capteurs | Prix: 50.93 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version breakout board.",
+            "Module NRF24L01+PA+LNA | Catégorie: Modules | Prix: 39.02 DT | Disponibilité: en stock | Caractéristiques: RF 2.4GHz longue portée | Module NRF24L01+PA+LNA — RF 2.4GHz longue portée."
+          ],
+          "retrieved_sources": [
+            "LS-CA-000035",
+            "LS-CA-000034",
+            "LS-CA-000036",
+            "LS-MO-000066"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.626,
+          "would_escalate": false,
+          "answer": "Oui, nous proposons le capteur de distance VL53L0X sous trois formes :\n\n| Variante | Prix | Disponibilité |\n|----------|------|----------------|\n| Capteur VL53L0X (seul, nu) | 32,98 DT | En stock |\n| Capteur VL53L0X (module complet) | 54,04 DT | En stock |\n| Capteur VL53L0X (breakout board) | 50,93 DT | En stock |\n\nN’hésitez pas à nous indiquer la version qui vous intéresse ou à poser d’autres questions !",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8,
+              "answer_relevancy": 0.7732
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 629,
+          "contexts": [
+            "Capteur VL53L0X (capteur seul (nu)) | Catégorie: Capteurs | Prix: 32.98 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version capteur seul (nu).",
+            "Capteur VL53L0X (breakout board) | Catégorie: Capteurs | Prix: 50.93 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version breakout board.",
+            "Capteur VL53L0X (module complet) | Catégorie: Capteurs | Prix: 54.04 DT | Disponibilité: en stock | Caractéristiques: Distance laser ToF | Capteur VL53L0X — Distance laser ToF. Livré en version module complet.",
+            "Capteur Sharp GP2Y0A21 (breakout board) | Catégorie: Capteurs | Prix: 10.95 DT | Disponibilité: en stock | Caractéristiques: Distance infrarouge 10-80cm | Capteur Sharp GP2Y0A21 — Distance infrarouge 10-80cm. Livré en version breakout board."
+          ],
+          "retrieved_sources": [
+            "LS-CA-000035",
+            "LS-CA-000036",
+            "LS-CA-000034",
+            "LS-CA-000039"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.626,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nOui, nous proposons le capteur de distance VL53L0X sous trois déclinaisons, toutes en stock :\n\n| Variante | Prix | Description |\n|----------|------|-------------|\n| **Capteur VL53L0X (nu)** | 32,98 DT | Capteur seul, sans circuit d’interface. |\n| **Capteur VL53L0X (breakout board)** | 50,93 DT | Version avec carte d’interface pour faciliter le branchement. |\n| **Capteur VL53L0X (module complet)** | 54,04 DT | Module prêt à l’emploi, incluant le breakout et les protections nécessaires. |\n\nN’hésitez pas à me dire laquelle vous intéresse ou si vous avez besoin d’informations complémentaires (compatibilité, mode de paiement, etc.).",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.6,
+              "answer_relevancy": 0.7272
+            },
+            "errors": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "p-18650",
+      "lang": "fr",
+      "category": "produit",
+      "question": "Vous avez des piles 18650 en stock ?",
+      "reference": "Oui, les piles/batteries 18650 sont en stock en packs de 4 (9,44 DT), de 10 (23,43 DT) et de 20 (6,32 DT).",
+      "sources": [
+        "LS-AL-000031",
+        "LS-AL-000032",
+        "LS-AL-000033"
+      ],
+      "runs": {
+        "basic": {
+          "language_detected": "fr",
+          "retrieval_ms": 230,
+          "contexts": [
+            "Chargeur batteries 18650 (2 slots) | Catégorie: Alimentation | Prix: 18.76 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Chargeur batteries 18650 (2 slots).",
+            "Support batterie 18650 (x1) avec fil | Catégorie: Alimentation | Prix: 2.46 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Support batterie 18650 (x1) avec fil.",
+            "Chargeur batteries 18650 (4 slots) | Catégorie: Alimentation | Prix: 28.06 DT | Disponibilité: sur commande | Caractéristiques: Voir fiche technique | Chargeur batteries 18650 (4 slots).",
+            "Support batterie 18650 (x2) avec fil | Catégorie: Alimentation | Prix: 4.11 DT | Disponibilité: en stock | Caractéristiques: Voir fiche technique | Support batterie 18650 (x2) avec fil."
+          ],
+          "retrieved_sources": [
+            "LS-AL-000049",
+            "LS-AL-000064",
+            "LS-AL-000050",
+            "LS-AL-000065"
+          ],
+          "hit_at_4": false,
+          "confidence": 0.676,
+          "would_escalate": false,
+          "answer": "Bonjour,\n\nJe ne trouve pas d'information dans notre base concernant la disponibilité de piles 18650. Je vous propose de vérifier cela pour vous ou de vous mettre en relation avec un conseiller qui pourra vous confirmer nos stocks.\n\nCordialement,\nService client Liss Strike.",
+          "ragas": {
+            "scores": {
+              "context_precision": 0.0,
+              "context_recall": 0.0,
+              "faithfulness": 0.0,
+              "answer_relevancy": 0.0
+            },
+            "errors": {}
+          }
+        },
+        "advanced": {
+          "language_detected": "fr",
+          "retrieval_ms": 2006,
+          "contexts": [
+            "Pile/Batterie 18650 (pack de 10) | Catégorie: Alimentation | Prix: 23.43 DT | Disponibilité: en stock | Caractéristiques: Type 18650, pack de 10 | Piles/batteries 18650, conditionnement pack de 10.",
+            "Pile/Batterie 18650 (pack de 4) | Catégorie: Alimentation | Prix: 9.44 DT | Disponibilité: en stock | Caractéristiques: Type 18650, pack de 4 | Piles/batteries 18650, conditionnement pack de 4.",
+            "Pile/Batterie 18650 (pack de 20) | Catégorie: Alimentation | Prix: 6.32 DT | Disponibilité: en stock | Caractéristiques: Type 18650, pack de 20 | Piles/batteries 18650, conditionnement pack de 20.",
+            "Batterie 18650 2200mAh (générique) | Catégorie: Alimentation | Prix: 11.92 DT | Disponibilité: en stock | Caractéristiques: Li-ion 3.7V, 2200mAh, générique | Batterie rechargeable 18650 2200mAh, version générique."
+          ],
+          "retrieved_sources": [
+            "LS-AL-000032",
+            "LS-AL-000031",
+            "LS-AL-000033",
+            "LS-AL-000004"
+          ],
+          "hit_at_4": true,
+          "confidence": 0.597,
+          "would_escalate": false,
+          "answer": "Oui, nous avons des piles 18650 en stock :\n\n- **Pack de 10** – disponible, prix 23,43 DT  \n- **Pack de 4** – disponible, prix 9,44 DT  \n- **Pack de 20** – disponible, prix 6,32 DT  \n\nNous proposons également une **batterie 18650 2200 mAh (générique)**, également en stock, au prix de 11,92 DT.  \n\nN’hésitez pas si vous avez besoin de précisions ou si vous souhaitez passer commande.",
+          "ragas": {
+            "scores": {
+              "context_precision": 1.0,
+              "context_recall": 1.0,
+              "faithfulness": 0.8333,
+              "answer_relevancy": 0.7879
+            },
+            "errors": {}
+          }
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "basic": {
+      "context_precision": 0.5,
+      "context_recall": 0.5,
+      "faithfulness": 0.4,
+      "answer_relevancy": 0.3866,
+      "hit_at_4": 0.5,
+      "retrieval_ms_median": 3066,
+      "metric_failures": 0,
+      "lang_fr": {
+        "context_precision": 0.5,
+        "context_recall": 0.5,
+        "faithfulness": 0.4,
+        "answer_relevancy": 0.3866
+      },
+      "offtopic_escalated": 0,
+      "offtopic_total": 0
+    },
+    "advanced": {
+      "context_precision": 1.0,
+      "context_recall": 1.0,
+      "faithfulness": 0.7167,
+      "answer_relevancy": 0.7575,
+      "hit_at_4": 1.0,
+      "retrieval_ms_median": 2006,
+      "metric_failures": 0,
+      "lang_fr": {
+        "context_precision": 1.0,
+        "context_recall": 1.0,
+        "faithfulness": 0.7167,
+        "answer_relevancy": 0.7575
+      },
+      "offtopic_escalated": 0,
+      "offtopic_total": 0
+    }
+  }
+}
