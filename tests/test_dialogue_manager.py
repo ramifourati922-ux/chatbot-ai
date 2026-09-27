@@ -102,10 +102,15 @@ async def test_session_persists_across_messages():
 
 
 @pytest.mark.asyncio
-async def test_rag_loop_triggers_automatic_escalation():
-    """RAG_LOOP_THRESHOLD messages RAG consécutifs (sans escalade ni
-    signal de satisfaction) doivent déclencher une escalade automatique
-    sur le dernier, puis remettre le compteur à zéro."""
+async def test_rag_loop_triggers_automatic_escalation(monkeypatch):
+    """RAG_LOOP_THRESHOLD réponses "je n'ai pas l'information" consécutives
+    (sans escalade ni signal de satisfaction) doivent déclencher une
+    escalade automatique sur la dernière, puis remettre le compteur à zéro.
+    Le LLM est remplacé par un "je ne sais pas" : seuls les échecs réels
+    comptent (3 BONNES réponses d'affilée ne doivent plus transférer, cf.
+    tests/test_rag_loop.py)."""
+    monkeypatch.setattr(dialogue_manager, "ask",
+                        lambda *a, **k: "Je n'ai pas cette information précise, désolé.")
     session_id = f"test-rag-loop-{uuid.uuid4()}"
     questions = [
         "Quel est le délai de garantie sur les cartes Arduino ?",
@@ -191,7 +196,11 @@ async def test_low_rag_confidence_message_in_multiple_languages(language, text):
 
 
 @pytest.mark.asyncio
-async def test_satisfaction_signal_resets_rag_loop_counter():
+async def test_satisfaction_signal_resets_rag_loop_counter(monkeypatch):
+    # Le LLM est remplacé par un "je ne sais pas" : seuls les échecs
+    # réels incrémentent le compteur (une réponse informative le remet à 0).
+    monkeypatch.setattr(dialogue_manager, "ask",
+                        lambda *a, **k: "Je n'ai pas cette information précise, désolé.")
     # Réutilise le singleton de dialogue_manager (pas une nouvelle
     # instance de SessionManager) : sous pytest-asyncio, chaque test
     # tourne dans sa propre boucle asyncio, et une instance Redis fraîche

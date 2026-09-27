@@ -16,12 +16,12 @@ Pour chaque message reçu :
    dans les 4 langues) → réponse toute prête, sans RAG ni LLM ; compteur
    de boucle RAG réinitialisé.
 4. Sinon → recherche RAG dans la knowledge base (ChromaDB). Le compteur
-   rag_attempts_count de la session est incrémenté à chaque passage ici ;
-   à 3 échecs consécutifs (aucune escalade ni signal de satisfaction
-   entre-temps), une escalade automatique est forcée sur CE message
-   plutôt que de laisser le client tourner en boucle. Un signal de
-   satisfaction explicite ("merci, c'est réglé"...) réinitialise aussi
-   le compteur.
+   rag_attempts_count de la session compte les réponses du LLM qui
+   disent ne pas avoir l'information ; à 3 échecs consécutifs, une
+   escalade automatique remplace la 3e réponse plutôt que de laisser le
+   client tourner en boucle. Une réponse informative, une escalade, une
+   politesse ou un signal de satisfaction explicite ("merci, c'est
+   réglé"...) réinitialise le compteur.
 5. Si la recherche RAG aboutit mais avec une confiance trop faible
    (1 - distance du meilleur hit < RAG_CONFIDENCE_THRESHOLD, ou score
    reranker si RAG_CONFIDENCE_SIGNAL="reranker", voir
@@ -126,11 +126,41 @@ def _get_small_talk_message(kind: str, language: str) -> str:
     return by_language.get(language, by_language["fr"])
 
 
-# Nombre de messages RAG consécutifs (sans escalade ni signal de
-# satisfaction) au-delà duquel on force une escalade automatique — le
-# bot n'arrive visiblement pas à aider, mieux vaut transférer que de
-# laisser le client tourner en boucle.
+# Nombre de réponses "je n'ai pas l'information" CONSÉCUTIVES au-delà
+# duquel on force une escalade automatique — le bot n'arrive visiblement
+# pas à aider, mieux vaut transférer que de laisser le client tourner en
+# boucle. Une réponse informative ou un signal de satisfaction remet le
+# compteur à zéro.
 RAG_LOOP_THRESHOLD = 3
+
+# Réponses du LLM où il dit ne pas avoir l'information (le prompt lui
+# demande de le dire clairement plutôt que d'inventer, cf.
+# llm_factory.BASE_SYSTEM_PROMPT). Formulations relevées sur de vraies
+# réponses ; apostrophes typographiques normalisées avant la recherche.
+# Limite : détection par mots-clés, une formulation inédite n'est pas
+# comptée (le client peut toujours demander un humain explicitement).
+_NO_INFO_PATTERNS = [re.compile(p, re.IGNORECASE) for p in (
+    # Français
+    r"je n'ai pas (cette |d'|l'|de |les? |la |aucune )?(information|info|donn[ée]e|d[ée]tail|pr[ée]cision)",
+    r"je ne (dispose|trouve) pas",
+    r"je n'ai pas acc[èe]s",
+    r"aucune information",
+    # Anglais
+    r"i (don't|do not) have (\w+ ){0,4}(information|info|details|data)",  # "...the specific warranty details"
+    r"i (couldn't|could not|can't|cannot) find",
+    r"no information (about|on|regarding)",
+    # Arabe
+    r"(ليس|ليست) (لدي|لديّ|عندي)",
+    r"لا (تتوفر|يتوفر|أملك|توجد) (لدي|لديّ )?معلومات",
+    # Tunisien (lettres arabes et arabizi)
+    r"ما ?عنديش",
+    r"ma ?3andi?ch",
+)]
+
+
+def _is_no_info_answer(text: str) -> bool:
+    normalized = text.replace("’", "'").replace("‘", "'")
+    return any(p.search(normalized) for p in _NO_INFO_PATTERNS)
 
 
 def _get_escalation_message(reason: Optional[str], language: str) -> str:
@@ -382,31 +412,11 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
     # 5. Signal de satisfaction ("merci, c'est réglé"...) → le client
     # indique que son problème est résolu, on repart de zéro sur le
     # compteur de boucle avant de continuer normalement vers le RAG.
+    # (6. Le compteur de boucle RAG n'est plus incrémenté ici, à chaque
+    # question, mais après la réponse du LLM et seulement en cas d'échec
+    # réel : voir étape 9 bis.)
     if _intent_classifier.is_satisfaction_signal(message):
         await _session_manager.reset_rag_attempts(session_id)
-    else:
-        # 6. Compteur de boucle RAG : trop d'échecs consécutifs sans
-        # escalade ni satisfaction entre-temps → on force l'escalade sur
-        # CE message plutôt que de laisser le client tourner en rond.
-        rag_attempts = await _session_manager.increment_rag_attempts(session_id)
-        if rag_attempts >= RAG_LOOP_THRESHOLD:
-            response_text = _get_escalation_message("repeated_rag_failure", language)
-            await _session_manager.reset_rag_attempts(session_id)
-            await _session_manager.add_message(
-                session_id, "assistant", response_text,
-                {"escalated": True, "escalation_reason": "repeated_rag_failure"},
-            )
-            processing_time = int((time.time() - start) * 1000)
-            logger.info(
-                f"🚨 Escalade automatique (boucle RAG, {rag_attempts} tentatives) | "
-                f"session={session_id} | langue={language}"
-            )
-            return DialogueResult(
-                response=response_text, session_id=session_id, language=language,
-                intent="repeated_rag_failure", confidence=1.0,
-                escalated=True, processing_time_ms=processing_time, sources=[],
-                escalation_reason="repeated_rag_failure",
-            )
 
     # 7. RAG : recherche de contexte pertinent (bloquant → thread)
     # Pas de filtre par catégorie : retriever.search() sans type_filter
@@ -477,6 +487,36 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
     response_text = await asyncio.to_thread(
         ask, message, language, context, previous_messages[-HISTORY_MESSAGES_FOR_LLM:],
     )
+
+    # 9 bis. Compteur de boucle RAG : ne compte que les échecs RÉELS, où
+    # le LLM dit ne pas avoir l'information (l'autre échec, la confiance
+    # trop faible, escalade déjà immédiatement à l'étape 8). Une réponse
+    # informative remet le compteur à zéro : il faut RAG_LOOP_THRESHOLD
+    # échecs CONSÉCUTIFS pour transférer, à la place d'un énième "je ne
+    # sais pas". Avant, chaque question RAG comptait, même bien répondue :
+    # 3 bonnes questions d'affilée déclenchaient un transfert.
+    if _is_no_info_answer(response_text):
+        rag_attempts = await _session_manager.increment_rag_attempts(session_id)
+        if rag_attempts >= RAG_LOOP_THRESHOLD:
+            response_text = _get_escalation_message("repeated_rag_failure", language)
+            await _session_manager.reset_rag_attempts(session_id)
+            await _session_manager.add_message(
+                session_id, "assistant", response_text,
+                {"escalated": True, "escalation_reason": "repeated_rag_failure"},
+            )
+            processing_time = int((time.time() - start) * 1000)
+            logger.info(
+                f"🚨 Escalade automatique (boucle RAG, {rag_attempts} échecs consécutifs) | "
+                f"session={session_id} | langue={language}"
+            )
+            return DialogueResult(
+                response=response_text, session_id=session_id, language=language,
+                intent="repeated_rag_failure", confidence=1.0,
+                escalated=True, processing_time_ms=processing_time, sources=[],
+                escalation_reason="repeated_rag_failure",
+            )
+    else:
+        await _session_manager.reset_rag_attempts(session_id)
 
     # 10. Persistance session
     await _session_manager.add_message(
