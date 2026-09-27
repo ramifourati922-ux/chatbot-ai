@@ -38,6 +38,7 @@ from typing import Optional
 class Category(str, Enum):
     GENERAL = "general"
     ESCALATE = "escalate"
+    SMALL_TALK = "small_talk"  # salutation / remerciement / au revoir seuls
 
 
 @dataclass
@@ -52,6 +53,54 @@ class IntentResult:
     entities: dict = field(default_factory=dict)
     requires_escalation: bool = False
     escalation_reason: Optional[str] = None  # "explicit" | "frustration" | None
+    # Échange de politesse seulement : langue du mot reconnu ("hello" →
+    # "en"), plus fiable que language_detector sur un message d'un mot
+    # (trop court pour langdetect, il retombe sur la langue par défaut).
+    language_hint: Optional[str] = None
+
+
+# ── Échanges de politesse ──────────────────────────────────────────────
+# Un message fait UNIQUEMENT de ces mots (salutation, remerciement, au
+# revoir) reçoit une réponse toute prête, sans passer par le RAG : la base
+# ne contient aucune salutation, donc "bonjour" y obtenait une confiance
+# trop basse et déclenchait une escalade vers un humain.
+# mot → (type, langue ; None = mot sans langue propre, ex. "ça", "va").
+_SMALL_TALK_WORDS = {
+    # Français
+    "bonjour": ("greeting", "fr"), "bonsoir": ("greeting", "fr"), "salut": ("greeting", "fr"),
+    "coucou": ("greeting", "fr"), "merci": ("thanks", "fr"), "revoir": ("goodbye", "fr"),
+    "bonne": ("goodbye", "fr"), "journée": ("goodbye", "fr"), "soirée": ("goodbye", "fr"),
+    "ça": ("greeting", None), "ca": ("greeting", None), "va": ("greeting", None),
+    "comment": ("greeting", "fr"), "beaucoup": ("thanks", None), "bcp": ("thanks", None),
+    "au": ("goodbye", None), "à": ("goodbye", None), "bientôt": ("goodbye", "fr"),
+    "tous": ("greeting", None), "tout": ("greeting", None), "le": ("greeting", None), "monde": ("greeting", None),
+    # Anglais
+    "hello": ("greeting", "en"), "hi": ("greeting", "en"), "hey": ("greeting", "en"),
+    "good": ("greeting", None), "morning": ("greeting", "en"), "evening": ("greeting", "en"),
+    "afternoon": ("greeting", "en"), "how": ("greeting", "en"), "are": ("greeting", None),
+    "you": ("greeting", None), "there": ("greeting", None), "thanks": ("thanks", "en"),
+    "thank": ("thanks", "en"), "thx": ("thanks", "en"), "bye": ("goodbye", "en"),
+    "goodbye": ("goodbye", "en"), "see": ("goodbye", "en"), "later": ("goodbye", "en"),
+    "a": ("thanks", None), "lot": ("thanks", None), "much": ("thanks", None), "so": ("thanks", None),
+    # Tunisien (arabizi)
+    "aslema": ("greeting", "tn"), "3aslema": ("greeting", "tn"), "asslema": ("greeting", "tn"),
+    "salam": ("greeting", "tn"), "ahla": ("greeting", "tn"), "ahlan": ("greeting", "tn"),
+    "marhba": ("greeting", "tn"), "labes": ("greeting", "tn"), "chnahwalek": ("greeting", "tn"),
+    "choukran": ("thanks", "tn"), "chokran": ("thanks", "tn"), "shukran": ("thanks", "tn"),
+    "3aychek": ("thanks", "tn"), "ya3tik": ("thanks", "tn"), "sa7a": ("thanks", "tn"),
+    "beslema": ("goodbye", "tn"), "bslema": ("goodbye", "tn"),
+    # Arabe (et tunisien en lettres arabes)
+    "مرحبا": ("greeting", "ar"), "أهلا": ("greeting", "ar"), "اهلا": ("greeting", "ar"),
+    "السلام": ("greeting", "ar"), "عليكم": ("greeting", None), "سلام": ("greeting", "ar"),
+    "صباح": ("greeting", "ar"), "مساء": ("greeting", "ar"), "الخير": ("greeting", None),
+    "عسلامة": ("greeting", "tn"), "شكرا": ("thanks", "ar"), "جزيلا": ("thanks", None),
+    "مع": ("goodbye", None), "السلامة": ("goodbye", "ar"), "وداعا": ("goodbye", "ar"),
+}
+# Au-delà, ce n'est plus un simple échange de politesse.
+_SMALL_TALK_MAX_WORDS = 5
+_SMALL_TALK_PRIORITY = ("thanks", "goodbye", "greeting")  # "merci, au revoir" → remerciement
+_WORD_RE = re.compile(r"\w+", re.UNICODE)
+_ARABIC_DIACRITICS_RE = re.compile(r"[\u064B-\u0652]")  # tanwin, harakat : "شكرًا" → "شكرا"
 
 
 class IntentClassifier:
@@ -164,6 +213,27 @@ class IntentClassifier:
         text_lower = text.lower().strip()
         return any(re.search(p, text_lower, re.IGNORECASE) for p in self._satisfaction_patterns)
 
+    def _detect_small_talk(self, text_lower: str) -> Optional[tuple]:
+        """
+        (type, langue) si le message n'est QU'un échange de politesse,
+        sinon None. Règle stricte : TOUS les mots doivent être des mots de
+        politesse, donc "bonjour, quelle est la garantie ?" reste une vraie
+        question (part au RAG). Un mot isolé sans langue propre ("ça",
+        "va", "au"...) ne suffit pas.
+        """
+        words = _WORD_RE.findall(_ARABIC_DIACRITICS_RE.sub("", text_lower))
+        if not words or len(words) > _SMALL_TALK_MAX_WORDS:
+            return None
+        matches = [_SMALL_TALK_WORDS.get(w) for w in words]
+        if None in matches:
+            return None
+        languages = [lang for _, lang in matches if lang]
+        if not languages:
+            return None
+        kinds = {kind for kind, _ in matches}
+        kind = next(k for k in _SMALL_TALK_PRIORITY if k in kinds)
+        return kind, languages[0]
+
     def _load_entity_patterns(self) -> dict:
         return {
             "order_number": r"(?:commande|order|cmd|ref|#)\s*[:#]?\s*([A-Z0-9]{4,15})",
@@ -174,10 +244,10 @@ class IntentClassifier:
 
     def classify(self, text: str) -> IntentResult:
         """Détecte une demande d'escalade humaine (explicite ou par
-        frustration). Tout le reste part vers le RAG (voir
-        dialogue_manager.handle_message). La demande explicite est
-        vérifiée en premier : si un client frustré demande aussi
-        directement un agent, "explicit" est le signal le plus fort."""
+        frustration), puis un simple échange de politesse. Tout le reste
+        part vers le RAG (voir dialogue_manager.handle_message). La demande
+        explicite est vérifiée en premier : si un client frustré demande
+        aussi directement un agent, "explicit" est le signal le plus fort."""
         text_lower = text.lower().strip()
         entities = self._extract_entities(text)
 
@@ -202,6 +272,17 @@ class IntentClassifier:
                     requires_escalation=True,
                     escalation_reason="frustration",
                 )
+
+        small_talk = self._detect_small_talk(text_lower)
+        if small_talk:
+            kind, language = small_talk
+            return IntentResult(
+                intent=kind,  # "greeting" | "thanks" | "goodbye"
+                category=Category.SMALL_TALK,
+                confidence=0.95,
+                entities=entities,
+                language_hint=language,
+            )
 
         return IntentResult(
             intent="general",

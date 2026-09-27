@@ -12,6 +12,9 @@ Pour chaque message reçu :
    déclencheurs).
 3. Si escalade demandée (explicite ou frustration) → réponse canned
    immédiate, pas d'appel LLM ; compteur de boucle RAG réinitialisé.
+3 bis. Si simple échange de politesse ("bonjour", "merci", "au revoir",
+   dans les 4 langues) → réponse toute prête, sans RAG ni LLM ; compteur
+   de boucle RAG réinitialisé.
 4. Sinon → recherche RAG dans la knowledge base (ChromaDB). Le compteur
    rag_attempts_count de la session est incrémenté à chaque passage ici ;
    à 3 échecs consécutifs (aucune escalade ni signal de satisfaction
@@ -53,7 +56,7 @@ from app.db.database import AsyncSessionLocal
 from app.db.repositories.conversation_repository import ConversationRepository
 from app.db.repositories.user_repository import UserRepository
 from app.services.language_detector import detect_language
-from app.services.intent_classifier import IntentClassifier
+from app.services.intent_classifier import Category, IntentClassifier
 from app.services.session_manager import SessionManager
 from app.services.rag import retriever
 from app.services.rag.llm_factory import ask
@@ -92,6 +95,36 @@ ESCALATION_MESSAGES = {
         "tn": "Ma3andich ma3loumet mou'akkada bidhabt 3al mawdhou3 hedha. Bch na3addik l wa7ed agent humain khir men najjawbek b'chay machi mou'akked.",
     },
 }
+
+# Réponses aux échanges de politesse (voir intent_classifier, catégorie
+# SMALL_TALK), par type et par langue. Le tunisien est en arabizi, comme
+# les messages d'escalade.
+SMALL_TALK_MESSAGES = {
+    "greeting": {
+        "fr": "Bonjour ! Je suis l'assistant Liss Strike. Je peux vous aider sur nos produits, la livraison, les retours ou la garantie. Que puis-je faire pour vous ?",
+        "en": "Hello! I'm the Liss Strike assistant. I can help you with our products, delivery, returns or warranty. How can I help you?",
+        "ar": "مرحباً! أنا المساعد الآلي لـ Liss Strike. يمكنني مساعدتك بخصوص منتجاتنا، التوصيل، الإرجاع أو الضمان. كيف يمكنني مساعدتك؟",
+        "tn": "Aslema! Ena l'assistant mta3 Liss Strike. Najjem n3awnek fel produits, livraison, retour wala garantie. Chnowa t7eb?",
+    },
+    "thanks": {
+        "fr": "Avec plaisir ! N'hésitez pas si vous avez une autre question.",
+        "en": "You're welcome! Feel free to ask if you have any other question.",
+        "ar": "على الرحب والسعة! لا تتردد إذا كان لديك سؤال آخر.",
+        "tn": "Bel 3ani! Ken 3andek sou2el ekher, ahna houni.",
+    },
+    "goodbye": {
+        "fr": "Au revoir et à bientôt chez Liss Strike !",
+        "en": "Goodbye, see you soon at Liss Strike!",
+        "ar": "إلى اللقاء، نراك قريباً في Liss Strike!",
+        "tn": "Beslema, nchoufouk 9rib fi Liss Strike!",
+    },
+}
+
+
+def _get_small_talk_message(kind: str, language: str) -> str:
+    by_language = SMALL_TALK_MESSAGES.get(kind) or SMALL_TALK_MESSAGES["greeting"]
+    return by_language.get(language, by_language["fr"])
+
 
 # Nombre de messages RAG consécutifs (sans escalade ni signal de
 # satisfaction) au-delà duquel on force une escalade automatique — le
@@ -313,6 +346,24 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
             intent=intent_result.intent, confidence=intent_result.confidence,
             escalated=True, processing_time_ms=processing_time, sources=[],
             escalation_reason=intent_result.escalation_reason,
+        )
+
+    # 4 bis. Échange de politesse seul ("bonjour", "merci", "au revoir"...)
+    # → réponse toute prête, sans RAG ni LLM. Sans ça, la base ne contenant
+    # aucune salutation, "bonjour" obtenait une confiance RAG sous le seuil
+    # et déclenchait une escalade vers un humain. Le compteur de boucle RAG
+    # est remis à zéro, comme le faisait cette escalade.
+    if intent_result.category == Category.SMALL_TALK:
+        language = intent_result.language_hint or language
+        response_text = _get_small_talk_message(intent_result.intent, language)
+        await _session_manager.reset_rag_attempts(session_id)
+        await _session_manager.add_message(session_id, "assistant", response_text, {"intent": intent_result.intent})
+        processing_time = int((time.time() - start) * 1000)
+        logger.info(f"👋 Politesse ({intent_result.intent}) | session={session_id} | langue={language}")
+        return DialogueResult(
+            response=response_text, session_id=session_id, language=language,
+            intent=intent_result.intent, confidence=intent_result.confidence,
+            escalated=False, processing_time_ms=processing_time, sources=[],
         )
 
     # 5. Signal de satisfaction ("merci, c'est réglé"...) → le client
