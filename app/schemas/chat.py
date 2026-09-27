@@ -44,7 +44,12 @@ class ChatResponse(BaseModel):
     response: str = Field(..., description="La réponse du chatbot")
     session_id: str = Field(..., description="ID de session à conserver")
     intent: Optional[str] = Field(None, description="Intent détecté")
-    confidence: Optional[float] = Field(None, description="Score 0 à 1")
+    confidence: Optional[float] = Field(
+        None,
+        description="Score 0 à 1. Réponse RAG ou escalade low_rag_confidence : confiance de la "
+                    "recherche RAG. Escalade explicite/frustration ou politesse : confiance du "
+                    "classifieur d'intentions.",
+    )
     sources: Optional[List[str]] = Field(default=[], description="Sources RAG")
     processing_time_ms: Optional[int] = Field(None, description="Temps en ms")
     escalated: bool = Field(default=False, description="Transféré à un humain ?")

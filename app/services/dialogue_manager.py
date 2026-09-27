@@ -490,8 +490,11 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
         f"sources={len(sources)} | {processing_time}ms | session={session_id}"
     )
 
+    # confidence = confiance du RAG (celle comparée au seuil d'escalade à
+    # l'étape 8), pas celle du classifieur d'intentions : sur une réponse
+    # RAG, celle-ci vaut toujours 0.0 (aucune règle ne s'applique).
     return DialogueResult(
         response=response_text, session_id=session_id, language=language,
-        intent=intent_result.intent, confidence=intent_result.confidence,
+        intent=intent_result.intent, confidence=rag_confidence,
         escalated=False, processing_time_ms=processing_time, sources=sources,
     )

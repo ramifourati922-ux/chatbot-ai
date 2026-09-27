@@ -9,7 +9,7 @@ import uuid
 import pytest
 
 from app.config import settings
-from app.services.rag import vector_store
+from app.services.rag import retriever, vector_store
 from app.services import dialogue_manager
 from app.services.dialogue_manager import handle_message, RAG_LOOP_THRESHOLD
 
@@ -70,6 +70,20 @@ async def test_rag_grounded_response_in_french():
     assert result.language == "fr"
     assert len(result.sources) > 0, "La réponse devrait s'appuyer sur au moins un chunk de la KB"
     print(f"\n[fr] R: {result.response}\nSources: {result.sources}")
+
+
+@pytest.mark.asyncio
+async def test_rag_response_exposes_rag_confidence():
+    """Le champ confidence d'une réponse RAG est la confiance du RAG (celle
+    comparée au seuil d'escalade), pas celle du classifieur d'intentions,
+    qui valait toujours 0.0 sur ce chemin (constaté au test manuel)."""
+    question = "Quel est le délai pour retourner un produit ?"
+    result = await handle_message(question, channel="web")
+    assert result.escalated is False and result.intent == "general"
+    assert 0.0 < result.confidence <= 1.0
+    assert result.confidence >= settings.RAG_CONFIDENCE_THRESHOLD  # sinon il y aurait eu escalade
+    hits = retriever.search(question, 4)
+    assert result.confidence == pytest.approx(retriever.get_best_confidence(hits))
 
 
 @pytest.mark.asyncio
