@@ -198,6 +198,11 @@
     border: 1.5px solid var(--escalate-border);
     box-shadow: 0 2px 10px rgba(245, 158, 11, 0.12);
   }
+  /* Message d'un conseiller humain (envoyé depuis /admin) */
+  .row.assistant .bubble.agent {
+    background: #ecfdf5;
+    border: 1.5px solid var(--accent-green, #10b981);
+  }
 
   /* ── Indicateur de frappe ("typing…") ───────────────── */
   .bubble.typing-bubble {
@@ -386,7 +391,7 @@
     row.className = "row assistant";
 
     const bubble = document.createElement("div");
-    bubble.className = "bubble" + (data.escalated ? " escalated" : "");
+    bubble.className = "bubble" + (data.escalated ? " escalated" : "") + (data.from_agent ? " agent" : "");
     bubble.textContent = data.response;
     row.appendChild(bubble);
 
@@ -403,7 +408,8 @@
     const details = document.createElement("span");
     details.className = "meta-details";
     const parts = [];
-    if (data.intent) parts.push(`intent: ${data.intent}`);
+    if (data.from_agent) parts.push("Conseiller Liss Strike");
+    else if (data.intent) parts.push(`intent: ${data.intent}`);
     if (typeof data.confidence === "number") parts.push(`confiance: ${data.confidence.toFixed(2)}`);
     if (typeof data.processing_time_ms === "number") parts.push(`${data.processing_time_ms} ms`);
     details.textContent = parts.join(" · ");

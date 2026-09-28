@@ -104,6 +104,43 @@
   .empty strong { display: block; font-size: 16px; color: var(--text); margin-bottom: 6px; }
   .error { color: var(--danger); }
   .note { margin-top: 14px; font-size: 12px; color: var(--text-muted); }
+  /* hidden doit l'emporter sur les display: flex ci-dessous */
+  [hidden] { display: none !important; }
+  .actions { display: flex; gap: 8px; }
+  .open {
+    background: var(--panel); color: var(--primary); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px; font: inherit; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+  }
+  tr.selected td { background: #f5f6ff; }
+  #conversation { margin-top: 20px; }
+  .conv-head {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+  }
+  .conv-head strong { font-size: 15px; }
+  .conv-head .customer { margin-left: 8px; }
+  .conv-head button { background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; }
+  .history { max-height: 420px; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 75%; padding: 10px 14px; border-radius: 14px; font-size: 14px; white-space: pre-wrap; word-wrap: break-word; }
+  .msg .who { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+  .msg.user { align-self: flex-start; background: #f1f3f9; }
+  .msg.assistant { align-self: flex-start; background: #eef2ff; }
+  .msg.agent { align-self: flex-end; background: var(--primary); color: #fff; }
+  .msg.agent .who { color: rgba(255,255,255,.8); }
+  .reply { display: flex; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--border); }
+  .reply textarea {
+    flex: 1; resize: vertical; min-height: 44px; font: inherit; font-size: 14px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px;
+  }
+  .reply button {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 0 18px; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .reply button:disabled { opacity: .5; cursor: default; }
+  .feedback { padding: 0 18px 14px; font-size: 13px; }
+  .feedback.ok { color: var(--accent-green); }
+  .feedback.ko { color: var(--danger); }
 </style>
 </head>
 <body>
@@ -124,6 +161,18 @@
     </div>
   </div>
   <div class="card" id="card"></div>
+  <section class="card" id="conversation" hidden>
+    <div class="conv-head">
+      <div><strong id="conv-title">Conversation</strong><span class="customer" id="conv-customer"></span></div>
+      <button type="button" id="conv-close" title="Fermer">×</button>
+    </div>
+    <div class="history" id="history"></div>
+    <form class="reply" id="reply-form">
+      <textarea id="reply-text" maxlength="4096" placeholder="Votre réponse au client…" required></textarea>
+      <button type="submit" id="reply-send">Envoyer</button>
+    </form>
+    <div class="feedback" id="feedback" hidden></div>
+  </section>
   <p class="note">Liste actualisée automatiquement toutes les 10 secondes. Page interne protégée par identifiant et mot de passe (HTTP Basic).</p>
 </main>
 
@@ -214,12 +263,21 @@
       row.appendChild(cell(e.customer_id || "—", "customer"));
 
       const actionCell = document.createElement("td");
+      const actions = document.createElement("div");
+      actions.className = "actions";
+      const open = document.createElement("button");
+      open.className = "open";
+      open.type = "button";
+      open.textContent = "Voir la conversation";
+      open.addEventListener("click", () => openConversation(e.conversation_id));
       const button = document.createElement("button");
       button.className = "resolve";
       button.type = "button";
       button.textContent = "Marquer traitée";
       button.addEventListener("click", () => resolve(e.conversation_id, button));
-      actionCell.appendChild(button);
+      actions.append(open, button);
+      actionCell.appendChild(actions);
+      if (e.conversation_id === openId) row.className = "selected";
       row.appendChild(actionCell);
       tbody.appendChild(row);
     }
@@ -241,6 +299,7 @@
       const escalations = await response.json();
       render(escalations);
       notifyNewEscalations(escalations);
+      if (openId) await loadHistory();
       lastRefresh.textContent = `Mis à jour à ${new Date().toLocaleTimeString("fr-FR")}`;
     } catch (err) {
       counter.textContent = "—";
@@ -260,8 +319,105 @@
       button.textContent = "Réessayer";
       return;
     }
+    if (conversationId === openId) closeConversation();
     await load();
   }
+
+  // ── Historique et réponse au client ───────────────────────────────
+  const conversation = document.getElementById("conversation");
+  const history = document.getElementById("history");
+  const replyForm = document.getElementById("reply-form");
+  const replyText = document.getElementById("reply-text");
+  const replySend = document.getElementById("reply-send");
+  const feedback = document.getElementById("feedback");
+  const WHO = { user: "Client", assistant: "Assistant", agent: "Conseiller" };
+  let openId = null;
+
+  function showFeedback(text, ok) {
+    feedback.textContent = text;
+    feedback.className = "feedback " + (ok ? "ok" : "ko");
+    feedback.hidden = false;
+  }
+
+  function renderHistory(conv) {
+    document.getElementById("conv-title").textContent = `Conversation ${CHANNELS[conv.channel] || conv.channel}`;
+    document.getElementById("conv-customer").textContent = conv.customer_id || "";
+    // Défilement conservé si le conseiller est remonté dans l'historique
+    const atBottom = history.scrollHeight - history.scrollTop - history.clientHeight < 40;
+    history.replaceChildren();
+    for (const m of conv.messages) {
+      const div = document.createElement("div");
+      div.className = `msg ${m.role}`;
+      const who = document.createElement("span");
+      who.className = "who";
+      who.textContent = `${WHO[m.role] || m.role} · ${new Date(m.created_at).toLocaleTimeString("fr-FR")}`;
+      div.append(who, document.createTextNode(m.content));  // texte brut, jamais de HTML
+      history.appendChild(div);
+    }
+    if (atBottom) history.scrollTop = history.scrollHeight;
+  }
+
+  async function loadHistory() {
+    const id = openId;
+    try {
+      const response = await fetch(`/admin/escalations/${id}/messages`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const conv = await response.json();
+      if (id === openId) renderHistory(conv);
+    } catch (err) {
+      if (id === openId) showFeedback(`Impossible de charger l'historique (${err.message}).`, false);
+    }
+  }
+
+  async function openConversation(id) {
+    openId = id;
+    feedback.hidden = true;
+    replyText.value = "";
+    history.replaceChildren();
+    conversation.hidden = false;
+    await load();  // surligne la ligne ouverte et charge l'historique
+    history.scrollTop = history.scrollHeight;
+    conversation.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function closeConversation() {
+    openId = null;
+    conversation.hidden = true;
+    for (const row of card.querySelectorAll("tbody tr")) row.classList.remove("selected");
+  }
+
+  replyForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const text = replyText.value.trim();
+    if (!text || !openId) return;
+    replySend.disabled = true;
+    feedback.hidden = true;
+    try {
+      const response = await fetch(`/admin/escalations/${openId}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!response.ok) {
+        // Erreur de l'API (client injoignable, identifiants Meta absents...) :
+        // le conseiller doit savoir que rien n'est parti.
+        let detail = `HTTP ${response.status}`;
+        try { detail = (await response.json()).detail || detail; } catch (e) { /* corps non JSON */ }
+        showFeedback(`Message NON envoyé : ${typeof detail === "string" ? detail : JSON.stringify(detail)}`, false);
+        return;
+      }
+      replyText.value = "";
+      showFeedback("Message envoyé au client.", true);
+      await loadHistory();
+      history.scrollTop = history.scrollHeight;
+    } catch (err) {
+      showFeedback(`Message NON envoyé : ${err.message}`, false);
+    } finally {
+      replySend.disabled = false;
+    }
+  });
+
+  document.getElementById("conv-close").addEventListener("click", closeConversation);
 
   // ── Notifications navigateur ─────────────────────────────────────
   // Signale une NOUVELLE escalade même si l'onglet n'est pas au premier

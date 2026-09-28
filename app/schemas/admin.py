@@ -3,7 +3,7 @@
 
 import uuid
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -25,3 +25,29 @@ class ResolveResponse(BaseModel):
     conversation_id: uuid.UUID
     status: str
     resolved_at: datetime
+
+
+class MessageItem(BaseModel):
+    """Un message de l'historique d'une conversation."""
+    role: str = Field(..., description="user (client) | assistant (bot) | agent (conseiller)")
+    content: str
+    created_at: datetime
+
+
+class ConversationHistory(BaseModel):
+    conversation_id: uuid.UUID
+    customer_id: Optional[str]
+    channel: str = Field(..., description="Canal réel de la conversation : web | whatsapp | messenger")
+    status: str
+    messages: List[MessageItem]
+
+
+class ReplyRequest(BaseModel):
+    # 4 096 caractères : limite d'un message texte WhatsApp
+    text: str = Field(..., min_length=1, max_length=4096, description="Réponse du conseiller au client")
+
+
+class ReplyResponse(BaseModel):
+    conversation_id: uuid.UUID
+    channel: str
+    sent_at: datetime

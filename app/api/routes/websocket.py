@@ -51,6 +51,16 @@ class ConnectionManager:
         self._connections.pop(client_id, None)
         logger.info(f"🔌 WebSocket déconnecté : {client_id} ({len(self._connections)} actif(s))")
 
+    async def send_to(self, client_id: str, payload: dict) -> bool:
+        """Envoie un message à un client connecté (réponse d'un conseiller).
+        False si ce client n'a pas de connexion ouverte dans CE processus :
+        onglet fermé, ou serveur redémarré depuis."""
+        websocket = self._connections.get(client_id)
+        if websocket is None:
+            return False
+        await websocket.send_json(payload)
+        return True
+
 
 manager = ConnectionManager()
 

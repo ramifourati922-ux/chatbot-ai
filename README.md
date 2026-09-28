@@ -74,9 +74,11 @@ bord protégé.
   PostgreSQL (enregistré en arrière-plan, sans retarder la réponse).
 - **Tableau de bord des conseillers** (`/admin`) : liste des
   conversations transférées (client, canal, raison, question, temps
-  d'attente), bouton « Marquer traitée », notification du navigateur à
-  chaque nouveau transfert. Protégé par identifiant et mot de passe
-  (HTTP Basic).
+  d'attente), historique complet de chaque conversation, **réponse au
+  client** sur son canal d'origine (WhatsApp, Messenger, ou chat du site
+  s'il est encore connecté), bouton « Marquer traitée », notification du
+  navigateur à chaque nouveau transfert. Protégé par identifiant et mot
+  de passe (HTTP Basic).
 - **Interface de démonstration** (`/chat-demo`) : chat en temps réel,
   sans framework front.
 
@@ -280,7 +282,7 @@ Points d'entrée de l'API :
 | Web (temps réel) | `WS /ws/{client_id}` |
 | WhatsApp Business Cloud API | `GET` / `POST /webhook/whatsapp` |
 | Facebook Messenger | `GET` / `POST /webhook/messenger` |
-| Conseillers | `GET /admin`, `GET /admin/escalations`, `POST /admin/escalations/{id}/resolve` |
+| Conseillers | `GET /admin`, `GET /admin/escalations`, `GET /admin/escalations/{id}/messages`, `POST /admin/escalations/{id}/reply`, `POST /admin/escalations/{id}/resolve` |
 | Utilisateurs (CRUD, identifiants requis) | `/users/` |
 | Supervision | `GET /health` |
 
@@ -306,10 +308,11 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**337 tests** : détection de langue, classification (escalade,
+**354 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
-types de transfert), persistance PostgreSQL, tableau de bord `/admin`,
+types de transfert), persistance PostgreSQL, tableau de bord `/admin`
+(historique, réponse au client),
 authentification de `/admin` et `/users/`, restriction CORS et origine
 du WebSocket, séparation des sessions web / WhatsApp, limitation de débit, structure de
 la base de connaissances.
@@ -339,7 +342,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (337 tests)
+tests/                         # suite pytest (354 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -368,10 +371,20 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ### Relais humain
 
-- Le conseiller voit les conversations transférées sur `/admin`, mais
-  **ne peut pas répondre au client depuis la page** : il doit le
-  recontacter par un autre moyen. Seule la dernière question est
-  affichée, pas l'historique complet.
+- **Réponse depuis `/admin`** : envoyée sur le canal d'origine, et
+  enregistrée seulement si l'envoi a réussi. Sinon, le conseiller voit
+  l'erreur exacte (« Message NON envoyé ») :
+  - **WhatsApp / Messenger** : impossible sans identifiants Meta
+    (`WHATSAPP_*`, `MESSENGER_*`). Les fonctions d'envoi simulent alors
+    l'envoi sans erreur ; la route le détecte et répond 409. L'envoi réel
+    n'a **jamais été testé avec un compte Meta** (règle des 24 h de
+    WhatsApp non gérée).
+  - **Chat du site** : le client n'est joignable que tant que son onglet
+    `/chat-demo` reste ouvert (connexion WebSocket, dans le même
+    processus serveur). Onglet fermé, serveur redémarré ou client venu
+    par `POST /chat/` : 409, aucun moyen de le recontacter.
+- **Pas de prise de main** : si le client écrit de nouveau après la
+  réponse du conseiller, c'est le bot qui lui répond.
 - Les notifications ne fonctionnent que si l'onglet `/admin` est ouvert
   (notifications du navigateur) : pas d'e-mail ni de notification push.
 
@@ -466,9 +479,8 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ## Perspectives
 
-- Réponse du conseiller depuis `/admin` (historique complet, envoi sur
-  WhatsApp / Messenger) et prise de main : suspendre le bot quand un
-  humain a repris la conversation.
+- Prise de main : suspendre le bot quand un conseiller a repris la
+  conversation.
 - Notifications hors navigateur (e-mail, push) ; comptes conseillers
   individuels avec rôles et traçabilité.
 - Authentification et limitation de débit sur l'API ; identifiants de

@@ -118,6 +118,29 @@ class ConversationRepository:
         messages = list(result.scalars().all())
         return list(reversed(messages))  # Ordre chronologique
 
+    async def get_full_history(self, conversation_id: uuid.UUID) -> List[Message]:
+        """Tous les messages de la conversation, dans l'ordre chronologique
+        (get_messages, lui, ne renvoie que les derniers)."""
+        result = await self.db.execute(
+            select(Message)
+            .where(Message.conversation_id == conversation_id)
+            .order_by(Message.created_at.asc())
+        )
+        return list(result.scalars().all())
+
+    async def get_with_customer(self, conv_id: uuid.UUID) -> Optional[tuple]:
+        """(conversation, identifiant externe du client : n° WhatsApp, PSID
+        Messenger, "web:<client_id>"), ou None si introuvable."""
+        from app.models.user import User
+
+        result = await self.db.execute(
+            select(Conversation, User.external_id)
+            .join(User, User.id == Conversation.user_id)
+            .where(Conversation.id == conv_id)
+        )
+        row = result.first()
+        return (row[0], row[1]) if row else None
+
     async def close(self, conv_id: uuid.UUID) -> Optional[Conversation]:
         """Fermer une conversation"""
         from datetime import datetime, timezone

@@ -23,11 +23,13 @@ USER, PASSWORD = "conseiller-test", "mot-de-passe-test"
 
 
 def _routes():
-    """Les 3 routes protégées : (méthode, chemin)."""
+    """Les 5 routes protégées : (méthode, chemin)."""
     return [
         ("GET", "/admin"),
         ("GET", "/admin/escalations"),
         ("POST", f"/admin/escalations/{uuid.uuid4()}/resolve"),
+        ("GET", f"/admin/escalations/{uuid.uuid4()}/messages"),
+        ("POST", f"/admin/escalations/{uuid.uuid4()}/reply"),
     ]
 
 
