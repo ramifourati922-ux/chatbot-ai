@@ -235,11 +235,15 @@ ADMIN_PASSWORD=un-vrai-mot-de-passe
 Seules les origines listées dans `CORS_ALLOWED_ORIGINS` (séparées par des
 virgules) peuvent appeler l'API depuis un navigateur. Sans cette
 variable, ce sont `http://localhost:8000` et `http://127.0.0.1:8000`.
+La même liste s'applique au WebSocket `/ws/{client_id}` : une connexion
+dont l'en-tête `Origin` n'y figure pas (ou qui n'en a pas) est fermée
+avec le code 1008.
 
-- `/chat-demo` et `/admin` sont servis par l'API elle-même (même
-  origine) : aucune configuration nécessaire.
-- Pour une page hébergée ailleurs, par exemple une démonstration exposée
-  via ngrok, ajouter son origine exacte (schéma, domaine, port, sans `/`
+- `/chat-demo` et `/admin` ouverts en local (`localhost:8000` ou
+  `127.0.0.1:8000`) : aucune configuration nécessaire.
+- Pour une page ouverte depuis une autre adresse, **y compris
+  `/chat-demo` exposé via ngrok** (son WebSocket envoie alors l'origine
+  ngrok), ajouter cette origine exacte (schéma, domaine, port, sans `/`
   final) :
 
 ```env
@@ -302,11 +306,12 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**257 tests** : détection de langue, classification (escalade,
+**266 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin`,
-authentification de `/admin` et `/users/`, restriction CORS, limitation de débit, structure de
+authentification de `/admin` et `/users/`, restriction CORS et origine
+du WebSocket, limitation de débit, structure de
 la base de connaissances.
 
 - Les tests d'intégration ont besoin des services (`docker compose up
@@ -334,7 +339,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (257 tests)
+tests/                         # suite pytest (266 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -403,10 +408,11 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
     authentifiés par leur signature HMAC, mais seulement si
     `WHATSAPP_APP_SECRET` / `MESSENGER_APP_SECRET` sont définis (sinon
     la signature n'est pas vérifiée).
-- La restriction CORS ne protège que contre un site tiers ouvert dans le
-  navigateur d'un visiteur. Elle ne bloque ni les clients hors
-  navigateur (curl, scripts), ni les WebSockets : `/ws/{client_id}`
-  accepte toujours une connexion depuis n'importe quelle page.
+- La restriction des origines (CORS pour HTTP, vérification de
+  l'en-tête `Origin` pour `/ws/{client_id}`) protège les visiteurs
+  contre un site tiers ouvert dans leur navigateur. Elle ne bloque pas
+  un client hors navigateur (curl, script), qui peut envoyer l'en-tête
+  `Origin` de son choix.
 - L'identifiant de session WebSocket est choisi par le client. Une
   session WhatsApp ayant pour identifiant le numéro de téléphone, un
   client web qui connaît ce numéro peut rejoindre la même session (dont

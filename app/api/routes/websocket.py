@@ -24,6 +24,7 @@ import logging
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from app.api import rate_limit
+from app.config import settings
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(tags=["WebSocket"])
@@ -63,6 +64,19 @@ async def _reject(websocket: WebSocket, text: str) -> None:
     await websocket.close(code=rate_limit.WS_POLICY_VIOLATION, reason="rate limit")
 
 
+def _origin_allowed(websocket: WebSocket) -> bool:
+    """
+    Les navigateurs n'appliquent pas CORS aux WebSockets mais envoient
+    toujours l'en-tête Origin, qu'une page ne peut pas falsifier : on le
+    compare à la même liste que CORS (settings.cors_origins). Sans Origin,
+    ce n'est pas un navigateur : refusé aussi, aucun client légitime
+    n'ouvre /ws hors navigateur (WhatsApp et Messenger passent par leurs
+    webhooks). Un script peut en revanche envoyer l'Origin de son choix :
+    cette vérification protège les visiteurs, pas l'API elle-même.
+    """
+    return websocket.headers.get("origin") in settings.cors_origins
+
+
 @router.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
     """
@@ -73,6 +87,17 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
     message à l'autre), renvoie la réponse complète en JSON (mêmes
     champs que ChatResponse pour l'endpoint HTTP existant).
     """
+    if not _origin_allowed(websocket):
+        # Accepter puis fermer : le client reçoit un code explicite (1008)
+        # au lieu d'un simple échec de connexion. Aucun message n'est traité.
+        await websocket.accept()
+        await websocket.close(code=rate_limit.WS_POLICY_VIOLATION, reason="origin not allowed")
+        logger.warning(
+            f"⛔ WebSocket refusé (origine non autorisée) : origin={websocket.headers.get('origin')!r} "
+            f"client={client_id}"
+        )
+        return
+
     # slowapi ne couvre pas les WebSockets : limites manuelles par IP
     # (connexions simultanées, messages par minute), voir rate_limit.py.
     ip = websocket.client.host if websocket.client else "inconnue"
