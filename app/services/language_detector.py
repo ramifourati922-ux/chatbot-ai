@@ -117,6 +117,10 @@ TECHNICAL_UNIT_SUFFIXES = {
     "v", "a", "w", "hz", "khz", "mhz", "ghz", "mm", "cm", "km", "kg",
     "g", "mg", "ml", "l", "ah", "mah", "ms", "db", "va", "ohm", "f",
     "uf", "nf", "pf", "dt", "tnd", "usd", "eur", "px",
+    # Dimensions, résolutions, capacités : "imprimante 3D", "écran 2K",
+    # "caméra 5MP", "LCD 16x2", "câble de 2m", "carte 2GB", "capteur 9DOF".
+    # Lettres seules ou sigles, jamais un mot arabizi ("3andi", "7aja").
+    "d", "k", "p", "x", "m", "mp", "kb", "mb", "gb", "tb", "dof",
 }
 
 

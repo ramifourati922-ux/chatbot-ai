@@ -306,7 +306,7 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**316 tests** : détection de langue, classification (escalade,
+**337 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin`,
@@ -339,7 +339,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (316 tests)
+tests/                         # suite pytest (337 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -445,9 +445,11 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
   [Résultats mesurés](#résultats-mesurés)).
 - **Tunisien en arabizi** : le contenu de la réponse est correct, mais
   elle est souvent rédigée en arabe littéraire plutôt qu'en arabizi.
-- **« 3D » pris pour de l'arabizi** : un chiffre collé à des lettres est
-  un marqueur d'arabizi (« 3andi ») ; « imprimante 3D » dans une question
-  en français fait répondre le bot en tunisien.
+- **Notations techniques et arabizi** : un chiffre collé à des lettres
+  est un marqueur d'arabizi (« 3andi »). Les unités et notations
+  courantes (« 5V », « 3D », « 2K », « 5MP », « 2m », « 16x2 »…) sont
+  exclues par une liste fermée : une notation absente de cette liste
+  peut encore faire répondre le bot en tunisien.
 - Le compteur de boucle RAG reconnaît les réponses « je n'ai pas
   l'information » par mots-clés : une formulation inédite du LLM n'est
   pas comptée.

@@ -47,6 +47,19 @@ def test_detect_language(text, expected):
     "Le module fait 3mm d'épaisseur",
     "Avez-vous la carte ESP32 en stock ?",
     "Une résistance de 9V fonctionne avec ce montage ?",
+    # Dimensions, résolutions, capacités ("3D" faisait répondre en tunisien)
+    "imprimante 3D",
+    "je cherche une imprimante 3D",
+    "j'ai une imprimante 3D",
+    "modèle 3D",
+    "écran 4K",
+    "carte SD",
+    "écran 2K ou 4K ?",
+    "caméra 5MP",
+    "carte 2GB",
+    "capteur 9DOF",
+    "câble de 2m",
+    "écran LCD 16x2",
 ])
 def test_technical_unit_notation_is_not_mistaken_for_arabizi(text):
     assert detect_language(text) == "fr"
@@ -99,3 +112,24 @@ def test_informal_english_already_detected_stays_english(text):
 ])
 def test_short_french_misdetected_by_langdetect_stays_french(text):
     assert detect_language(text) == "fr"
+
+
+def test_english_sentence_with_3d_is_english():
+    assert detect_language("I need a 3D printer") == "en"
+
+
+@pytest.mark.parametrize("text", [
+    # Vrais marqueurs arabizi (chiffre = lettre arabe, suivi d'un mot) :
+    # toujours tunisiens après l'ajout des unités "d", "k", "m", "x"...
+    "3andi commande",
+    "7aja behya",
+    "9anon el garantie",
+    "5ouya chnowa el prix",
+    "3lech ma wsaltch",
+    "9a3ed nestanna",
+    "7kit m3akom",
+    "2ana nheb arduino",
+])
+def test_real_arabizi_digit_words_stay_tunisian(text):
+    from app.services.language_detector import detect_language_detailed
+    assert detect_language_detailed(text).language == "tn"
