@@ -126,11 +126,24 @@ class IntentClassifier:
             r"(service\s+client|support)\s+(humain|réel)",
 
             # ─── Anglais ───
-            r"(talk|speak)\s+(to|with)\s+(a\s+)?(human|agent|representative|someone|person)",
+            # "a" ou "an" : "speak to an agent" échappait à la règle.
+            r"(talk|speak)\s+(to|with)\s+(an?\s+)?(live\s+)?(human|agent|representative|someone|person|operator"
+            r"|customer\s+(service|support))",
             r"human\s+agent",
             r"real\s+(person|human|agent)",
-            r"(connect|transfer)\s+me\s+(to|with)\s+(a\s+)?(human|agent|representative)",
+            r"live\s+(agent|person|representative)",
+            r"(connect|transfer|put)\s+me\s+(through\s+)?(to|with)\s+(an?\s+)?(human|agent|representative|operator)",
             r"customer\s+service\s+(rep|representative|agent)",
+            r"\bhuman\s+(help|assistance|support)\b",
+            r"\b(human|agent|representative|person)\s+(i\s+can\s+|to\s+)(talk|speak)\b",  # "a human I can talk to"
+            # Équivalent de "je veux / j'ai besoin d'un conseiller" : l'intention
+            # seule ("I need help") ne suffit pas, il faut le rôle humain, et le
+            # rôle doit finir la demande ("I want a human presence sensor" est
+            # une question produit, pas une demande de transfert).
+            r"\b(want|need|like|get\s+me)\s+(an?\s+)?(human|agent|representative|operator)"
+            r"(?=\s*($|[.,!?]|please\b|pls\b|plz\b|now\b|asap\b|to\b|who\b|that\b))",
+            # Message réduit au rôle : "human", "human please", "agent pls"
+            r"^\s*(an?\s+)?(human|agent|representative|operator)(\s+(please|pls|plz))?\s*[.!?]*\s*$",
 
             # ─── Arabe littéraire ───
             r"(أريد|اريد|أحتاج|أرغب)\s+.{0,20}(التحدث|التواصل|أتحدث)\s+.{0,10}(مع\s+)?(موظف|إنسان|بشري|وكيل)",

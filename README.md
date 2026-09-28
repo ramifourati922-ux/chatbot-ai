@@ -306,7 +306,7 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**287 tests** : détection de langue, classification (escalade,
+**316 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin`,
@@ -339,7 +339,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (287 tests)
+tests/                         # suite pytest (316 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 

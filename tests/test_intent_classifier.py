@@ -95,3 +95,55 @@ def test_entity_extraction():
 ])
 def test_satisfaction_signal(text, expected):
     assert clf.is_satisfaction_signal(text) is expected
+
+
+# ── Demande explicite d'humain en anglais ───────────────────────────────
+# Trous des règles anglaises : article "an" ("speak to an agent"), pas
+# d'équivalent de "je veux / j'ai besoin d'un conseiller" ("I need a
+# human"), rôles "live agent", "operator", "customer support"...
+
+@pytest.mark.parametrize("text", [
+    "can I speak to an agent",
+    "connect me to an agent",
+    "let me talk to an agent",
+    "I need a human",
+    "I want a human",
+    "I need an agent to call me back",
+    "I'd like a representative please",
+    "get me a human",
+    "speak to a live agent",
+    "I want to talk to customer support",
+    "put me through to an operator",
+    "is there a human I can talk to",
+    "I need human help",
+    "human please",
+    "agent pls",
+])
+def test_english_explicit_escalation_detected(text):
+    result = clf.classify(text)
+    assert result.requires_escalation is True
+    assert result.escalation_reason == "explicit"
+
+
+@pytest.mark.parametrize("text", [
+    # Demande d'aide sans rôle humain : comme "j'ai besoin d'aide" en
+    # français, ce n'est pas une demande de transfert
+    "I need ur help",
+    "I need help",
+    "help",
+    "can you help me find a product",
+    "how can I get help with my order",
+    "who can help me choose an arduino",
+    "can someone tell me the price",
+    # Rôle humain suivi d'un nom : question produit
+    "I want a human presence sensor",
+    "I need a human detection module for my robot",
+    "do you have a human body sensor",
+    "I need an operator amplifier",
+    "I want an agent based kit",
+    "is the agent software included",
+    "is the live chat free",
+])
+def test_english_help_or_product_question_is_not_escalated(text):
+    result = clf.classify(text)
+    assert result.requires_escalation is False
