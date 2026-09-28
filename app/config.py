@@ -7,6 +7,8 @@ from pydantic_settings import BaseSettings
 from functools import lru_cache
 from typing import Optional
 
+DEFAULT_CORS_ORIGINS = ("http://localhost:8000", "http://127.0.0.1:8000")
+
 
 class Settings(BaseSettings):
     # Application
@@ -138,6 +140,19 @@ class Settings(BaseSettings):
     # importent la configuration échoueraient aussi.
     ADMIN_USERNAME: str = "admin"
     ADMIN_PASSWORD: Optional[str] = None
+
+    # Origines web autorisées à appeler l'API depuis un navigateur (CORS),
+    # séparées par des virgules. Une chaîne plutôt qu'une liste :
+    # pydantic-settings attend du JSON pour une liste, pas "a,b". Absente
+    # ou vide : origines de développement local (pas bloquant au
+    # démarrage, contrairement à ADMIN_PASSWORD). /chat-demo et /admin
+    # sont servis par l'API elle-même (même origine), donc non concernés.
+    CORS_ALLOWED_ORIGINS: str = ""
+
+    @property
+    def cors_origins(self) -> list:
+        origins = [o.strip() for o in self.CORS_ALLOWED_ORIGINS.split(",") if o.strip()]
+        return origins or list(DEFAULT_CORS_ORIGINS)
 
     class Config:
         env_file = ".env"

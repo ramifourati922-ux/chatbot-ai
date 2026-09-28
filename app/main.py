@@ -61,9 +61,13 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+# Liste explicite (CORS_ALLOWED_ORIGINS) : un site tiers ne peut pas lire
+# les réponses de l'API depuis le navigateur d'un visiteur. Ne concerne
+# ni les WebSockets (les navigateurs n'y appliquent pas CORS) ni les
+# clients hors navigateur (curl, webhooks Meta).
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

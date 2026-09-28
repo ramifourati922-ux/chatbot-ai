@@ -229,6 +229,22 @@ ADMIN_PASSWORD=un-vrai-mot-de-passe
   (base64), non chiffrés : **HTTPS indispensable** en dehors d'une
   machine locale.
 
+### Origines autorisées (CORS)
+
+Seules les origines listées dans `CORS_ALLOWED_ORIGINS` (séparées par des
+virgules) peuvent appeler l'API depuis un navigateur. Sans cette
+variable, ce sont `http://localhost:8000` et `http://127.0.0.1:8000`.
+
+- `/chat-demo` et `/admin` sont servis par l'API elle-même (même
+  origine) : aucune configuration nécessaire.
+- Pour une page hébergée ailleurs, par exemple une démonstration exposée
+  via ngrok, ajouter son origine exacte (schéma, domaine, port, sans `/`
+  final) :
+
+```env
+CORS_ALLOWED_ORIGINS=http://localhost:8000,https://xxxx.ngrok-free.app
+```
+
 ### Ne jamais utiliser `docker compose down -v`
 
 L'option `-v` supprime les volumes Docker nommés : la base de
@@ -285,11 +301,12 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**224 tests** : détection de langue, classification (escalade,
+**233 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin` et
-son authentification, structure de la base de connaissances.
+son authentification, restriction CORS, structure de la base de
+connaissances.
 
 - Les tests d'intégration ont besoin des services (`docker compose up
   -d`), d'une base de connaissances indexée et d'une clé Groq ; sans eux,
@@ -316,7 +333,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (224 tests)
+tests/                         # suite pytest (233 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -360,6 +377,10 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
   authentification ni limitation de débit** : n'importe qui peut
   notamment lister ou supprimer des utilisateurs, ou épuiser le quota
   Groq.
+- La restriction CORS ne protège que contre un site tiers ouvert dans le
+  navigateur d'un visiteur. Elle ne bloque ni les clients hors
+  navigateur (curl, scripts), ni les WebSockets : `/ws/{client_id}`
+  accepte toujours une connexion depuis n'importe quelle page.
 - L'identifiant de session WebSocket est choisi par le client. Une
   session WhatsApp ayant pour identifiant le numéro de téléphone, un
   client web qui connaît ce numéro peut rejoindre la même session (dont
