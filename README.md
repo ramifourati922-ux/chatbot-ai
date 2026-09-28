@@ -306,12 +306,12 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**266 tests** : détection de langue, classification (escalade,
+**270 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin`,
 authentification de `/admin` et `/users/`, restriction CORS et origine
-du WebSocket, limitation de débit, structure de
+du WebSocket, séparation des sessions web / WhatsApp, limitation de débit, structure de
 la base de connaissances.
 
 - Les tests d'intégration ont besoin des services (`docker compose up
@@ -339,7 +339,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (266 tests)
+tests/                         # suite pytest (270 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -413,10 +413,16 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
   contre un site tiers ouvert dans leur navigateur. Elle ne bloque pas
   un client hors navigateur (curl, script), qui peut envoyer l'en-tête
   `Origin` de son choix.
-- L'identifiant de session WebSocket est choisi par le client. Une
-  session WhatsApp ayant pour identifiant le numéro de téléphone, un
-  client web qui connaît ce numéro peut rejoindre la même session (dont
-  l'historique est transmis au LLM).
+- Les identifiants de session des canaux web (`/ws/{client_id}`,
+  `session_id` de `POST /chat/`) sont choisis par le client, mais
+  préfixés en interne par `web:` : un client web ne peut plus rejoindre
+  une session WhatsApp (numéro de téléphone) ou Messenger (PSID). En
+  revanche, rien n'empêche un client web de reprendre la session d'un
+  **autre client web** s'il en connaît l'identifiant (`/chat-demo`
+  génère un UUID aléatoire, difficile à deviner). Par ailleurs, le champ
+  `channel` de `POST /chat/` est déclaratif : une conversation web peut
+  apparaître sous le canal « WhatsApp » dans `/admin` (l'identifiant du
+  client y commence alors par `web:`).
 
 ### Mise en production
 

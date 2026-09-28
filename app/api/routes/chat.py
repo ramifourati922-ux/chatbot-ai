@@ -2,8 +2,10 @@
 
 from fastapi import APIRouter, Request
 import logging
+import uuid
 
 from app.api.rate_limit import chat_limit, limiter
+from app.api.web_session import web_session_id
 from app.schemas.chat import ChatMessage, ChatResponse
 from app.services.dialogue_manager import handle_message
 
@@ -25,15 +27,20 @@ async def chat(request: Request, message: ChatMessage):
     ConversationRepository) est une amélioration possible mais hors
     scope de cette tâche.
     """
+    # Préfixe "web:" (canal réel : cette route HTTP, quel que soit le
+    # champ channel déclaré) : un session_id égal à un numéro WhatsApp ne
+    # rejoint pas cette session (voir web_session.py). Le client reçoit
+    # et renvoie son identifiant sans préfixe.
+    session_id = message.session_id or str(uuid.uuid4())
     result = await handle_message(
         message=message.message,
-        session_id=message.session_id,
+        session_id=web_session_id(session_id),
         channel=message.channel,
     )
 
     return ChatResponse(
         response=result.response,
-        session_id=result.session_id,
+        session_id=session_id,
         intent=result.intent,
         confidence=result.confidence,
         sources=[s for s in result.sources if s],

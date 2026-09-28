@@ -24,6 +24,7 @@ import logging
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from app.api import rate_limit
+from app.api.web_session import web_session_id
 from app.config import settings
 from app.services.dialogue_manager import handle_message
 
@@ -118,13 +119,15 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 manager.disconnect(client_id)
                 return
 
+            # Préfixe "web:" : un client_id égal à un numéro WhatsApp ne
+            # rejoint pas cette session (voir web_session.py)
             result = await handle_message(
-                message=message, session_id=client_id, channel="web"
+                message=message, session_id=web_session_id(client_id), channel="web"
             )
 
             await websocket.send_json({
                 "response": result.response,
-                "session_id": result.session_id,
+                "session_id": client_id,
                 "intent": result.intent,
                 "confidence": result.confidence,
                 "sources": [s for s in result.sources if s],
