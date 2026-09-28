@@ -47,4 +47,5 @@ async def chat(request: Request, message: ChatMessage):
         processing_time_ms=result.processing_time_ms,
         escalated=result.escalated,
         escalation_reason=result.escalation_reason,
+        handled_by_agent=result.handled_by_agent,
     )

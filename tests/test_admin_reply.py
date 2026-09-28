@@ -211,3 +211,139 @@ async def test_reply_to_unknown_conversation_is_404(prefix, client, sent):
     response = await client.post(f"/admin/escalations/{uuid.uuid4()}/reply", json={"text": "Bonjour"})
     assert response.status_code == 404
     assert sent == []
+
+
+# ── Prise en main : le bot se tait tant que le conseiller a la main ─────
+
+from app.services import dialogue_manager  # noqa: E402
+
+AGENT_TEXT = "Bonjour, ici le service client, je m'occupe de vous."
+
+
+async def _take_over(client, prefix, channel="whatsapp"):
+    """Escalade + réponse du conseiller : renvoie (session, conversation)."""
+    session_id = f"{prefix}{channel}"
+    conv_id = await _escalate(session_id, channel)
+    response = await client.post(f"/admin/escalations/{conv_id}/reply", json={"text": AGENT_TEXT})
+    assert response.status_code == 200
+    return session_id, conv_id
+
+
+async def _history(client, conv_id):
+    return (await client.get(f"/admin/escalations/{conv_id}/messages")).json()
+
+
+@pytest.mark.asyncio
+async def test_reply_takes_over_the_conversation(prefix, client, sent):
+    session_id, conv_id = await _take_over(client, prefix)
+    assert (await _history(client, conv_id))["status"] == "agent"
+    assert await dialogue_manager.agent_has_the_conversation(session_id, "whatsapp") is True
+
+
+@pytest.mark.asyncio
+async def test_bot_is_silent_while_the_agent_has_the_conversation(prefix, client, sent):
+    session_id, conv_id = await _take_over(client, prefix)
+    result = await handle_message("Merci, et le délai de livraison ?", session_id=session_id, channel="whatsapp")
+    await wait_for_pending_persistence()
+    assert result.handled_by_agent is True
+    assert result.response == ""
+    # Message du client enregistré, aucune réponse du bot après celle du conseiller
+    roles = [(m["role"], m["content"]) for m in (await _history(client, conv_id))["messages"]]
+    assert roles[-2:] == [("agent", AGENT_TEXT), ("user", "Merci, et le délai de livraison ?")]
+
+
+@pytest.mark.asyncio
+async def test_whatsapp_webhook_sends_nothing_during_takeover(prefix, client, sent, monkeypatch):
+    session_id, conv_id = await _take_over(client, prefix)
+    sent.clear()
+    monkeypatch.setattr(settings, "WHATSAPP_APP_SECRET", None)  # signature non exigée dans ce test
+    payload = {"entry": [{"changes": [{"value": {"messages": [
+        {"from": session_id, "type": "text", "text": {"body": "vous êtes là ?"}}]}}]}]}
+    assert (await client.post("/webhook/whatsapp", json=payload)).status_code == 200
+    await wait_for_pending_persistence()
+    assert sent == []  # ni réponse du bot ni accusé de réception
+    assert (await _history(client, conv_id))["messages"][-1]["content"] == "vous êtes là ?"
+
+
+@pytest.mark.asyncio
+async def test_web_client_gets_an_empty_handled_by_agent_answer(prefix, client, sent):
+    """POST /chat/ : réponse vide marquée handled_by_agent (rien à afficher)."""
+    web_id = f"{prefix}site"
+    conv_id = await _escalate(f"web:{web_id}", "web")
+    async with database.AsyncSessionLocal() as db:  # prise en main (client web non connecté ici)
+        from app.db.repositories.conversation_repository import ConversationRepository
+        from datetime import datetime, timezone
+        repo = ConversationRepository(db)
+        conv = await repo.get_by_id(conv_id)
+        now = datetime.now(timezone.utc)
+        await repo.add_message(conv_id, "agent", AGENT_TEXT, {}, created_at=now)
+        await repo.take_over(conv, "conseiller-test", now)
+        await db.commit()
+    response = await client.post("/chat/", json={"message": "d'accord", "session_id": web_id})
+    await wait_for_pending_persistence()
+    assert response.status_code == 200
+    assert response.json()["handled_by_agent"] is True
+    assert response.json()["response"] == ""
+
+
+@pytest.mark.asyncio
+async def test_taken_over_conversation_stays_listed_with_the_latest_customer_message(prefix, client, sent):
+    session_id, conv_id = await _take_over(client, prefix)
+    await handle_message("Merci, et le délai de livraison ?", session_id=session_id, channel="whatsapp")
+    await wait_for_pending_persistence()
+    [item] = [e for e in (await client.get("/admin/escalations")).json() if e["conversation_id"] == str(conv_id)]
+    assert item["status"] == "agent"
+    assert item["last_question"] == "Merci, et le délai de livraison ?"
+    assert item["reason"] == "explicit"
+
+
+@pytest.mark.asyncio
+async def test_bot_resumes_after_resolve(prefix, client, sent):
+    session_id, conv_id = await _take_over(client, prefix)
+    assert (await client.post(f"/admin/escalations/{conv_id}/resolve")).status_code == 200
+    result = await handle_message("bonjour", session_id=session_id, channel="whatsapp")
+    await wait_for_pending_persistence()
+    assert result.handled_by_agent is False
+    assert result.response  # réponse de politesse du bot
+
+
+@pytest.mark.asyncio
+async def test_bot_resumes_after_one_hour_without_agent_message(prefix, client, sent):
+    session_id, conv_id = await _take_over(client, prefix)
+    async with database.AsyncSessionLocal() as db:  # dernier message du conseiller il y a 61 min
+        await db.execute(text(
+            "update messages set created_at = created_at - interval '61 minutes' "
+            "where conversation_id = :c and role = 'agent'"), {"c": conv_id})
+        await db.commit()
+    result = await handle_message("bonjour", session_id=session_id, channel="whatsapp")
+    await wait_for_pending_persistence()
+    assert result.handled_by_agent is False
+    assert result.response
+    # Toujours visible sur /admin, en attente : le conseiller ne l'a pas close
+    assert (await _history(client, conv_id))["status"] == "escalated"
+
+
+@pytest.mark.asyncio
+async def test_takeover_only_concerns_that_customer(prefix, client, sent):
+    await _take_over(client, prefix)
+    result = await handle_message("bonjour", session_id=f"{prefix}other", channel="whatsapp")
+    await wait_for_pending_persistence()
+    assert result.handled_by_agent is False
+
+
+@pytest.mark.asyncio
+async def test_agent_reply_is_added_to_the_bot_memory(prefix, client, sent):
+    session_id, _ = await _take_over(client, prefix)
+    session = await dialogue_manager._session_manager.get_session(session_id)
+    assert session["messages"][-1]["content"] == AGENT_TEXT
+    assert session["messages"][-1]["role"] == "assistant"
+    await dialogue_manager._session_manager.delete_session(session_id)
+
+
+@pytest.mark.asyncio
+async def test_bot_answers_if_postgres_is_unavailable(monkeypatch):
+    def broken_session():
+        raise RuntimeError("PostgreSQL indisponible")
+
+    monkeypatch.setattr(dialogue_manager, "AsyncSessionLocal", broken_session)
+    assert await dialogue_manager.agent_has_the_conversation("216xxxxxxxx", "whatsapp") is False

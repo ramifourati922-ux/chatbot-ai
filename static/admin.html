@@ -93,6 +93,11 @@
     background: var(--escalate-bg); color: var(--escalate-text); border: 1px solid var(--escalate-border);
     white-space: nowrap;
   }
+  .taken {
+    display: inline-block; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 600;
+    background: #ecfdf5; color: #047857; border: 1px solid var(--accent-green); white-space: nowrap;
+    margin-top: 6px;
+  }
   .waiting { white-space: nowrap; color: var(--text-muted); }
   .waiting.long { color: var(--danger); font-weight: 600; }
   .resolve {
@@ -235,7 +240,8 @@
   }
 
   function render(escalations) {
-    counter.textContent = `${escalations.length} en attente`;
+    const taken = escalations.filter((e) => e.status === "agent").length;
+    counter.textContent = `${escalations.length - taken} en attente` + (taken ? ` · ${taken} prise(s) en main` : "");
     if (escalations.length === 0) {
       message("empty", "Aucune conversation en attente", "Les nouveaux transferts apparaîtront ici automatiquement.");
       return;
@@ -243,7 +249,7 @@
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headRow = document.createElement("tr");
-    for (const label of ["Attente", "Canal", "Raison", "Dernière question du client", "Client", ""]) {
+    for (const label of ["Attente", "Canal", "Raison", "Question / dernier message du client", "Client", ""]) {
       const th = document.createElement("th");
       th.textContent = label;
       headRow.appendChild(th);
@@ -258,7 +264,15 @@
       waiting.title = new Date(e.escalated_at).toLocaleString("fr-FR");
       row.appendChild(waiting);
       row.appendChild(badge(CHANNELS[e.channel] || e.channel, "channel"));
-      row.appendChild(badge(REASONS[e.reason] || e.reason || "—", "reason"));
+      const reasonCell = badge(REASONS[e.reason] || e.reason || "—", "reason");
+      if (e.status === "agent") {
+        // Conseiller aux commandes : le bot ne répond plus à ce client
+        const takenBadge = document.createElement("span");
+        takenBadge.className = "taken";
+        takenBadge.textContent = "Pris en main";
+        reasonCell.append(document.createElement("br"), takenBadge);
+      }
+      row.appendChild(reasonCell);
       row.appendChild(cell(e.last_question || "—", "question"));
       row.appendChild(cell(e.customer_id || "—", "customer"));
 
@@ -340,7 +354,8 @@
   }
 
   function renderHistory(conv) {
-    document.getElementById("conv-title").textContent = `Conversation ${CHANNELS[conv.channel] || conv.channel}`;
+    document.getElementById("conv-title").textContent = `Conversation ${CHANNELS[conv.channel] || conv.channel}`
+      + (conv.status === "agent" ? " · prise en main (le bot ne répond plus)" : "");
     document.getElementById("conv-customer").textContent = conv.customer_id || "";
     // Défilement conservé si le conseiller est remonté dans l'historique
     const atBottom = history.scrollHeight - history.scrollTop - history.clientHeight < 40;
@@ -407,7 +422,8 @@
         return;
       }
       replyText.value = "";
-      showFeedback("Message envoyé au client.", true);
+      showFeedback("Message envoyé au client. Vous avez la main : le bot ne lui répond plus "
+        + "jusqu'à « Marquer traitée » (ou 1 h sans message de votre part).", true);
       await loadHistory();
       history.scrollTop = history.scrollHeight;
     } catch (err) {

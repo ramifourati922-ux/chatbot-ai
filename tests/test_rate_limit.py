@@ -37,7 +37,7 @@ ORIGIN = {"origin": settings.cors_origins[0]}
 async def _fake_handle_message(message, session_id=None, channel="web"):
     return SimpleNamespace(
         response=f"écho : {message}", session_id=session_id or "s", intent="general",
-        confidence=0.9, sources=[], processing_time_ms=1, escalated=False, escalation_reason=None,
+        confidence=0.9, sources=[], processing_time_ms=1, escalated=False, escalation_reason=None, handled_by_agent=False,
     )
 
 

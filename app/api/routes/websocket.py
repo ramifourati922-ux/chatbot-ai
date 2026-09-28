@@ -144,6 +144,8 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 "processing_time_ms": result.processing_time_ms,
                 "escalated": result.escalated,
                 "escalation_reason": result.escalation_reason,
+                # Conseiller aux commandes : réponse vide, rien à afficher
+                "handled_by_agent": result.handled_by_agent,
             })
     except WebSocketDisconnect:
         manager.disconnect(client_id)

@@ -30,6 +30,7 @@ from app.api.web_session import WEB_SESSION_PREFIX
 from app.config import settings
 from app.db.database import get_db
 from app.db.repositories.conversation_repository import ConversationRepository
+from app.services.dialogue_manager import record_agent_message
 from app.schemas.admin import (
     ConversationHistory, EscalationItem, MessageItem, ReplyRequest, ReplyResponse, ResolveResponse,
 )
@@ -92,7 +93,8 @@ async def resolve_escalation(conversation_id: uuid.UUID, db: AsyncSession = Depe
     conv = await repo.get_by_id(conversation_id)
     if conv is None:
         raise HTTPException(status_code=404, detail="Conversation introuvable")
-    if conv.status != "escalated":
+    # "agent" : conversation prise en main, "Marquer traitée" rend la main au bot
+    if conv.status not in ("escalated", "agent"):
         raise HTTPException(status_code=409, detail=f"Conversation non escaladée (statut : {conv.status})")
     resolved_at = datetime.now(timezone.utc)
     await repo.resolve(conversation_id, resolved_at)
@@ -197,7 +199,10 @@ async def reply_to_customer(
 ):
     """
     Le conseiller répond au client, sur le canal d'origine de la conversation.
-    Le message est enregistré (rôle "agent") seulement si l'envoi a réussi.
+    Le message est enregistré (rôle "agent") seulement si l'envoi a réussi,
+    et le conseiller prend la main : le bot ne répond plus à ce client
+    (statut "agent") jusqu'à "Marquer traitée" ou 1 h sans message du
+    conseiller (voir dialogue_manager.agent_has_the_conversation).
     """
     repo = ConversationRepository(db)
     conv, customer_id, channel = await _load(repo, conversation_id)
@@ -209,4 +214,6 @@ async def reply_to_customer(
 
     sent_at = datetime.now(timezone.utc)
     await repo.add_message(conv.id, "agent", text, {"agent": agent, "sent_via": channel}, created_at=sent_at)
+    await repo.take_over(conv, agent, sent_at)
+    await record_agent_message(customer_id, text)
     return ReplyResponse(conversation_id=conv.id, channel=channel, sent_at=sent_at)

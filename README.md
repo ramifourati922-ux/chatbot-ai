@@ -79,6 +79,13 @@ bord protégé.
   s'il est encore connecté), bouton « Marquer traitée », notification du
   navigateur à chaque nouveau transfert. Protégé par identifiant et mot
   de passe (HTTP Basic).
+- **Prise en main** : dès que le conseiller a envoyé une réponse, le bot
+  ne répond plus à ce client (les messages du client restent enregistrés
+  et s'affichent sur `/admin`, marqués « Pris en main »). Le bot reprend
+  la main quand le conseiller clique « Marquer traitée », ou après 1 h
+  sans message du conseiller (la conversation repasse alors « en
+  attente » sur `/admin`). Les réponses du conseiller sont ajoutées à la
+  mémoire du bot pour la suite de la conversation.
 - **Interface de démonstration** (`/chat-demo`) : chat en temps réel,
   sans framework front.
 
@@ -308,11 +315,11 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**354 tests** : détection de langue, classification (escalade,
+**364 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin`
-(historique, réponse au client),
+(historique, réponse au client, prise en main),
 authentification de `/admin` et `/users/`, restriction CORS et origine
 du WebSocket, séparation des sessions web / WhatsApp, limitation de débit, structure de
 la base de connaissances.
@@ -342,7 +349,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (354 tests)
+tests/                         # suite pytest (364 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -383,8 +390,19 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
     `/chat-demo` reste ouvert (connexion WebSocket, dans le même
     processus serveur). Onglet fermé, serveur redémarré ou client venu
     par `POST /chat/` : 409, aucun moyen de le recontacter.
-- **Pas de prise de main** : si le client écrit de nouveau après la
-  réponse du conseiller, c'est le bot qui lui répond.
+- **Prise en main** :
+  - elle ne commence qu'avec un envoi **réussi** : sur WhatsApp et
+    Messenger, sans identifiants Meta, le conseiller ne peut donc pas
+    prendre la main (le bot continue de répondre) ;
+  - pendant la prise en main, le client ne reçoit **rien** (ni réponse
+    du bot, ni accusé de réception) : sans réponse du conseiller, il
+    attend jusqu'à 1 h avant que le bot reprenne ;
+  - aucune alerte quand le client écrit pendant la prise en main : son
+    message apparaît dans la liste et l'historique (actualisés toutes
+    les 10 s), sans notification ;
+  - le statut est lu dans PostgreSQL avant chaque réponse (6 à 10 ms par
+    message, mesuré en local). Si PostgreSQL est indisponible, le bot
+    répond comme si personne n'avait pris la main.
 - Les notifications ne fonctionnent que si l'onglet `/admin` est ouvert
   (notifications du navigateur) : pas d'e-mail ni de notification push.
 
@@ -479,8 +497,6 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ## Perspectives
 
-- Prise de main : suspendre le bot quand un conseiller a repris la
-  conversation.
 - Notifications hors navigateur (e-mail, push) ; comptes conseillers
   individuels avec rôles et traçabilité.
 - Authentification et limitation de débit sur l'API ; identifiants de

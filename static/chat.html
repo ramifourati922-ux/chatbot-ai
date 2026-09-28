@@ -431,6 +431,9 @@
     ws.onmessage = (event) => {
       hideTyping();
       const data = JSON.parse(event.data);
+      // Conseiller aux commandes : le bot ne répond pas, il n'y a rien à
+      // afficher (le conseiller répondra lui-même)
+      if (data.handled_by_agent) return;
       addAssistantMessage(data);
     };
   }

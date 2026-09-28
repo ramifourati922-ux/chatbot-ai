@@ -153,18 +153,21 @@ class ConversationRepository:
 
     async def list_escalated(self) -> List[dict]:
         """
-        Conversations en attente d'un conseiller (statut "escalated"), la
-        plus récente escalade en premier. Pour chacune : le client, le
-        canal, la raison et l'heure de la DERNIÈRE escalade (métadonnées
-        du message de transfert, voir dialogue_manager._persist_exchange)
-        et la question du client qui l'a déclenchée.
+        Conversations en attente d'un conseiller (statut "escalated") ou
+        prises en main par un conseiller (statut "agent"), la plus récente
+        escalade en premier. Pour chacune : le client, le canal, le statut,
+        la raison et l'heure de la DERNIÈRE escalade (métadonnées du
+        message de transfert, voir dialogue_manager._persist_exchange) et
+        la question du client : celle qui a déclenché le transfert, ou son
+        dernier message si un conseiller a pris la main (il peut avoir
+        écrit depuis).
         """
         from app.models.user import User
 
         rows = await self.db.execute(
             select(Conversation, User)
             .join(User, User.id == Conversation.user_id)
-            .where(Conversation.status == "escalated")
+            .where(Conversation.status.in_(("escalated", "agent")))
         )
         escalations = []
         for conv, user in rows.all():
@@ -174,22 +177,43 @@ class ConversationRepository:
                  if messages[i].role == "assistant" and (messages[i].metadata_ or {}).get("escalated")),
                 None,
             )
-            if transfer_index is None:
+            if transfer_index is None and conv.status != "agent":
                 continue  # statut incohérent (aucun message de transfert) : rien à afficher
-            transfer = messages[transfer_index]
-            question = next(
-                (m.content for m in reversed(messages[:transfer_index]) if m.role == "user"), ""
-            )
+            # Prise en main sans transfert (réponse à une conversation jamais
+            # escaladée) : pas de raison, datée du début de la conversation.
+            transfer = messages[transfer_index] if transfer_index is not None else None
+            before = messages if conv.status == "agent" else messages[:transfer_index]
+            question = next((m.content for m in reversed(before) if m.role == "user"), "")
             escalations.append({
                 "conversation_id": conv.id,
                 "customer_id": user.external_id,
                 "channel": conv.channel,
+                "status": conv.status,
                 "last_question": question,
-                "reason": (transfer.metadata_ or {}).get("escalation_reason"),
-                "escalated_at": transfer.created_at,
+                "reason": (transfer.metadata_ or {}).get("escalation_reason") if transfer else None,
+                "escalated_at": transfer.created_at if transfer else conv.started_at,
             })
         escalations.sort(key=lambda e: e["escalated_at"], reverse=True)
         return escalations
+
+    async def last_agent_message_at(self, conv_id: uuid.UUID) -> Optional[datetime]:
+        """Heure du dernier message envoyé par un conseiller, ou None."""
+        result = await self.db.execute(
+            select(func.max(Message.created_at))
+            .where(Message.conversation_id == conv_id, Message.role == "agent")
+        )
+        return result.scalar_one_or_none()
+
+    async def take_over(self, conv: Conversation, agent: str, at: datetime) -> None:
+        """
+        Un conseiller a répondu : il prend la main, le bot ne répond plus à
+        ce client (voir dialogue_manager.agent_has_the_conversation) jusqu'à
+        "Marquer traitée" ou 1 h sans message du conseiller.
+        """
+        conv.status = "agent"
+        # Nouveau dict : SQLAlchemy ne détecte pas une modification en place du JSONB
+        conv.context = {**(conv.context or {}), "taken_over_by": agent, "taken_over_at": at.isoformat()}
+        await self.db.flush()
 
     async def resolve(self, conv_id: uuid.UUID, resolved_at: datetime) -> Optional[Conversation]:
         """

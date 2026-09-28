@@ -32,7 +32,9 @@ class Conversation(Base):
     # Statut de la conversation
     # "active" → en cours
     # "closed" → terminée
-    # "escalated" → transférée à un humain
+    # "escalated" → transférée à un humain, en attente
+    # "agent" → prise en main par un conseiller, le bot ne répond plus
+    # "resolved" → traitée par un conseiller (bouton de /admin)
     status: Mapped[str] = mapped_column(
         String(20),
         default="active",

@@ -56,3 +56,7 @@ class ChatResponse(BaseModel):
     escalation_reason: Optional[str] = Field(
         None, description="Raison de l'escalade : explicit | frustration | repeated_rag_failure | low_rag_confidence"
     )
+    handled_by_agent: bool = Field(
+        default=False,
+        description="Un conseiller a pris la main sur la conversation : le bot ne répond pas (response vide)",
+    )

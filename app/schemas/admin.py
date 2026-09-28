@@ -13,6 +13,7 @@ class EscalationItem(BaseModel):
     conversation_id: uuid.UUID
     customer_id: Optional[str] = Field(None, description="Identifiant du client sur son canal (n° WhatsApp, PSID, session web)")
     channel: str = Field(..., description="web | whatsapp | messenger")
+    status: str = Field("escalated", description="escalated (en attente) | agent (pris en main par un conseiller)")
     last_question: str = Field(..., description="Question du client qui a déclenché le transfert")
     reason: Optional[str] = Field(
         None, description="explicit | frustration | low_rag_confidence | repeated_rag_failure"

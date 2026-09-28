@@ -30,7 +30,7 @@ async def _fake_handle_message(message, session_id=None, channel="web"):
     calls.append({"message": message, "session_id": session_id, "channel": channel})
     return SimpleNamespace(
         response=f"écho : {message}", session_id=session_id, intent="general", confidence=0.9,
-        sources=[], processing_time_ms=1, escalated=False, escalation_reason=None,
+        sources=[], processing_time_ms=1, escalated=False, escalation_reason=None, handled_by_agent=False,
     )
 
 

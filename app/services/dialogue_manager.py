@@ -3,6 +3,9 @@
 Orchestrateur central du chatbot — appelé par la route POST /chat.
 
 Pour chaque message reçu :
+0. Si un conseiller a pris la main sur la conversation depuis /admin
+   (statut "agent", voir agent_has_the_conversation), le bot ne répond
+   pas : le message du client est seulement enregistré.
 1. Détection de la langue (language_detector) — imposée au LLM ensuite,
    pas laissée à sa devinette.
 2. Classification d'intent par règles (intent_classifier) — rapide et
@@ -242,6 +245,9 @@ class DialogueResult:
     processing_time_ms: int
     sources: list = field(default_factory=list)
     escalation_reason: Optional[str] = None
+    # Conseiller aux commandes : aucune réponse du bot (response vide),
+    # les canaux n'envoient rien au client.
+    handled_by_agent: bool = False
 
 
 # ── Persistance PostgreSQL ─────────────────────────────────────────────
@@ -292,6 +298,10 @@ async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, c
             await conversations.add_message(
                 conv.id, "user", user_message, {"language": result.language}, created_at=received_at,
             )
+            if result.handled_by_agent:
+                # Conseiller aux commandes : pas de réponse du bot à enregistrer
+                await db.commit()
+                return
             await conversations.add_message(
                 conv.id, "assistant", result.response,
                 {
@@ -349,10 +359,79 @@ async def handle_message(message: str, session_id: Optional[str] = None, channel
     # Réponse au moins 1 µs après la réception : ordre strict garanti même
     # si l'horloge renvoie deux fois la même valeur.
     received_at = datetime.now(timezone.utc)
-    result = await _handle_message(message, session_id, channel)
+    if await agent_has_the_conversation(session_id, channel):
+        result = await _handled_by_agent(message, session_id, channel)
+    else:
+        result = await _handle_message(message, session_id, channel)
     answered_at = max(datetime.now(timezone.utc), received_at + timedelta(microseconds=1))
     _schedule_persist(session_id, channel, message, result, received_at, answered_at)
     return result
+
+
+# ── Prise en main par un conseiller ────────────────────────────────────
+# Même durée que la session Redis : sans message du conseiller pendant ce
+# délai, le bot reprend la main (le client n'attend pas indéfiniment).
+AGENT_TAKEOVER_TIMEOUT = timedelta(seconds=_session_manager.SESSION_TTL)
+
+
+async def agent_has_the_conversation(session_id: str, channel: str) -> bool:
+    """
+    True si un conseiller a pris la main sur la conversation en cours de ce
+    client (statut "agent", posé par POST /admin/escalations/{id}/reply) et
+    lui a écrit il y a moins d'AGENT_TAKEOVER_TIMEOUT. Passé ce délai, la
+    conversation repasse "escalated" (toujours visible sur /admin) et le bot
+    reprend la main.
+
+    Lecture PostgreSQL synchrone, avant toute réponse : seule source de
+    vérité du statut. En cas d'erreur (PostgreSQL indisponible), False :
+    le bot répond comme avant plutôt que de laisser le client sans réponse.
+    """
+    try:
+        async with AsyncSessionLocal() as db:
+            user = await UserRepository(db).get_by_external_id(session_id, channel)
+            if user is None:
+                return False
+            conversations = ConversationRepository(db)
+            now = datetime.now(timezone.utc)
+            conv = await conversations.get_recent_for_user(user.id, now - AGENT_TAKEOVER_TIMEOUT)
+            if conv is None or conv.status != "agent":
+                return False
+            last_agent = await conversations.last_agent_message_at(conv.id)
+            if last_agent is not None and last_agent >= now - AGENT_TAKEOVER_TIMEOUT:
+                return True
+            conv.status = "escalated"
+            conv.context = {**(conv.context or {}), "agent_timeout_at": now.isoformat()}
+            await db.commit()
+            logger.info(f"⏱️ Prise en main expirée (aucun message du conseiller depuis 1 h), "
+                        f"le bot reprend la main | session={session_id}")
+            return False
+    except Exception as e:
+        logger.warning(f"⚠️ Statut de prise en main illisible, le bot répond | session={session_id} : {e}")
+        return False
+
+
+async def _handled_by_agent(message: str, session_id: str, channel: str) -> DialogueResult:
+    """Conseiller aux commandes : le message reste dans l'historique
+    (session Redis, puis PostgreSQL via la persistance), sans réponse."""
+    start = time.time()
+    await _session_manager.get_or_create(session_id, channel)
+    await _session_manager.add_message(session_id, "user", message)
+    logger.info(f"🧑‍💼 Conversation prise en main par un conseiller, pas de réponse du bot | session={session_id}")
+    return DialogueResult(
+        response="", session_id=session_id, language=detect_language(message),
+        intent="handled_by_agent", confidence=0.0, escalated=False,
+        processing_time_ms=int((time.time() - start) * 1000), handled_by_agent=True,
+    )
+
+
+async def record_agent_message(session_id: str, text: str) -> None:
+    """Ajoute la réponse d'un conseiller à la session Redis du client : quand
+    le bot reprend la main, sa mémoire conversationnelle en tient compte.
+    Session expirée : rien à faire (le bot repartira d'une session neuve)."""
+    try:
+        await _session_manager.add_message(session_id, "assistant", text, {"agent": True})
+    except Exception as e:
+        logger.warning(f"⚠️ Message du conseiller non ajouté à la session Redis | session={session_id} : {e}")
 
 
 async def _handle_message(message: str, session_id: str, channel: str) -> DialogueResult:

@@ -153,6 +153,8 @@ async def receive_message(request: Request):
             message=text_body, session_id=psid, channel="messenger"
         )
 
+        if result.handled_by_agent:
+            return Response(status_code=200)  # conseiller aux commandes : le bot se tait
         try:
             await _send_messenger_message(psid, result.response)
         except Exception as e:

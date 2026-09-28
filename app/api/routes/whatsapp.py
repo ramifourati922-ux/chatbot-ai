@@ -166,6 +166,8 @@ async def receive_message(request: Request):
             message=text_body, session_id=from_number, channel="whatsapp"
         )
 
+        if result.handled_by_agent:
+            return Response(status_code=200)  # conseiller aux commandes : le bot se tait
         try:
             await _send_whatsapp_message(from_number, result.response)
         except Exception as e:
