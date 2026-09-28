@@ -211,8 +211,9 @@ téléchargement reste bloqué, définir `HF_HUB_DISABLE_XET=1`.
 
 Les routes `/admin`, `/admin/escalations` et
 `/admin/escalations/{id}/resolve` exposent les identifiants des clients
-(numéros WhatsApp…) et leurs questions. Elles sont protégées par
-**HTTP Basic** :
+(numéros WhatsApp…) et leurs questions ; les routes `/users/` permettent
+de lister, créer, modifier et désactiver leurs comptes. Toutes sont
+protégées par le même **HTTP Basic** :
 
 ```env
 ADMIN_USERNAME=admin
@@ -276,7 +277,7 @@ Points d'entrée de l'API :
 | WhatsApp Business Cloud API | `GET` / `POST /webhook/whatsapp` |
 | Facebook Messenger | `GET` / `POST /webhook/messenger` |
 | Conseillers | `GET /admin`, `GET /admin/escalations`, `POST /admin/escalations/{id}/resolve` |
-| Utilisateurs (CRUD) | `/users/` |
+| Utilisateurs (CRUD, identifiants requis) | `/users/` |
 | Supervision | `GET /health` |
 
 Exemple :
@@ -301,11 +302,11 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**245 tests** : détection de langue, classification (escalade,
+**257 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
-types de transfert), persistance PostgreSQL, tableau de bord `/admin` et
-son authentification, restriction CORS, limitation de débit, structure de
+types de transfert), persistance PostgreSQL, tableau de bord `/admin`,
+authentification de `/admin` et `/users/`, restriction CORS, limitation de débit, structure de
 la base de connaissances.
 
 - Les tests d'intégration ont besoin des services (`docker compose up
@@ -333,7 +334,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (245 tests)
+tests/                         # suite pytest (257 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -371,19 +372,21 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ### Sécurité
 
-- `/admin` : un seul compte partagé, sans rôles (voir
+- `/admin` et `/users/` : un seul compte partagé, sans rôles (voir
   [Accès au tableau de bord](#accès-au-tableau-de-bord-des-conseillers)).
-- Les routes `/chat/`, `/ws/{client_id}` et `/users/` n'ont **aucune
-  authentification** : n'importe qui peut notamment lister ou supprimer
-  des utilisateurs. Une **limitation de débit par adresse IP** freine
-  les abus (épuisement du quota Groq, créations ou suppressions en
-  boucle) sans les empêcher :
+  Les tentatives de connexion ne sont pas limitées : l'authentification
+  est vérifiée avant la limitation de débit, donc les essais de mot de
+  passe refusés (401) ne sont pas comptés, et `/admin` n'a pas de limite.
+- Les routes `/chat/` et `/ws/{client_id}`, destinées aux clients, n'ont
+  **aucune authentification**. Une **limitation de débit par adresse
+  IP** freine les abus (épuisement du quota Groq, appels en boucle) sans
+  les empêcher :
 
   | Route | Limite par IP (défaut) | Justification |
   |---|---|---|
   | `POST /chat/` | 20 requêtes / minute | Un client humain envoie quelques messages par minute ; chaque message coûte un appel Groq. |
   | `WS /ws/{client_id}` | 5 connexions simultanées, 20 messages / minute (toutes connexions confondues) | Quelques onglets ouverts ; même budget que `/chat/`. |
-  | `/users/` (toutes routes) | 10 requêtes / minute, compteur commun | Aucun usage légitime en rafale ; l'interface de démo ne l'appelle pas. |
+  | `/users/` (toutes routes) | 10 requêtes / minute, compteur commun (requêtes authentifiées) | Aucun usage légitime en rafale ; l'interface de démo ne l'appelle pas. |
 
   Au-delà : réponse **429** avec un message explicite (HTTP), ou
   message d'erreur puis fermeture de la connexion avec le code 1008

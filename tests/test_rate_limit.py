@@ -5,7 +5,8 @@ toutes ses routes) et /ws (connexions simultanées + messages).
 
 Fenêtres réduites à 1 seconde par monkeypatch pour tester la remise à
 zéro sans attendre une minute. handle_message et la base sont remplacés
-par des bouchons : ni appel Groq ni PostgreSQL.
+par des bouchons : ni appel Groq ni PostgreSQL. Le client envoie les
+identifiants administrateur (exigés par /users/, ignorés par /chat/).
 """
 
 import time
@@ -28,6 +29,7 @@ from app.main import app
 
 LIMIT = 3
 WINDOW_S = 1
+ADMIN = ("conseiller-test", "mot-de-passe-test")
 
 
 async def _fake_handle_message(message, session_id=None, channel="web"):
@@ -51,6 +53,8 @@ async def _no_users(self, *args, **kwargs):
 
 @pytest.fixture(autouse=True)
 def small_limits(monkeypatch):
+    monkeypatch.setattr(settings, "ADMIN_USERNAME", ADMIN[0])
+    monkeypatch.setattr(settings, "ADMIN_PASSWORD", ADMIN[1])
     monkeypatch.setattr(settings, "RATE_LIMIT_CHAT", f"{LIMIT}/{WINDOW_S} second")
     monkeypatch.setattr(settings, "RATE_LIMIT_USERS", f"{LIMIT}/{WINDOW_S} second")
     monkeypatch.setattr(settings, "RATE_LIMIT_WS_MESSAGES", f"{LIMIT}/{WINDOW_S} second")
@@ -69,7 +73,7 @@ def small_limits(monkeypatch):
 
 @pytest_asyncio.fixture
 async def client():
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", auth=ADMIN) as c:
         yield c
 
 

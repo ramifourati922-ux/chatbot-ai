@@ -5,11 +5,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import uuid
 
 from app.api.rate_limit import limiter, users_limit
+from app.api.routes.admin import require_admin
 from app.db.database import get_db
 from app.db.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate, UserUpdate, UserResponse
 
-router = APIRouter(prefix="/users", tags=["Users"])
+# Même authentification HTTP Basic que /admin (ADMIN_USERNAME /
+# ADMIN_PASSWORD) : ces routes listent, modifient et désactivent les
+# comptes clients. Aucun composant interne ne les appelle (le chatbot
+# passe directement par UserRepository, voir dialogue_manager).
+router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(require_admin)])
 
 # Une seule limite pour toutes les routes /users/ (RATE_LIMIT_USERS par
 # IP) : alterner création, lecture et suppression ne la contourne pas.
