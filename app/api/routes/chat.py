@@ -1,8 +1,9 @@
 # app/api/routes/chat.py
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 import logging
 
+from app.api.rate_limit import chat_limit, limiter
 from app.schemas.chat import ChatMessage, ChatResponse
 from app.services.dialogue_manager import handle_message
 
@@ -11,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 @router.post("/", response_model=ChatResponse)
-async def chat(message: ChatMessage):
+@limiter.limit(chat_limit)  # 429 au-delà de RATE_LIMIT_CHAT par IP
+async def chat(request: Request, message: ChatMessage):
     """
     Endpoint principal du chatbot.
     Détection de langue + intent (règles) + RAG (ChromaDB) + LLM (Groq)

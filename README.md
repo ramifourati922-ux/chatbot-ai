@@ -301,12 +301,12 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**233 tests** : détection de langue, classification (escalade,
+**245 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin` et
-son authentification, restriction CORS, structure de la base de
-connaissances.
+son authentification, restriction CORS, limitation de débit, structure de
+la base de connaissances.
 
 - Les tests d'intégration ont besoin des services (`docker compose up
   -d`), d'une base de connaissances indexée et d'une clé Groq ; sans eux,
@@ -333,7 +333,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (233 tests)
+tests/                         # suite pytest (245 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -373,10 +373,33 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 - `/admin` : un seul compte partagé, sans rôles (voir
   [Accès au tableau de bord](#accès-au-tableau-de-bord-des-conseillers)).
-- Les routes `/chat/`, `/ws/{client_id}` et `/users/` n'ont **ni
-  authentification ni limitation de débit** : n'importe qui peut
-  notamment lister ou supprimer des utilisateurs, ou épuiser le quota
-  Groq.
+- Les routes `/chat/`, `/ws/{client_id}` et `/users/` n'ont **aucune
+  authentification** : n'importe qui peut notamment lister ou supprimer
+  des utilisateurs. Une **limitation de débit par adresse IP** freine
+  les abus (épuisement du quota Groq, créations ou suppressions en
+  boucle) sans les empêcher :
+
+  | Route | Limite par IP (défaut) | Justification |
+  |---|---|---|
+  | `POST /chat/` | 20 requêtes / minute | Un client humain envoie quelques messages par minute ; chaque message coûte un appel Groq. |
+  | `WS /ws/{client_id}` | 5 connexions simultanées, 20 messages / minute (toutes connexions confondues) | Quelques onglets ouverts ; même budget que `/chat/`. |
+  | `/users/` (toutes routes) | 10 requêtes / minute, compteur commun | Aucun usage légitime en rafale ; l'interface de démo ne l'appelle pas. |
+
+  Au-delà : réponse **429** avec un message explicite (HTTP), ou
+  message d'erreur puis fermeture de la connexion avec le code 1008
+  (WebSocket). Les valeurs se règlent dans `.env` (`RATE_LIMIT_CHAT`,
+  `RATE_LIMIT_WS_MESSAGES`, `RATE_LIMIT_WS_CONNECTIONS`,
+  `RATE_LIMIT_USERS`). Limites de ce mécanisme :
+  - compteurs en mémoire, propres au processus : remis à zéro au
+    redémarrage, non partagés entre plusieurs workers ;
+  - derrière un proxy (ngrok…), tous les visiteurs ont l'adresse du
+    proxy et partagent donc la même limite (l'en-tête
+    `X-Forwarded-For`, falsifiable, n'est pas lu) ;
+  - un attaquant disposant de nombreuses adresses IP n'est pas freiné ;
+  - les webhooks WhatsApp et Messenger ne sont pas limités : ils sont
+    authentifiés par leur signature HMAC, mais seulement si
+    `WHATSAPP_APP_SECRET` / `MESSENGER_APP_SECRET` sont définis (sinon
+    la signature n'est pas vérifiée).
 - La restriction CORS ne protège que contre un site tiers ouvert dans le
   navigateur d'un visiteur. Elle ne bloque ni les clients hors
   navigateur (curl, scripts), ni les WebSockets : `/ws/{client_id}`

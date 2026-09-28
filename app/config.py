@@ -149,6 +149,19 @@ class Settings(BaseSettings):
     # sont servis par l'API elle-même (même origine), donc non concernés.
     CORS_ALLOWED_ORIGINS: str = ""
 
+    # Limitation de débit par IP (voir app/api/rate_limit.py), syntaxe de
+    # la bibliothèque `limits` : "20/minute", "5/10 seconds"...
+    # POST /chat/ et messages WebSocket : 20/min. Un client humain envoie
+    # quelques messages par minute ; chaque message coûte un appel Groq
+    # (quota gratuit), une rafale de script est coupée au 21e.
+    RATE_LIMIT_CHAT: str = "20/minute"
+    RATE_LIMIT_WS_MESSAGES: str = "20/minute"
+    # Connexions WebSocket simultanées par IP : quelques onglets ouverts.
+    RATE_LIMIT_WS_CONNECTIONS: int = 5
+    # /users/ (toutes routes confondues) : plus strict, aucun usage
+    # légitime en rafale (l'interface de démo ne l'appelle jamais).
+    RATE_LIMIT_USERS: str = "10/minute"
+
     @property
     def cors_origins(self) -> list:
         origins = [o.strip() for o in self.CORS_ALLOWED_ORIGINS.split(",") if o.strip()]

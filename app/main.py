@@ -72,6 +72,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Limitation de débit (décorateurs sur /chat/ et /users/, voir rate_limit.py)
+from slowapi.errors import RateLimitExceeded
+from app.api.rate_limit import limiter, rate_limit_exceeded_handler
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
+
 # ── Inclure les routes ─────────────────────────────────────
 from app.api.routes import users
 from app.api.routes import chat

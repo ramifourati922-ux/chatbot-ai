@@ -1,14 +1,19 @@
 # app/api/routes/users.py
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 import uuid
 
+from app.api.rate_limit import limiter, users_limit
 from app.db.database import get_db
 from app.db.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate, UserUpdate, UserResponse
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
+# Une seule limite pour toutes les routes /users/ (RATE_LIMIT_USERS par
+# IP) : alterner création, lecture et suppression ne la contourne pas.
+users_rate_limit = limiter.shared_limit(users_limit, scope="users")
 
 
 @router.post(
@@ -17,7 +22,9 @@ router = APIRouter(prefix="/users", tags=["Users"])
     status_code=status.HTTP_201_CREATED,
     summary="Créer un utilisateur"
 )
+@users_rate_limit
 async def create_user(
+    request: Request,
     user_data: UserCreate,
     db: AsyncSession = Depends(get_db)
 ):
@@ -32,7 +39,9 @@ async def create_user(
     response_model=UserResponse,
     summary="Récupérer un utilisateur"
 )
+@users_rate_limit
 async def get_user(
+    request: Request,
     user_id: uuid.UUID,
     db: AsyncSession = Depends(get_db)
 ):
@@ -52,7 +61,9 @@ async def get_user(
     response_model=UserResponse,
     summary="Modifier un utilisateur"
 )
+@users_rate_limit
 async def update_user(
+    request: Request,
     user_id: uuid.UUID,
     user_data: UserUpdate,
     db: AsyncSession = Depends(get_db)
@@ -73,7 +84,9 @@ async def update_user(
     response_model=list[UserResponse],
     summary="Lister les utilisateurs"
 )
+@users_rate_limit
 async def list_users(
+    request: Request,
     skip: int = 0,
     limit: int = 20,
     db: AsyncSession = Depends(get_db)
@@ -88,7 +101,9 @@ async def list_users(
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Désactiver un utilisateur"
 )
+@users_rate_limit
 async def delete_user(
+    request: Request,
     user_id: uuid.UUID,
     db: AsyncSession = Depends(get_db)
 ):

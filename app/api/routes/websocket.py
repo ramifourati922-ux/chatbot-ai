@@ -23,6 +23,7 @@ import logging
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
+from app.api import rate_limit
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(tags=["WebSocket"])
@@ -51,6 +52,16 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
+# Dépassement de limite : message d'erreur au format des réponses (champ
+# "response", affiché tel quel par chat.html) puis fermeture propre.
+_TOO_MANY_CONNECTIONS = "Trop de connexions simultanées depuis votre adresse. Fermez un onglet puis réessayez."
+_TOO_MANY_MESSAGES = "Trop de messages en peu de temps. Patientez une minute, puis rechargez la page."
+
+
+async def _reject(websocket: WebSocket, text: str) -> None:
+    await websocket.send_json({"response": text, "error": "rate_limited", "escalated": False})
+    await websocket.close(code=rate_limit.WS_POLICY_VIOLATION, reason="rate limit")
+
 
 @router.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
@@ -62,10 +73,25 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
     message à l'autre), renvoie la réponse complète en JSON (mêmes
     champs que ChatResponse pour l'endpoint HTTP existant).
     """
-    await manager.connect(client_id, websocket)
+    # slowapi ne couvre pas les WebSockets : limites manuelles par IP
+    # (connexions simultanées, messages par minute), voir rate_limit.py.
+    ip = websocket.client.host if websocket.client else "inconnue"
+    if not rate_limit.ws_connection_opened(ip):
+        await websocket.accept()
+        await _reject(websocket, _TOO_MANY_CONNECTIONS)
+        logger.warning(f"⛔ WebSocket refusé (connexions simultanées) : ip={ip} client={client_id}")
+        return
+
     try:
+        await manager.connect(client_id, websocket)
         while True:
             message = await websocket.receive_text()
+
+            if not rate_limit.ws_message_allowed(ip):
+                await _reject(websocket, _TOO_MANY_MESSAGES)
+                logger.warning(f"⛔ WebSocket fermé (débit de messages) : ip={ip} client={client_id}")
+                manager.disconnect(client_id)
+                return
 
             result = await handle_message(
                 message=message, session_id=client_id, channel="web"
@@ -92,3 +118,5 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
         logger.error(f"❌ Erreur WebSocket client={client_id}: {e}", exc_info=True)
         manager.disconnect(client_id)
         raise
+    finally:
+        rate_limit.ws_connection_closed(ip)
