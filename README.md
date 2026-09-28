@@ -1,141 +1,218 @@
-# Liss Strike — Chatbot IA Multicanal
+# Liss Strike — Assistant de service client multilingue (RAG)
 
-Chatbot service client pour **Liss Strike**, boutique tunisienne
-spécialisée dans l'électronique et les composants pour makers (cartes
-programmables, capteurs, modules, outillage, impression 3D...).
+Assistant conversationnel de service client pour **Liss Strike**, une
+boutique tunisienne d'électronique et de composants pour *makers*
+(cartes programmables, capteurs, modules, outillage…).
 
-Le bot comprend et répond en **français, anglais, arabe littéraire et
-tunisien** (dialecte + arabizi), s'appuie sur un pipeline **RAG**
-(Retrieval-Augmented Generation) branché sur la base de connaissances
-réelle du magasin, et détecte de façon fiable les situations qui
-doivent être transférées à un humain plutôt que traitées par l'IA.
+Il répond aux questions des clients en **français, anglais, arabe
+littéraire et tunisien** (en lettres arabes ou en arabizi), uniquement à
+partir de la base de connaissances de la boutique (pipeline **RAG**), et
+transfère la conversation à un conseiller humain quand c'est nécessaire.
+Les conseillers suivent les conversations transférées sur un tableau de
+bord protégé.
 
-## Aperçu
+> **Projet académique — prototype.** La base de connaissances (politiques
+> SAV et catalogue produits) est **fictive**, rédigée ou générée pour le
+> projet. Le système n'est pas prêt pour une mise en production en l'état
+> (voir [Limites connues](#limites-connues)).
+
+## Sommaire
+
+- [Fonctionnalités](#fonctionnalités)
+- [Architecture](#architecture)
+- [Stack technique](#stack-technique)
+- [Résultats mesurés](#résultats-mesurés)
+- [Installation](#installation)
+- [Utilisation](#utilisation)
+- [Tests](#tests)
+- [Structure du code](#structure-du-code)
+- [Documentation](#documentation)
+- [Limites connues](#limites-connues)
+- [Perspectives](#perspectives)
+- [Licence](#licence)
+
+## Fonctionnalités
+
+### Compréhension du message
+
+- **Détection de la langue** (fr / en / ar / tn) : règles dédiées à
+  l'arabe et au tunisien (y compris l'arabizi, par exemple « 3andi »),
+  `langdetect` pour le reste. La langue de réponse est imposée au LLM.
+- **Classification par règles** (sans LLM, donc déterministe et
+  instantanée) : demande explicite d'un humain, frustration envers le
+  *service* (« votre service est nul » transfère, « ce produit est nul »
+  non), simple politesse (« bonjour », « merci », « au revoir »).
+- **Mémoire conversationnelle** : les 6 derniers messages de la session
+  sont transmis au LLM, et une question de suivi (« et quel est le
+  délai ? ») est rattachée à la question précédente pour la recherche.
+
+### Réponse (RAG « Advanced »)
+
+- **Recherche hybride** : recherche sémantique (embeddings, ChromaDB) +
+  recherche par mots-clés (BM25), fusionnées par Reciprocal Rank Fusion.
+- **Reranking** des 20 meilleurs candidats par un cross-encoder
+  multilingue, qui garde les 4 plus pertinents.
+- **Génération** par un LLM (Groq) avec une consigne stricte : répondre
+  uniquement à partir des passages trouvés, dire « je n'ai pas
+  l'information » plutôt qu'inventer, refuser les questions hors sujet.
+
+### Transfert vers un humain (4 déclencheurs)
+
+| Raison | Déclencheur | Appel au LLM |
+|---|---|---|
+| `explicit` | Le client demande un humain | Non |
+| `frustration` | Mécontentement envers le service | Non |
+| `low_rag_confidence` | Confiance de la recherche sous le seuil (0,35) | Non |
+| `repeated_rag_failure` | 3 réponses « je n'ai pas l'information » consécutives | Oui (réponses précédentes) |
+
+### Canaux et suivi
+
+- Un seul moteur (`dialogue_manager.handle_message`) pour 4 canaux :
+  HTTP, WebSocket, WhatsApp Business Cloud API, Facebook Messenger
+  (signature HMAC-SHA256 des webhooks Meta vérifiée).
+- **Sessions** dans Redis (1 h), **historique permanent** dans
+  PostgreSQL (enregistré en arrière-plan, sans retarder la réponse).
+- **Tableau de bord des conseillers** (`/admin`) : liste des
+  conversations transférées (client, canal, raison, question, temps
+  d'attente), bouton « Marquer traitée », notification du navigateur à
+  chaque nouveau transfert. Protégé par identifiant et mot de passe
+  (HTTP Basic).
+- **Interface de démonstration** (`/chat-demo`) : chat en temps réel,
+  sans framework front.
+
+## Architecture
+
+```text
+                 Client
+   Web · WebSocket · WhatsApp · Messenger
+                    │
+       ┌────────────▼─────────────┐
+       │  API FastAPI (routes)    │  signature HMAC Meta, filtre is_echo
+       └────────────┬─────────────┘
+       ┌────────────▼─────────────┐
+       │  dialogue_manager        │  orchestration
+       └──┬─────────┬─────────┬───┘
+          │         │         │
+  language_detector │     rag/ ─ embeddings (MiniLM, local)
+  intent_classifier │          ─ ChromaDB (dense) + BM25 → RRF
+                    │          ─ reranker (cross-encoder)
+            session_manager    ─ LLM Groq
+                 (Redis)
+                    │
+            PostgreSQL (users, conversations, messages)
+                    │
+       /admin : conversations transférées (conseillers)
+```
+
+Parcours d'un message :
 
 ```mermaid
 flowchart TD
     A[Message entrant] --> B[Détection de langue<br/>fr / en / ar / tn]
-    B --> C[Classification d'intent<br/>escalade uniquement]
-    C -->|escalade détectée<br/>explicite / frustration| D[Réponse canned immédiate<br/>pas d'appel LLM]
-    C -->|message normal| L{3 échecs RAG<br/>consécutifs ?}
-    L -->|oui| D
-    L -->|non| E[Recherche RAG<br/>ChromaDB]
-    E --> M{Confiance RAG<br/>≥ seuil ?}
-    M -->|non| D
-    M -->|oui| F[Appel LLM<br/>Groq]
-    F --> H[Réponse au client]
-    D --> I[Session Redis<br/>historique + compteur]
-    H --> I
+    B --> C[Classification par règles]
+    C -->|demande d'humain<br/>ou frustration| T[Message de transfert<br/>sans LLM]
+    C -->|politesse| P[Réponse toute prête<br/>sans LLM]
+    C -->|question| S[Question de suivi ?<br/>rattachée à la précédente]
+    S --> R[Recherche hybride<br/>BM25 + dense + RRF<br/>puis reranking]
+    R --> K{Confiance<br/>≥ 0,35 ?}
+    K -->|non| T
+    K -->|oui| L[LLM Groq<br/>passages + historique]
+    L --> F{3e « je n'ai pas<br/>l'information »<br/>d'affilée ?}
+    F -->|oui| T
+    F -->|non| H[Réponse au client]
+    T --> D[Tableau de bord /admin]
+    H --> DB[(Redis + PostgreSQL)]
+    P --> DB
+    T --> DB
 ```
-
-Quatre canaux d'entrée, un seul moteur (`dialogue_manager.handle_message`) :
-
-| Canal | Endpoint |
-|---|---|
-| Web (HTTP) | `POST /chat/` |
-| Web (temps réel) | `WS /ws/{client_id}` |
-| WhatsApp Business Cloud API | `GET`/`POST /webhook/whatsapp` |
-| Facebook Messenger | `GET`/`POST /webhook/messenger` |
-
-## Fonctionnalités clés
-
-- **Multilingue natif** — détection fr/en/ar/tn (arabe littéraire ET
-  tunisien, écrit en lettres arabes ou en arabizi), réponse imposée
-  dans la langue détectée plutôt que laissée au hasard du LLM.
-- **RAG ancré dans la vraie base de connaissances** — le bot ne
-  répond qu'à partir des documents indexés (politiques SAV, catalogue
-  produits) ; consigne stricte de ne jamais halluciner un numéro de
-  commande, un prix ou une date.
-- **Escalade humaine fiable** — détection par règles déterministes
-  (pas de ML probabiliste sur ce point précis) de 4 situations :
-  - demande explicite ("je veux parler à un agent")
-  - frustration envers le service (mécontentement + contexte service,
-    pas confondu avec une critique produit normale)
-  - boucle d'échecs RAG répétés (3 tentatives infructueuses de suite)
-  - confiance RAG trop faible (score = 1 - distance cosinus du
-    meilleur document trouvé < seuil calibré empiriquement) — évite de
-    laisser le LLM répondre sur un contexte peu fiable plutôt que de
-    risquer une hallucination
-- **Garde-fou hors-sujet** — refuse poliment les questions sans
-  rapport avec Liss Strike plutôt que de répondre avec les
-  connaissances générales du LLM.
-- **Multicanal** — même moteur conversationnel branché sur le web
-  (HTTP + WebSocket), WhatsApp et Messenger, avec vérification de
-  signature HMAC-SHA256 sur les deux webhooks Meta.
-- **Interface de démonstration** — chat temps réel autonome
-  (`/chat-demo`), sans framework, avec badges visuels d'escalade.
 
 ## Stack technique
 
 | Composant | Technologie |
 |---|---|
-| API | FastAPI (ASGI, async) |
-| LLM | Groq (`openai/gpt-oss-120b`, fallback `gpt-oss-20b`) — gratuit |
-| Embeddings | `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (local, 384 dim) |
-| Base vectorielle | ChromaDB |
-| Session / compteur anti-boucle | Redis (fallback mémoire si indisponible) |
-| Base relationnelle | PostgreSQL (SQLAlchemy async) |
-| Détection de langue | `langdetect` + règles dédiées (arabe/tunisien) |
-| Tests | pytest + pytest-asyncio |
-| Conteneurisation | Docker Compose (Redis, PostgreSQL, ChromaDB, Adminer) |
+| API | FastAPI (async), Uvicorn |
+| LLM | Groq : `openai/gpt-oss-120b`, repli sur `openai/gpt-oss-20b` |
+| Embeddings | `paraphrase-multilingual-MiniLM-L12-v2` (sentence-transformers, local, 384 dimensions) |
+| Recherche lexicale | BM25 (`rank-bm25`) |
+| Reranker | `cross-encoder/mmarco-mMiniLMv2-L12-H384-v1` (multilingue) |
+| Base vectorielle | ChromaDB 1.4.1 (image Docker épinglée par digest) |
+| Sessions | Redis 7 (repli en mémoire si indisponible) |
+| Base relationnelle | PostgreSQL 16, SQLAlchemy async, Alembic |
+| Détection de langue | `langdetect` + règles dédiées arabe / tunisien |
+| Évaluation | RAGas 0.4.3 (`scripts/evaluate_ragas.py`) |
+| Tests | pytest, pytest-asyncio |
+| Infrastructure | Docker Compose (PostgreSQL, Redis, ChromaDB, Adminer) |
 
-## Structure du projet
+## Résultats mesurés
 
-```
-app/
-├── api/routes/          # chat, whatsapp, messenger, websocket, users
-├── services/
-│   ├── dialogue_manager.py    # orchestrateur central
-│   ├── intent_classifier.py   # détection d'escalade (règles)
-│   ├── language_detector.py   # détection fr/en/ar/tn
-│   ├── session_manager.py     # sessions Redis + compteur anti-boucle
-│   └── rag/                   # embeddings, ChromaDB, retriever, LLM
-├── db/                   # SQLAlchemy (models, repositories)
-├── schemas/              # Pydantic
-└── config.py             # variables d'environnement centralisées
+Tous les chiffres ci-dessous proviennent de
+[`CHANGELOG_ADVANCED_RAG.md`](CHANGELOG_ADVANCED_RAG.md) et de
+[`docs/evaluation/`](docs/evaluation/) ; le protocole et les limites de
+l'évaluation y sont détaillés.
 
-data/knowledge_base/      # politiques SAV + catalogue produits (source du RAG)
-scripts/                  # ingestion de la knowledge base, génération de données
-static/chat.html          # interface de démo
-tests/                    # suite pytest (224 tests)
-docs/                     # guides (ngrok/webhooks) + captures d'écran
-```
+**Base de connaissances** : 11 109 chunks indexés (59 questions-réponses
+de politiques SAV / e-commerce + 11 050 produits).
+
+**Évaluation RAGas, Basic RAG vs Advanced RAG** (22 questions notées en
+fr / en / ar / tn, juge `gpt-oss-20b`) :
+
+| Métrique | Basic RAG | Advanced RAG |
+|---|---|---|
+| Context Precision | 0,645 | 0,913 |
+| Context Recall | 0,599 | 0,800 |
+| Faithfulness | 0,532 | 0,689 |
+| Answer Relevancy | 0,485 | 0,600 |
+| Source attendue dans le top 4 | 77 % | 95 % |
+
+Le gain porte sur le français et l'anglais ; **l'arabe régresse** avec le
+reranker (Context Recall 0,92 → 0,55). Échantillon réduit (3 à 4
+questions en arabe et en tunisien) : ce sont des tendances, pas des
+mesures statistiquement solides.
+
+**Latences** (CPU, sans GPU) :
+
+| Mesure | Valeur |
+|---|---|
+| Recherche Advanced (hybride + reranking), médiane sur 9 questions | 1 084 ms (max 1 505 ms) |
+| dont reranking des 20 candidats | 883 ms (médiane) |
+| Réponses RAG de bout en bout, scénario de démo vérifié | 1,2 à 1,9 s |
+| Politesse et transfert explicite (sans LLM), même scénario | 7 à 22 ms |
 
 ## Installation
 
-Prérequis : Python 3.13, Docker Desktop, une clé [Groq](https://console.groq.com/keys) gratuite.
+**Prérequis** : Python 3.13, Docker Desktop, une clé API
+[Groq](https://console.groq.com/keys) (offre gratuite).
 
 ```bash
 # 1. Dépendances
 python -m venv venv
-venv\Scripts\activate          # Windows
+venv\Scripts\activate          # Windows (Linux/macOS : source venv/bin/activate)
 pip install -r requirements.txt
 
-# 2. Variables d'environnement
-# Copier .env.example vers .env et renseigner au minimum GROQ_API_KEY
-# et ADMIN_PASSWORD (sans lui, l'API refuse de démarrer, voir plus bas)
+# 2. Configuration : copier .env.example en .env, puis renseigner au minimum
+#    GROQ_API_KEY et ADMIN_PASSWORD (sans lui, l'API refuse de démarrer)
 
-# 3. Services (Redis, PostgreSQL, ChromaDB, Adminer)
+# 3. Services (PostgreSQL, Redis, ChromaDB, Adminer)
 docker compose up -d
 
-# 4. Indexer la base de connaissances dans ChromaDB
+# 4. Schéma de la base, puis indexation de la base de connaissances
+alembic upgrade head
 python scripts/ingest_knowledge_base.py
 
-# 5. Lancer le serveur
+# 5. Lancement
 uvicorn app.main:app --reload
 ```
 
-- API + docs Swagger : http://localhost:8000/docs
-- Interface de démo : http://localhost:8000/chat-demo
-- Tableau de bord des conseillers (conversations transférées) : http://localhost:8000/admin
-- Admin base de données : http://localhost:8080 (Adminer)
+Au premier lancement, les modèles d'embeddings et de reranking sont
+téléchargés depuis Hugging Face (le reranker pèse environ 470 Mo). Si le
+téléchargement reste bloqué, définir `HF_HUB_DISABLE_XET=1`.
 
-### Accès au tableau de bord des conseillers (`/admin`)
+### Accès au tableau de bord des conseillers
 
 Les routes `/admin`, `/admin/escalations` et
-`/admin/escalations/{id}/resolve` sont protégées par **HTTP Basic** : elles
-exposent les identifiants (numéros WhatsApp…) et les questions des clients.
-Définir dans `.env` :
+`/admin/escalations/{id}/resolve` exposent les identifiants des clients
+(numéros WhatsApp…) et leurs questions. Elles sont protégées par
+**HTTP Basic** :
 
 ```env
 ADMIN_USERNAME=admin
@@ -143,36 +220,64 @@ ADMIN_PASSWORD=un-vrai-mot-de-passe
 ```
 
 - `ADMIN_PASSWORD` est **obligatoire** : s'il est absent ou vide, l'API
-  refuse de démarrer avec un message explicite (plutôt que d'exposer ces
-  données). `ADMIN_USERNAME` vaut `admin` par défaut.
-- En ouvrant http://localhost:8000/admin, le navigateur affiche sa propre
-  invite de connexion.
+  refuse de démarrer avec un message explicite. `ADMIN_USERNAME` vaut
+  `admin` par défaut.
+- Le navigateur affiche sa propre invite de connexion à l'ouverture de
+  `/admin`.
+- Protection minimale : un seul compte partagé, sans rôles ni journal de
+  qui a traité quoi. HTTP Basic transmet les identifiants encodés
+  (base64), non chiffrés : **HTTPS indispensable** en dehors d'une
+  machine locale.
 
-⚠️ **Ce n'est qu'une première barrière** : un seul compte partagé entre
-tous les conseillers, pas de vrais comptes ni de rôles, pas de journal de
-qui a traité quoi. Et HTTP Basic transmet les identifiants simplement
-encodés (base64), pas chiffrés : **HTTPS indispensable** en dehors d'une
-machine locale.
+### Ne jamais utiliser `docker compose down -v`
 
-### ⚠️ Ne jamais utiliser `docker compose down -v`
-
-Le flag `-v` supprime les **volumes Docker nommés** — ça effacerait
-définitivement les ~11 000 documents indexés dans ChromaDB (obligeant
-à relancer `ingest_knowledge_base.py`, plusieurs minutes) ainsi que
-les données PostgreSQL.
-
-Pour arrêter les services sans rien perdre :
+L'option `-v` supprime les volumes Docker nommés : la base de
+connaissances indexée dans ChromaDB (il faudrait relancer
+`ingest_knowledge_base.py`, plusieurs minutes) et toutes les données
+PostgreSQL seraient perdues.
 
 ```bash
 docker compose stop     # arrête les conteneurs, garde tout (recommandé)
-docker compose down     # arrête ET supprime les conteneurs, mais les
-                         # volumes nommés (chroma_data, postgres_data)
-                         # survivent — sans -v, c'est sans risque aussi
+docker compose down     # supprime les conteneurs ; les volumes nommés
+                        # (chroma_data, postgres_data) sont conservés
 ```
 
-`docker compose up -d` redémarre ensuite normalement avec les données
-intactes, quelle que soit l'option utilisée pour arrêter — **tant que
-`-v` n'a jamais été ajouté**.
+## Utilisation
+
+| Adresse | Rôle |
+|---|---|
+| http://localhost:8000/chat-demo | Interface de démonstration (chat en temps réel) |
+| http://localhost:8000/admin | Tableau de bord des conseillers (identifiants requis) |
+| http://localhost:8000/docs | Documentation interactive de l'API (Swagger) |
+| http://localhost:8080 | Adminer (administration PostgreSQL) |
+
+Points d'entrée de l'API :
+
+| Canal / usage | Route |
+|---|---|
+| Web (HTTP) | `POST /chat/` |
+| Web (temps réel) | `WS /ws/{client_id}` |
+| WhatsApp Business Cloud API | `GET` / `POST /webhook/whatsapp` |
+| Facebook Messenger | `GET` / `POST /webhook/messenger` |
+| Conseillers | `GET /admin`, `GET /admin/escalations`, `POST /admin/escalations/{id}/resolve` |
+| Utilisateurs (CRUD) | `/users/` |
+| Supervision | `GET /health` |
+
+Exemple :
+
+```bash
+curl -X POST http://localhost:8000/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Quels sont les frais de livraison ?", "channel": "web"}'
+```
+
+La réponse contient le texte, l'identifiant de session à réutiliser,
+l'intention, la confiance, les sources consultées, le temps de
+traitement et, le cas échéant, la raison du transfert.
+
+**Démonstration** : un scénario vérifié en 8 étapes, une checklist de
+démarrage et une transcription de secours sont dans
+[`docs/demo/`](docs/demo/).
 
 ## Tests
 
@@ -180,65 +285,141 @@ intactes, quelle que soit l'option utilisée pour arrêter — **tant que
 pytest tests/ -v
 ```
 
-224 tests couvrant la détection de langue, la classification
-d'intent (escalade, politesse + non-régression sur faux positifs), le
-pipeline RAG (recherche hybride, reranking), l'orchestrateur complet
-(les 4 types d'escalade, mémoire conversationnelle, compteur
-anti-boucle, appels réels Groq/ChromaDB), la persistance PostgreSQL et
-la structure de la base de connaissances.
+**224 tests** : détection de langue, classification (escalade,
+politesse, faux positifs), recherche hybride et reranking, mémoire
+conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
+types de transfert), persistance PostgreSQL, tableau de bord `/admin` et
+son authentification, structure de la base de connaissances.
 
-## Documentation complémentaire
+- Les tests d'intégration ont besoin des services (`docker compose up
+  -d`), d'une base de connaissances indexée et d'une clé Groq ; sans eux,
+  ils sont ignorés (*skipped*).
+- Certains tests appellent réellement Groq (consommation du quota
+  gratuit) et les tests de l'orchestrateur écrivent des conversations
+  dans la base PostgreSQL locale.
 
-- [`docs/webhooks_ngrok_setup.md`](docs/webhooks_ngrok_setup.md) — exposer le serveur local en HTTPS et configurer les webhooks WhatsApp/Messenger dans l'interface Meta Developer.
-- [`docs/screenshots/`](docs/screenshots/) — captures d'écran de l'interface de démo.
-  - [`admin_1_liste.png`](docs/screenshots/admin_1_liste.png) — tableau de bord des conseillers (`/admin`) : 4 conversations transférées, avec la raison, la question du client et le temps d'attente (la 1re ligne montre une tentative d'injection HTML affichée comme du texte).
-  - [`admin_2_apres_resolution.png`](docs/screenshots/admin_2_apres_resolution.png) — après un clic sur « Marquer traitée » : la conversation « Client mécontent » disparaît de la liste (4 → 3 en attente).
+## Structure du code
+
+```text
+app/
+├── main.py                    # application FastAPI, préchargement des modèles
+├── config.py                  # configuration (variables d'environnement)
+├── api/routes/                # chat, websocket, whatsapp, messenger, users, admin
+├── services/
+│   ├── dialogue_manager.py    # orchestrateur : langue, règles, RAG, LLM, persistance
+│   ├── intent_classifier.py   # transfert, frustration, politesse (règles)
+│   ├── language_detector.py   # fr / en / ar / tn
+│   ├── session_manager.py     # sessions Redis
+│   └── rag/                   # embeddings, ChromaDB, BM25, reranker, LLM
+├── db/, models/, schemas/     # PostgreSQL (SQLAlchemy) et schémas Pydantic
+alembic/                       # migrations de la base
+data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
+scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
+static/                        # chat.html (démo client), admin.html (conseillers)
+tests/                         # suite pytest (224 tests)
+docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
+```
+
+## Documentation
+
+- [`CHANGELOG_ADVANCED_RAG.md`](CHANGELOG_ADVANCED_RAG.md) : passage au
+  RAG avancé (recherche hybride, reranking, calibration, évaluation
+  RAGas), correctifs après revue et anomalies documentées (symptôme,
+  diagnostic, cause, correction).
+- [`data/knowledge_base/README.md`](data/knowledge_base/README.md) :
+  contenu et format de la base de connaissances, ré-indexation.
+- [`docs/demo/`](docs/demo/) : scénario de démonstration, checklist du
+  jour J, transcription vérifiée.
+- [`docs/evaluation/`](docs/evaluation/) : résultats RAGas détaillés
+  (JSON et Markdown).
+- [`docs/webhooks_ngrok_setup.md`](docs/webhooks_ngrok_setup.md) :
+  exposer le serveur local en HTTPS et configurer les webhooks
+  WhatsApp / Messenger.
+- [`docs/screenshots/`](docs/screenshots/) : captures d'écran.
+  `admin_1_liste.png` et `admin_2_apres_resolution.png` montrent le
+  tableau de bord des conseillers ; les captures `chat_demo_*` et
+  `figure27` à `figure29` sont antérieures aux derniers correctifs de
+  l'interface de démonstration.
 
 ## Limites connues
 
-Ce projet est un prototype fonctionnel et testé (224 tests
-automatisés + tests manuels de bout en bout, y compris navigateur
-réel et webhooks simulés au format exact Meta), mais il n'est **pas
-prêt pour un vrai lancement en production** en l'état :
+### Relais humain
 
-- **Aucun volet humain réel de l'escalade** : le bot annonce un
-  transfert, mais rien ne notifie un agent ni ne lui permet de
-  répondre — c'est un message canned suivi d'un flag en session, pas
-  un vrai handoff.
-- **WhatsApp/Messenger non testés avec de vrais comptes Meta** — le
-  code respecte la documentation officielle et a été validé avec des
-  requêtes simulées au format exact, mais pas encore en conditions
-  réelles (quota, fenêtre de 24h WhatsApp, etc.).
-- **Aucune authentification ni rate-limiting** sur les endpoints
-  publics (`/chat/`, `/ws/{client_id}`).
-- Le compteur anti-boucle ne compte plus que les échecs réels (les
-  réponses où le bot dit ne pas avoir l'information), mais il les
-  **reconnaît par mots-clés** : une formulation inédite du LLM n'est
-  pas comptée (le client peut toujours demander un humain).
-- **Recherche cross-lingue anglais → français imparfaite** : la base
-  est rédigée en français, et certaines questions en anglais ne
-  retrouvent pas la bonne politique (ex. « What is the warranty on
-  programmable boards? » ne trouve pas la garantie ; « What is the
-  warranty on a multimeter? » la trouve).
+- Le conseiller voit les conversations transférées sur `/admin`, mais
+  **ne peut pas répondre au client depuis la page** : il doit le
+  recontacter par un autre moyen. Seule la dernière question est
+  affichée, pas l'historique complet.
+- Les notifications ne fonctionnent que si l'onglet `/admin` est ouvert
+  (notifications du navigateur) : pas d'e-mail ni de notification push.
+
+### Sécurité
+
+- `/admin` : un seul compte partagé, sans rôles (voir
+  [Accès au tableau de bord](#accès-au-tableau-de-bord-des-conseillers)).
+- Les routes `/chat/`, `/ws/{client_id}` et `/users/` n'ont **ni
+  authentification ni limitation de débit** : n'importe qui peut
+  notamment lister ou supprimer des utilisateurs, ou épuiser le quota
+  Groq.
+- L'identifiant de session WebSocket est choisi par le client. Une
+  session WhatsApp ayant pour identifiant le numéro de téléphone, un
+  client web qui connaît ce numéro peut rejoindre la même session (dont
+  l'historique est transmis au LLM).
+
+### Mise en production
+
+- WhatsApp et Messenger n'ont **pas été testés avec de vrais comptes
+  Meta** : validés avec des requêtes simulées au format exact, mais pas
+  en conditions réelles (quotas, fenêtre de 24 h de WhatsApp…).
+- Pas de `Dockerfile` pour l'API ni d'intégration continue ; les
+  webhooks passent par ngrok en local.
+- Dépendance à l'offre gratuite de Groq (quota de tokens par jour et par
+  modèle).
+- Pas de suivi de commande : le bot n'a accès à aucune base de commandes.
+
+### Langues et qualité des réponses
+
+- **Anglais → français** : la base est rédigée en français ; certaines
+  questions en anglais ne retrouvent pas la bonne politique (« What is
+  the warranty on programmable boards? » échoue, « What is the warranty
+  on a multimeter? » réussit).
+- **Arabe** : le reranker fait baisser le rappel (voir
+  [Résultats mesurés](#résultats-mesurés)).
 - **Tunisien en arabizi** : le contenu de la réponse est correct, mais
-  le bot répond souvent en arabe littéraire au lieu de l'écriture
-  latine (arabizi) utilisée par le client.
-- **« 3D » pris pour de l'arabizi** : un chiffre collé à des lettres
-  est un marqueur d'arabizi (« 3andi », « n7eb ») ; « imprimante 3D »
-  dans une question en français fait donc répondre le bot en tunisien
-  (même famille que les unités techniques « 12V », « 5A », déjà
-  gérées).
-- **Le seuil de confiance RAG chevauche largement le garde-fou
-  hors-sujet du prompt système**, découvert lors des tests
-  d'intégration : l'intention initiale était de rattraper les
-  questions *dans le domaine* Liss Strike mais mal couvertes par le
-  RAG. En pratique, sur ~18 questions candidates testées (français +
-  tunisien, services obscurs variés), aucune question dans le domaine
-  n'est descendue sous le seuil — le catalogue de ~11 000 produits est
-  trop large. Seules des questions clairement hors domaine déclenchent
-  ce mécanisme dans les faits (voir le détail dans `config.py` et
-  `dialogue_manager.py`).
+  elle est souvent rédigée en arabe littéraire plutôt qu'en arabizi.
+- **« 3D » pris pour de l'arabizi** : un chiffre collé à des lettres est
+  un marqueur d'arabizi (« 3andi ») ; « imprimante 3D » dans une question
+  en français fait répondre le bot en tunisien.
+- Le compteur de boucle RAG reconnaît les réponses « je n'ai pas
+  l'information » par mots-clés : une formulation inédite du LLM n'est
+  pas comptée.
+- Le seuil de confiance (0,35) arrête surtout les questions **hors
+  domaine** ; il isole rarement les questions du domaine mal couvertes
+  par la base (catalogue très large). Les deux mécanismes contre le
+  hors-sujet (seuil et consigne du LLM) se recouvrent en partie.
+
+### Suite de tests
+
+- Les tests de l'orchestrateur laissent des conversations dans la base
+  locale et consomment le quota Groq ; tests unitaires et d'intégration
+  ne sont pas séparés.
+
+## Perspectives
+
+- Réponse du conseiller depuis `/admin` (historique complet, envoi sur
+  WhatsApp / Messenger) et prise de main : suspendre le bot quand un
+  humain a repris la conversation.
+- Notifications hors navigateur (e-mail, push) ; comptes conseillers
+  individuels avec rôles et traçabilité.
+- Authentification et limitation de débit sur l'API ; identifiants de
+  session générés côté serveur.
+- Reranking réservé au français et à l'anglais (la mesure RAGas montre
+  la régression en arabe) ; normalisation de l'arabizi avant la
+  recherche.
+- `Dockerfile`, intégration continue, séparation des tests unitaires et
+  d'intégration.
+- Suivi de commande relié à un back-office.
 
 ## Licence
 
-Projet académique.
+Projet académique. Aucune licence open source n'est définie à ce jour
+(pas de fichier `LICENSE`).
