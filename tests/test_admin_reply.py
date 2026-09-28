@@ -347,3 +347,23 @@ async def test_bot_answers_if_postgres_is_unavailable(monkeypatch):
 
     monkeypatch.setattr(dialogue_manager, "AsyncSessionLocal", broken_session)
     assert await dialogue_manager.agent_has_the_conversation("216xxxxxxxx", "whatsapp") is False
+
+
+@pytest.mark.asyncio
+async def test_expired_takeover_is_displayed_as_waiting_without_writing(prefix, client, sent):
+    """Prise en main abandonnée des deux côtés (aucun message depuis 1 h) :
+    /admin l'affiche "en attente", sans attendre un message du client ni
+    écrire en base au moment de la lecture."""
+    _, conv_id = await _take_over(client, prefix)
+    async with database.AsyncSessionLocal() as db:
+        await db.execute(text(
+            "update messages set created_at = created_at - interval '61 minutes' "
+            "where conversation_id = :c and role = 'agent'"), {"c": conv_id})
+        await db.commit()
+
+    [item] = [e for e in (await client.get("/admin/escalations")).json() if e["conversation_id"] == str(conv_id)]
+    assert item["status"] == "escalated"  # plus de badge "Pris en main"
+    assert (await _history(client, conv_id))["status"] == "escalated"
+    async with database.AsyncSessionLocal() as db:  # rien d'écrit en base par la lecture
+        stored = (await db.execute(text("select status from conversations where id = :c"), {"c": conv_id})).scalar_one()
+    assert stored == "agent"

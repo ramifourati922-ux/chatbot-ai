@@ -127,7 +127,8 @@ async def conversation_history(conversation_id: uuid.UUID, db: AsyncSession = De
     repo = ConversationRepository(db)
     conv, customer_id, channel = await _load(repo, conversation_id)
     return ConversationHistory(
-        conversation_id=conv.id, customer_id=customer_id, channel=channel, status=conv.status,
+        conversation_id=conv.id, customer_id=customer_id, channel=channel,
+        status=await repo.displayed_status(conv),
         messages=[
             MessageItem(role=m.role, content=m.content, created_at=m.created_at)
             for m in await repo.get_full_history(conv.id)

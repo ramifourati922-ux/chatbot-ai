@@ -188,7 +188,7 @@ class ConversationRepository:
                 "conversation_id": conv.id,
                 "customer_id": user.external_id,
                 "channel": conv.channel,
-                "status": conv.status,
+                "status": await self.displayed_status(conv),
                 "last_question": question,
                 "reason": (transfer.metadata_ or {}).get("escalation_reason") if transfer else None,
                 "escalated_at": transfer.created_at if transfer else conv.started_at,
@@ -203,6 +203,27 @@ class ConversationRepository:
             .where(Message.conversation_id == conv_id, Message.role == "agent")
         )
         return result.scalar_one_or_none()
+
+    async def displayed_status(self, conv: Conversation) -> str:
+        """
+        Statut à afficher sur /admin. Une prise en main expirée (dernier
+        message du conseiller plus vieux qu'AGENT_TAKEOVER_TIMEOUT) s'affiche
+        "escalated", comme le bot la traite déjà : sinon une conversation
+        abandonnée des deux côtés resterait "Pris en main" indéfiniment, le
+        statut en base n'étant réécrit qu'au prochain message du client
+        (dialogue_manager.agent_has_the_conversation). Lecture seule.
+        """
+        if conv.status != "agent":
+            return conv.status
+        # Import différé : dialogue_manager importe ce module (import
+        # circulaire au chargement). Une seule définition du délai.
+        from datetime import timezone
+        from app.services.dialogue_manager import AGENT_TAKEOVER_TIMEOUT
+
+        last_agent = await self.last_agent_message_at(conv.id)
+        if last_agent is None or last_agent < datetime.now(timezone.utc) - AGENT_TAKEOVER_TIMEOUT:
+            return "escalated"
+        return "agent"
 
     async def take_over(self, conv: Conversation, agent: str, at: datetime) -> None:
         """
