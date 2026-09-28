@@ -56,3 +56,46 @@ def test_technical_unit_notation_is_not_mistaken_for_arabizi(text):
 def test_short_or_ambiguous_defaults_to_default_language(text):
     from app.services.language_detector import DEFAULT_LANGUAGE
     assert detect_language(text) == DEFAULT_LANGUAGE
+
+
+# ── Anglais court et informel (langdetect → langue non supportée) ───────
+# Régression : "I need ur help" était classé néerlandais par langdetect,
+# le repli sur DEFAULT_LANGUAGE faisait répondre en français.
+
+@pytest.mark.parametrize("text,langdetect_guess", [
+    ("I need ur help", "nl"),
+    ("can u help me", "cy"),
+    ("can you help me", "cy"),
+    ("r u open today", "cy"),
+    ("plz answer me", "nl"),
+    ("u have arduino?", "pt"),
+    ("help me pls", "nl"),
+])
+def test_informal_english_misdetected_by_langdetect_is_english(text, langdetect_guess):
+    from langdetect import detect
+    from app.services.language_detector import detect_language_detailed
+    assert detect(text) == langdetect_guess  # le cas corrigé est bien celui du repli
+    result = detect_language_detailed(text)
+    assert result.language == "en"
+    assert result.method == "english_hint"
+
+
+@pytest.mark.parametrize("text", ["need ur assistance", "thx for ur help", "where r u located"])
+def test_informal_english_already_detected_stays_english(text):
+    assert detect_language(text) == "en"
+
+
+@pytest.mark.parametrize("text", [
+    # Messages français courts que langdetect classe dans une langue non
+    # supportée : sans indice anglais, ils restent en français
+    "ok merci",        # slovaque
+    "dispo ?",         # italien
+    "ça marche",       # turc
+    "je cherche un kit",  # allemand
+    "combien le port",    # espagnol
+    "svp aidez moi",      # hongrois
+    # Indice anglais mais aussi indice français : reste en français
+    "help svp",
+])
+def test_short_french_misdetected_by_langdetect_stays_french(text):
+    assert detect_language(text) == "fr"

@@ -18,7 +18,10 @@ Stratégie (par ordre de priorité) :
        ou un chiffre utilisé comme lettre à l'intérieur d'un mot,
        ex: "n7eb", "5ouya") → "tn"
     4. Sinon on utilise `langdetect` (basé sur des n-grammes statistiques)
-       pour trancher entre "fr" et "en" (et "ar" en secours).
+       pour trancher entre "fr" et "en" (et "ar" en secours). S'il
+       renvoie une langue non supportée : "en" si le message contient un
+       indice anglais (ex: "ur", "pls", "you") et aucun indice français,
+       sinon langue par défaut.
 
 Pourquoi cette approche hybride et pas juste `langdetect` seul ?
     - `langdetect` est entraîné sur de l'arabe littéraire et des langues
@@ -117,6 +120,28 @@ TECHNICAL_UNIT_SUFFIXES = {
 }
 
 
+# ── Repli quand langdetect renvoie une langue non supportée ──
+# Sur un message anglais court et informel, langdetect se trompe souvent
+# de langue ("I need ur help" → néerlandais, "can u help me" → gallois),
+# et le repli sur DEFAULT_LANGUAGE faisait répondre en français. Dans ce
+# cas SEULEMENT (langue non supportée), un indice anglais sans indice
+# français fait choisir "en". On ne replie pas toutes les langues
+# européennes vers l'anglais : de nombreux messages français courts y
+# tombent aussi ("ok merci" → slovaque, "ça marche" → turc, "je cherche
+# un kit" → allemand) et doivent rester en français.
+# Abréviations anglaises + mots anglais très courants absents du français.
+ENGLISH_HINT_WORDS = {
+    "u", "ur", "r", "pls", "plz", "thx", "ty", "tysm", "idk", "im", "wanna", "gonna",
+    "i", "you", "your", "the", "is", "are", "can", "please", "help", "what",
+    "where", "how", "my", "need", "want", "have", "it", "this", "with", "thanks",
+}
+# Mots français courants : leur présence garde le repli français ("help svp").
+FRENCH_HINT_WORDS = {
+    "svp", "stp", "merci", "bonjour", "slt", "bjr", "je", "tu", "vous", "moi",
+    "le", "la", "les", "un", "une", "des", "de", "du", "et", "est", "pour", "avec",
+}
+
+
 def _is_technical_unit_notation(token: str) -> bool:
     """True si `token` est une notation technique (chiffre + unité,
     ex: "5v", "9ah", "3mm") plutôt qu'un vrai mot arabizi."""
@@ -128,7 +153,7 @@ def _is_technical_unit_notation(token: str) -> bool:
 class LanguageResult:
     """Résultat détaillé (utile pour debug/tests, pas juste le code langue)."""
     language: str
-    method: str  # "default" | "arabic_script" | "arabizi_keyword" | "arabizi_digit" | "statistical"
+    method: str  # "default" | "arabic_script" | "arabizi_keyword" | "arabizi_digit" | "statistical" | "english_hint"
     matched: Optional[str] = None
     raw_scores: dict = field(default_factory=dict)
 
@@ -196,8 +221,14 @@ def detect_language_detailed(text: str) -> LanguageResult:
         return LanguageResult(detected, "statistical")
 
     # langdetect peut renvoyer d'autres codes ISO (ex: "ca", "so"...)
-    # sur des textes ambigus/courts → on retombe sur le défaut plutôt
+    # sur des textes ambigus/courts → anglais si le message en porte un
+    # indice (voir ENGLISH_HINT_WORDS), sinon langue par défaut plutôt
     # que d'exposer une langue non supportée par le bot.
+    words = set(re.findall(r"[a-z]+", lower))
+    english_hint = words & ENGLISH_HINT_WORDS
+    if english_hint and not words & FRENCH_HINT_WORDS:
+        logger.info(f"🌐 langdetect a renvoyé '{detected}' (non supporté), indice anglais {sorted(english_hint)} → en")
+        return LanguageResult("en", "english_hint", matched=sorted(english_hint)[0])
     logger.info(f"🌐 langdetect a renvoyé '{detected}' (non supporté), fallback {DEFAULT_LANGUAGE}")
     return LanguageResult(DEFAULT_LANGUAGE, "default")
 
