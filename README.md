@@ -259,6 +259,43 @@ avec le code 1008.
 CORS_ALLOWED_ORIGINS=http://localhost:8000,https://xxxx.ngrok-free.app
 ```
 
+### WhatsApp en conditions réelles
+
+Testé de bout en bout avec un vrai téléphone : message reçu par le
+webhook (signature vérifiée), réponse du bot générée puis envoyée par
+l'API Graph et reçue sur WhatsApp. Configuration utilisée : **numéro de
+test fourni par Meta**, un seul destinataire autorisé, serveur local
+exposé par ngrok (voir
+[`docs/webhooks_ngrok_setup.md`](docs/webhooks_ngrok_setup.md)).
+
+Conditions nécessaires (en plus de l'URL du webhook, du jeton de
+vérification et de l'abonnement au champ `messages` dans l'application
+Meta) :
+
+- **`WHATSAPP_APP_SECRET`** : le secret de l'application Meta, recopié
+  exactement (32 caractères hexadécimaux). Sinon, chaque message reçu
+  est rejeté en 403 (signature invalide).
+- **Application abonnée au compte WhatsApp Business (WABA)** : étape
+  distincte des champs webhook de l'application, faite par l'API Graph
+  (`POST /{id-du-WABA}/subscribed_apps`, vérifiable par un `GET` sur la
+  même adresse). Sans elle, les messages réels n'arrivent jamais au
+  webhook, alors que le bouton « Test » du tableau de bord fonctionne.
+- **`WHATSAPP_ACCESS_TOKEN`** : jeton de l'application, avec la
+  permission `whatsapp_business_messaging` ; **`WHATSAPP_PHONE_NUMBER_ID`**
+  : identifiant du numéro qui envoie.
+- **En développement** : le numéro de test ne peut écrire qu'aux
+  destinataires ajoutés **et validés** dans la configuration de l'API.
+  Jeton invalide ou destinataire non autorisé : erreur Meta `131005`
+  (« Access denied »), réponse du bot non délivrée.
+
+Limites actuelles :
+
+- **Jeton d'accès temporaire** (environ 24 h) : passé ce délai, les
+  réponses ne partent plus. Un utilisateur système avec jeton permanent
+  est nécessaire pour un usage durable (pas encore fait).
+- **API Graph en version `v18.0`** : ancienne mais fonctionnelle ; la
+  mise à jour vers une version récente n'est pas encore faite.
+
 ### Ne jamais utiliser `docker compose down -v`
 
 L'option `-v` supprime les volumes Docker nommés : la base de
@@ -383,9 +420,10 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
   l'erreur exacte (« Message NON envoyé ») :
   - **WhatsApp / Messenger** : impossible sans identifiants Meta
     (`WHATSAPP_*`, `MESSENGER_*`). Les fonctions d'envoi simulent alors
-    l'envoi sans erreur ; la route le détecte et répond 409. L'envoi réel
-    n'a **jamais été testé avec un compte Meta** (règle des 24 h de
-    WhatsApp non gérée).
+    l'envoi sans erreur ; la route le détecte et répond 409. Sur
+    WhatsApp, la fonction d'envoi a été testée en réel pour les réponses
+    du bot, mais **pas encore depuis `/admin`** ; Messenger n'a jamais
+    été testé avec un vrai compte. Règle des 24 h de WhatsApp non gérée.
   - **Chat du site** : le client n'est joignable que tant que son onglet
     `/chat-demo` reste ouvert (connexion WebSocket, dans le même
     processus serveur). Onglet fermé, serveur redémarré ou client venu
@@ -457,9 +495,12 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ### Mise en production
 
-- WhatsApp et Messenger n'ont **pas été testés avec de vrais comptes
-  Meta** : validés avec des requêtes simulées au format exact, mais pas
-  en conditions réelles (quotas, fenêtre de 24 h de WhatsApp…).
+- **WhatsApp** : testé en conditions réelles avec le numéro de test de
+  Meta et un seul destinataire (voir
+  [WhatsApp en conditions réelles](#whatsapp-en-conditions-réelles)) ;
+  jeton d'accès temporaire, pas encore de numéro de production ni de
+  gestion de la fenêtre de 24 h. **Messenger** : jamais testé avec une
+  vraie Page, seulement avec des requêtes simulées au format exact.
 - Pas de `Dockerfile` pour l'API ni d'intégration continue ; les
   webhooks passent par ngrok en local.
 - Dépendance à l'offre gratuite de Groq (quota de tokens par jour et par

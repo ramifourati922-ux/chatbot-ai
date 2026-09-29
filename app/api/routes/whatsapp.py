@@ -29,6 +29,9 @@ from app.services.dialogue_manager import handle_message
 router = APIRouter(prefix="/webhook/whatsapp", tags=["WhatsApp"])
 logger = logging.getLogger(__name__)
 
+# TODO : migrer vers une version récente de l'API Graph. v18.0 est
+# ancienne mais fonctionne encore (envoi réel vérifié) ; ne pas changer
+# sans retester l'envoi et la réception de bout en bout.
 GRAPH_API_VERSION = "v18.0"
 
 
