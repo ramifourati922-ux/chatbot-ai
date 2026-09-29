@@ -158,6 +158,38 @@ class IntentClassifier:
             r"(veux|voudrais|besoin\s+d[e']|j'aimerais)\s+.{0,20}(parler\s+(à|avec)\s+)?(un\s+)?(conseiller|humain)",
             r"(transf[ée]rer|passer)\s+.{0,15}(un\s+)?(agent|conseiller|humain)",
             r"(service\s+client|support)\s+(humain|réel)",
+            # Tournures courantes que les règles ci-dessus manquaient. Apostrophe
+            # droite ou typographique ('/’). Rôles ambigus ("agent", "personne",
+            # "responsable") : seulement avec un article et une fin de demande,
+            # pour ne pas prendre une question produit ("je veux un agent
+            # électronique") ou une phrase anodine ("qui est responsable de...").
+            # "parler à/au/avec" + rôle : "parler au responsable", "à une personne"
+            r"parler\s+(à|a|au|avec)\s+(un\s+|une\s+|le\s+|la\s+|votre\s+)?(vrai(e)?\s+)?"
+            r"(conseill[eè]re?|responsable|être\s+humain|op[ée]rat(eur|rice)|personne\s+(réelle|physique|humaine))",
+            # "personne" avec article seulement : "parler à personne" veut dire l'inverse
+            r"parler\s+(à|a|avec)\s+(une|la)\s+(vraie\s+)?personne\b(?!l)",
+            # "j'ai besoin d'un conseiller", "il me faut un conseiller", "j'exige un humain"
+            r"(besoin\s+d['’]\s*|il\s+me\s+faut\s+|j['’]exige\s+|je\s+demande\s+)(un\s+|une\s+)?"
+            r"(vrai(e)?\s+)?(conseill[eè]re?|humain|être\s+humain)",
+            # "je veux / j'exige / il me faut un responsable / un agent / une personne", rôle en fin de demande
+            r"(veux|voudrais|besoin\s+d['’]\s*|faut|exige|demande|aimerais)\s+(parler\s+(à|a|avec)\s+)?"
+            r"(un|une|le|votre)\s+(vrai(e)?\s+)?(agent|responsable|personne|op[ée]rat(eur|rice))"
+            r"(?=\s*($|[.,;!?]|svp\b|stp\b|s['’]il|maintenant|tout\s+de\s+suite|immédiatement|qui\b|pour\s+m|humain|réel))",
+            # "j'exige de parler à...", "je demande à parler à..." (rôle déjà couvert ci-dessus, ici "quelqu'un")
+            r"(exige|demande\s+à|veux|voudrais)\s+(de\s+)?parler\s+(à|a|avec)\s+quelqu['’]\s*un",
+            # "passez-moi un agent / quelqu'un d'autre", "transférez-moi à un conseiller"
+            r"\b(passez|passe|transf[ée]rez|transf[ée]re|redirigez|redirige)[- ]moi\s+.{0,20}"
+            r"(agent|conseill[eè]re?|humain|responsable|quelqu['’]\s*un|personne|op[ée]rat(eur|rice)|sup[ée]rieur)",
+            # "transférez-moi" seul, en fin de demande : "pas satisfait, transférez-moi"
+            r"\btransf[ée]rez[- ]moi(?=\s*($|[.,;!?]|svp\b|stp\b|s['’]il))",
+            r"\bmettez[- ]moi\s+en\s+(relation|contact|ligne)\b",
+            r"(veux|voudrais|exige|faut)\s+.{0,10}quelqu['’]\s*un\s+d['’]\s*autre",
+            # Rôle suivi d'une formule de politesse : "un conseiller svp", "un agent s'il vous plaît"
+            r"\b(un|une|le|la)\s+(agent|conseill[eè]re?|humain|responsable|op[ée]rat(eur|rice))"
+            r"\s*,?\s*(svp|stp|s['’]il\s+(vous|te)\s+pla[iî]t)\b",
+            # Message réduit au rôle : "conseiller", "un humain svp", "agent humain !"
+            r"^\s*(un\s+|une\s+)?(agent|conseill[eè]re?|humain|responsable|op[ée]rat(eur|rice))"
+            r"(\s+humain)?(\s*,?\s*(svp|stp|s['’]il\s+(vous|te)\s+pla[iî]t|merci))?\s*[.!?]*\s*$",
 
             # ─── Anglais ───
             # "a" ou "an" : "speak to an agent" échappait à la règle.
@@ -206,6 +238,18 @@ class IntentClassifier:
             r"j'en\s+ai\s+marre",
             r"(je\s+vais\s+)?porter\s+plainte",
             r"(ça|ca)\s+ne\s+marche\s+jamais\s+avec\s+vous",
+            # Reproche adressé au service (vous/tu), pas au produit
+            r"\b(vous|tu)\s+(ne\s+|n['’]\s*)?compren(ez|ds)\s+(rien|jamais\s+rien"
+            r"|pas\s+(ma\s+(demande|question)|mes\s+(demandes|questions)|ce\s+que\s+je))",
+            # Insatisfaction visant le service ; "pas satisfait de ce capteur" reste une question produit
+            r"(pas\s+(du\s+tout\s+)?satisfaite?|insatisfaite?|m[ée]contente?)\s+(de|du|des)\s+"
+            r"(votre\s+|vos\s+|ce\s+|cette\s+|la\s+|l['’]\s*)?"
+            r"(service|réponses?|accueil|assistance|support|chatbot|bot|traitement)",
+            r"\bc['’]?\s*est\s+(vraiment\s+|complètement\s+|totalement\s+)?"
+            r"(inadmissible|inacceptable|scandaleux|honteux|une\s+honte)",
+            r"(ça|ca|cela)\s+fait\s+(\d+|deux|trois|quatre|cinq|dix|plusieurs|mille)\s+fois\s+que\s+je\s+(vous\s+|te\s+|la\s+|le\s+|l['’]\s*)?"
+            r"(demande|redemande|répète|repose|pose|explique|écris|dis|appelle|relance|contacte|signale|réclame)",
+            r"je\s+(vous\s+)?(l['’]\s*)?ai\s+déjà\s+(dit|demandé|expliqué|écrit)\s+(\d+|deux|trois|plusieurs|dix)\s+fois",
 
             # ─── Anglais ───
             r"terrible\s+(customer\s+)?service",
