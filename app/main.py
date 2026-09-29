@@ -11,9 +11,13 @@ from fastapi.responses import FileResponse
 import logging
 
 from app.config import settings
+from app.log_privacy import install_log_filters
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+# Journaux sans secrets ni conversations : paramètres sensibles masqués
+# (uvicorn, httpx), journal DEBUG de Groq coupé (voir app/log_privacy.py)
+install_log_filters()
 
 
 def _preload_rag():

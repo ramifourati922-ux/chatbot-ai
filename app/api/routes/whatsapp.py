@@ -24,6 +24,7 @@ from fastapi import APIRouter, Request, Response
 from fastapi.responses import PlainTextResponse
 
 from app.config import settings
+from app.log_privacy import mask_id, safe_error
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(prefix="/webhook/whatsapp", tags=["WhatsApp"])
@@ -174,7 +175,7 @@ async def receive_message(request: Request):
         try:
             await _send_whatsapp_message(from_number, result.response)
         except Exception as e:
-            logger.error(f"❌ Échec envoi réponse WhatsApp à {from_number}: {e}")
+            logger.error(f"❌ Échec envoi réponse WhatsApp à {mask_id(from_number)}: {safe_error(e)}")
 
     except Exception as e:
         logger.error(f"❌ Erreur traitement webhook WhatsApp: {e}", exc_info=True)

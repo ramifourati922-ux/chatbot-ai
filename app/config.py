@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     # Application
     APP_NAME: str = "Chatbot IA"
     DEBUG: bool = False
+    # Journal des requêtes SQL (débogage uniquement). Désactivé par défaut ;
+    # même activé, les valeurs des requêtes ne sont jamais affichées.
+    SQL_ECHO: bool = False
     SECRET_KEY: str = "change-this-secret"
 
     # Base de données

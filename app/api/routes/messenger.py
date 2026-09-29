@@ -25,6 +25,7 @@ from fastapi import APIRouter, Request, Response
 from fastapi.responses import PlainTextResponse
 
 from app.config import settings
+from app.log_privacy import mask_id, safe_error
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(prefix="/webhook/messenger", tags=["Messenger"])
@@ -158,7 +159,7 @@ async def receive_message(request: Request):
         try:
             await _send_messenger_message(psid, result.response)
         except Exception as e:
-            logger.error(f"❌ Échec envoi réponse Messenger à {psid}: {e}")
+            logger.error(f"❌ Échec envoi réponse Messenger à {mask_id(psid)}: {safe_error(e)}")
 
     except Exception as e:
         logger.error(f"❌ Erreur traitement webhook Messenger: {e}", exc_info=True)

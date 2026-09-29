@@ -30,7 +30,12 @@ class Base(DeclarativeBase):
 # Le "moteur" de connexion à la DB
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=settings.DEBUG,   # Affiche le SQL généré si DEBUG=True
+    # Journal SQL désactivé par défaut (SQL_ECHO) : il copiait dans les logs
+    # les valeurs des requêtes (messages des clients, numéros de téléphone).
+    # hide_parameters : même activé, et dans les erreurs de la base, les
+    # requêtes apparaissent sans leurs valeurs.
+    echo=settings.SQL_ECHO,
+    hide_parameters=True,
     pool_size=5,           # 5 connexions simultanées maximum
     max_overflow=10,       # 10 connexions supplémentaires si besoin
     pool_timeout=30,       # Attendre max 30s pour une connexion

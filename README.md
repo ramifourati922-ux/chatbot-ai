@@ -399,7 +399,7 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**432 tests** : détection de langue, classification (escalade,
+**442 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), suivi de commande, persistance PostgreSQL, tableau de bord `/admin`
@@ -433,7 +433,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (432 tests)
+tests/                         # suite pytest (442 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -493,6 +493,21 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ### Sécurité
 
+- **Journaux sans données personnelles ni secrets** :
+  - journal SQL **désactivé par défaut** (`SQL_ECHO=false`) ; même activé
+    pour déboguer, les requêtes s'affichent sans leurs valeurs (ni
+    messages, ni numéros) ;
+  - identifiants de session masqués (`216…21` pour un numéro WhatsApp),
+    texte des messages jamais journalisé (seulement en base) ;
+  - valeurs des paramètres sensibles masquées dans les journaux d'uvicorn
+    et de httpx (`hub.verify_token`, `access_token` de Messenger,
+    signature de session WebSocket), erreurs d'envoi Meta sans URL (ni
+    dans les journaux, ni dans les messages d'erreur de `/admin`) ;
+  - journal DEBUG de Groq (qui contient la conversation envoyée au LLM)
+    plafonné au niveau INFO.
+
+  Les journaux produits **avant** ces corrections peuvent en contenir :
+  à supprimer s'ils ont été conservés.
 - `/admin` et `/users/` : un compte par conseiller, deux rôles
   seulement (`conseiller`, `admin`), sans permissions plus fines ni
   journal des connexions (voir

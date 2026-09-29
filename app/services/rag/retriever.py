@@ -132,5 +132,5 @@ def search_and_format(query_text: str, top_k: int = 4, type_filter: Optional[str
     """Raccourci : recherche + formatage en une seule fonction."""
     hits = search(query_text, top_k=top_k, type_filter=type_filter)
     if not hits:
-        logger.info(f"🔍 Aucun résultat pertinent trouvé pour : {query_text[:60]!r}")
+        logger.info(f"🔍 Aucun résultat pertinent trouvé (requête de {len(query_text)} caractères)")
     return format_context(hits)

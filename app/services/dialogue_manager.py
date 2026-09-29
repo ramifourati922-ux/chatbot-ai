@@ -61,6 +61,7 @@ from app.config import settings
 from app.db.database import AsyncSessionLocal
 from app.db.repositories.conversation_repository import ConversationRepository
 from app.db.repositories.user_repository import UserRepository
+from app.log_privacy import mask_id
 from app.services.language_detector import detect_language
 from app.services import order_tracking
 from app.services.intent_classifier import ORDER_NUMBER_PATTERN, Category, IntentClassifier
@@ -327,9 +328,9 @@ async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, c
             if result.escalated:
                 conv.status = "escalated"
             await db.commit()
-        logger.debug(f"🗄️ Échange persisté en {(time.perf_counter() - t0) * 1000:.0f}ms | session={session_id}")
+        logger.debug(f"🗄️ Échange persisté en {(time.perf_counter() - t0) * 1000:.0f}ms | session={mask_id(session_id)}")
     except Exception as e:
-        logger.warning(f"⚠️ Persistance PostgreSQL échouée (réponse déjà envoyée) | session={session_id} : {e}")
+        logger.warning(f"⚠️ Persistance PostgreSQL échouée (réponse déjà envoyée) | session={mask_id(session_id)} : {e}")
 
 
 def _schedule_persist(session_id: str, channel: str, user_message: str, result: DialogueResult,
@@ -413,10 +414,10 @@ async def agent_has_the_conversation(session_id: str, channel: str) -> bool:
             conv.context = {**(conv.context or {}), "agent_timeout_at": now.isoformat()}
             await db.commit()
             logger.info(f"⏱️ Prise en main expirée (aucun message du conseiller depuis 1 h), "
-                        f"le bot reprend la main | session={session_id}")
+                        f"le bot reprend la main | session={mask_id(session_id)}")
             return False
     except Exception as e:
-        logger.warning(f"⚠️ Statut de prise en main illisible, le bot répond | session={session_id} : {e}")
+        logger.warning(f"⚠️ Statut de prise en main illisible, le bot répond | session={mask_id(session_id)} : {e}")
         return False
 
 
@@ -426,7 +427,7 @@ async def _handled_by_agent(message: str, session_id: str, channel: str) -> Dial
     start = time.time()
     await _session_manager.get_or_create(session_id, channel)
     await _session_manager.add_message(session_id, "user", message)
-    logger.info(f"🧑‍💼 Conversation prise en main par un conseiller, pas de réponse du bot | session={session_id}")
+    logger.info(f"🧑‍💼 Conversation prise en main par un conseiller, pas de réponse du bot | session={mask_id(session_id)}")
     return DialogueResult(
         response="", session_id=session_id, language=detect_language(message),
         intent="handled_by_agent", confidence=0.0, escalated=False,
@@ -441,7 +442,7 @@ async def record_agent_message(session_id: str, text: str) -> None:
     try:
         await _session_manager.add_message(session_id, "assistant", text, {"agent": True})
     except Exception as e:
-        logger.warning(f"⚠️ Message du conseiller non ajouté à la session Redis | session={session_id} : {e}")
+        logger.warning(f"⚠️ Message du conseiller non ajouté à la session Redis | session={mask_id(session_id)} : {e}")
 
 
 async def _conversation_language(message: str, session_id: str, detected: str) -> str:
@@ -479,7 +480,7 @@ async def _handle_order_tracking(message: str, intent_result, session_id: str, l
             order = await order_tracking.find_order(number)
         except Exception as e:
             lookup_failed = True
-            logger.warning(f"⚠️ Suivi de commande : base indisponible, transfert | session={session_id} : {e}")
+            logger.warning(f"⚠️ Suivi de commande : base indisponible, transfert | session={mask_id(session_id)} : {e}")
 
     if order is None and (already_prompted or lookup_failed):
         response_text = _get_escalation_message("order_tracking", language)
@@ -487,7 +488,7 @@ async def _handle_order_tracking(message: str, intent_result, session_id: str, l
         await _session_manager.add_message(
             session_id, "assistant", response_text, {"escalated": True, "escalation_reason": "order_tracking"},
         )
-        logger.info(f"🚨 Escalade (suivi de commande, numéro {number or 'absent'}) | session={session_id}")
+        logger.info(f"🚨 Escalade (suivi de commande, numéro {number or 'absent'}) | session={mask_id(session_id)}")
         return DialogueResult(
             response=response_text, session_id=session_id, language=language, intent="order_tracking",
             confidence=intent_result.confidence, escalated=True,
@@ -497,13 +498,13 @@ async def _handle_order_tracking(message: str, intent_result, session_id: str, l
     if order is not None:
         response_text = order_tracking.format_order(order, language)
         await _session_manager.clear_context_key(session_id, order_tracking.PROMPTED_CONTEXT_KEY)
-        logger.info(f"📦 Suivi de commande {number} : {order.status} | session={session_id}")
+        logger.info(f"📦 Suivi de commande {number} : {order.status} | session={mask_id(session_id)}")
     else:
         response_text = (order_tracking.not_found(number, language) if number
                          else order_tracking.ask_for_number(language))
         await _session_manager.update_context(session_id, {order_tracking.PROMPTED_CONTEXT_KEY: True})
         logger.info(f"📦 Suivi de commande : relance ({'numéro introuvable' if number else 'sans numéro'}) "
-                    f"| session={session_id}")
+                    f"| session={mask_id(session_id)}")
     await _session_manager.add_message(session_id, "assistant", response_text, {"intent": "order_tracking"})
     return DialogueResult(
         response=response_text, session_id=session_id, language=language, intent="order_tracking",
@@ -539,7 +540,7 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
         processing_time = int((time.time() - start) * 1000)
         logger.info(
             f"🚨 Escalade humaine | raison={intent_result.escalation_reason} | "
-            f"session={session_id} | langue={language}"
+            f"session={mask_id(session_id)} | langue={language}"
         )
         return DialogueResult(
             response=response_text, session_id=session_id, language=language,
@@ -566,7 +567,7 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
         await _session_manager.reset_rag_attempts(session_id)
         await _session_manager.add_message(session_id, "assistant", response_text, {"intent": intent_result.intent})
         processing_time = int((time.time() - start) * 1000)
-        logger.info(f"👋 Politesse ({intent_result.intent}) | session={session_id} | langue={language}")
+        logger.info(f"👋 Politesse ({intent_result.intent}) | session={mask_id(session_id)} | langue={language}")
         return DialogueResult(
             response=response_text, session_id=session_id, language=language,
             intent=intent_result.intent, confidence=intent_result.confidence,
@@ -593,7 +594,7 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
     previous_messages = (await _session_manager.get_history(session_id))[:-1]
     rag_query = _build_retrieval_query(message, previous_messages)
     if rag_query != message:
-        logger.info(f"🧠 Question de suivi, requête RAG enrichie : {rag_query!r}")
+        logger.info("🧠 Question de suivi : requête RAG enrichie avec la question précédente")
     hits = await asyncio.to_thread(retriever.search, rag_query, 4)
     context = retriever.format_context(hits)
     sources = [hit["metadata"].get("source") or hit["metadata"].get("sku") for hit in hits]
@@ -638,7 +639,7 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
         processing_time = int((time.time() - start) * 1000)
         logger.info(
             f"🚨 Escalade automatique (confiance RAG {rag_confidence:.3f} < "
-            f"{rag_threshold}) | session={session_id} | langue={language}"
+            f"{rag_threshold}) | session={mask_id(session_id)} | langue={language}"
         )
         return DialogueResult(
             response=response_text, session_id=session_id, language=language,
@@ -671,7 +672,7 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
             processing_time = int((time.time() - start) * 1000)
             logger.info(
                 f"🚨 Escalade automatique (boucle RAG, {rag_attempts} échecs consécutifs) | "
-                f"session={session_id} | langue={language}"
+                f"session={mask_id(session_id)} | langue={language}"
             )
             return DialogueResult(
                 response=response_text, session_id=session_id, language=language,
@@ -691,7 +692,7 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
     processing_time = int((time.time() - start) * 1000)
     logger.info(
         f"💬 intent={intent_result.intent} | langue={language} | "
-        f"sources={len(sources)} | {processing_time}ms | session={session_id}"
+        f"sources={len(sources)} | {processing_time}ms | session={mask_id(session_id)}"
     )
 
     # confidence = confiance du RAG (celle comparée au seuil d'escalade à

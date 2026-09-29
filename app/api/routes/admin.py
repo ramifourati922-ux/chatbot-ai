@@ -28,6 +28,7 @@ from app.api.auth import require_agent
 from app.api.routes import messenger, websocket, whatsapp
 from app.api.web_session import WEB_SESSION_PREFIX
 from app.config import settings
+from app.log_privacy import safe_error
 from app.db.database import get_db
 from app.db.repositories.conversation_repository import ConversationRepository
 from app.services.agent_auth import AuthenticatedAgent
@@ -155,7 +156,7 @@ async def _send_to_customer(channel: str, customer_id: str, text: str) -> None:
                 "response": text, "from_agent": True, "escalated": False, "intent": "agent",
             })
         except Exception as e:
-            raise HTTPException(status_code=502, detail=f"Échec de l'envoi au client web : {e}")
+            raise HTTPException(status_code=502, detail=f"Échec de l'envoi au client web : {safe_error(e)}")
         if not delivered:
             raise HTTPException(
                 status_code=409,
@@ -174,7 +175,7 @@ async def _send_to_customer(channel: str, customer_id: str, text: str) -> None:
     try:
         await send(customer_id, text)
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Échec de l'envoi via {channel} : {e}")
+        raise HTTPException(status_code=502, detail=f"Échec de l'envoi via {channel} : {safe_error(e)}")
 
 
 @router.post("/admin/escalations/{conversation_id}/reply", response_model=ReplyResponse)

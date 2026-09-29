@@ -13,6 +13,7 @@ from datetime import datetime
 import logging
 
 from app.config import settings
+from app.log_privacy import mask_id
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +109,7 @@ class SessionManager:
             "last_activity": datetime.now().isoformat()
         }
         await self._save(session_id, session)
-        logger.info(f"✅ Session créée : {session_id}")
+        logger.info(f"✅ Session créée : {mask_id(session_id)}")
         return session
 
     async def get_or_create(self, session_id: str, channel: str = "web") -> dict:
@@ -189,7 +190,7 @@ class SessionManager:
 
     async def delete_session(self, session_id: str):
         await self._redis_delete(f"{self.PREFIX}{session_id}")
-        logger.info(f"🗑️ Session supprimée : {session_id}")
+        logger.info(f"🗑️ Session supprimée : {mask_id(session_id)}")
 
     async def _save(self, session_id: str, session: dict):
         key = f"{self.PREFIX}{session_id}"
