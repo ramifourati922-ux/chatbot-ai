@@ -252,13 +252,13 @@ async def test_bot_is_silent_while_the_agent_has_the_conversation(prefix, client
 
 
 @pytest.mark.asyncio
-async def test_whatsapp_webhook_sends_nothing_during_takeover(prefix, client, sent, monkeypatch):
+async def test_whatsapp_webhook_sends_nothing_during_takeover(prefix, client, sent, sign_whatsapp):
     session_id, conv_id = await _take_over(client, prefix)
     sent.clear()
-    monkeypatch.setattr(settings, "WHATSAPP_APP_SECRET", None)  # signature non exigée dans ce test
     payload = {"entry": [{"changes": [{"value": {"messages": [
         {"from": session_id, "type": "text", "text": {"body": "vous êtes là ?"}}]}}]}]}
-    assert (await client.post("/webhook/whatsapp", json=payload)).status_code == 200
+    body, headers = sign_whatsapp(payload)  # requête signée comme par Meta
+    assert (await client.post("/webhook/whatsapp", content=body, headers=headers)).status_code == 200
     await wait_for_pending_persistence()
     assert sent == []  # ni réponse du bot ni accusé de réception
     assert (await _history(client, conv_id))["messages"][-1]["content"] == "vous êtes là ?"

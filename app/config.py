@@ -129,6 +129,9 @@ class Settings(BaseSettings):
     WHATSAPP_VERIFY_TOKEN: Optional[str] = None
     # Secret d'application Meta — sert à vérifier la signature
     # X-Hub-Signature-256 des webhooks entrants (voir routes/whatsapp.py).
+    # Obligatoire dès que le canal WhatsApp est configuré : l'API refuse de
+    # démarrer sans lui (main.lifespan), et le webhook refuse toute requête
+    # tant qu'il manque (jamais de message accepté sans signature vérifiée).
     WHATSAPP_APP_SECRET: Optional[str] = None
 
     # Messenger (Phase 5)
@@ -170,6 +173,11 @@ class Settings(BaseSettings):
     # /users/ (toutes routes confondues) : plus strict, aucun usage
     # légitime en rafale (l'interface de démo ne l'appelle jamais).
     RATE_LIMIT_USERS: str = "10/minute"
+
+    @property
+    def whatsapp_enabled(self) -> bool:
+        """Canal WhatsApp configuré (au moins un identifiant Meta défini)."""
+        return bool(self.WHATSAPP_PHONE_NUMBER_ID or self.WHATSAPP_ACCESS_TOKEN or self.WHATSAPP_VERIFY_TOKEN)
 
     @property
     def cors_origins(self) -> list:

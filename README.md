@@ -319,8 +319,12 @@ vérification et de l'abonnement au champ `messages` dans l'application
 Meta) :
 
 - **`WHATSAPP_APP_SECRET`** : le secret de l'application Meta, recopié
-  exactement (32 caractères hexadécimaux). Sinon, chaque message reçu
-  est rejeté en 403 (signature invalide).
+  exactement (32 caractères hexadécimaux). Valeur erronée : chaque
+  message reçu est rejeté en 403 (signature invalide). **Absent** alors
+  que le canal est configuré (`WHATSAPP_PHONE_NUMBER_ID`,
+  `WHATSAPP_ACCESS_TOKEN` ou `WHATSAPP_VERIFY_TOKEN`) : l'API **refuse de
+  démarrer** ; et sans lui, le webhook refuse toute requête (aucun
+  message n'est jamais accepté sans signature vérifiée).
 - **Application abonnée au compte WhatsApp Business (WABA)** : étape
   distincte des champs webhook de l'application, faite par l'API Graph
   (`POST /{id-du-WABA}/subscribed_apps`, vérifiable par un `GET` sur la
@@ -399,7 +403,7 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**442 tests** : détection de langue, classification (escalade,
+**451 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), suivi de commande, persistance PostgreSQL, tableau de bord `/admin`
@@ -433,7 +437,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (442 tests)
+tests/                         # suite pytest (451 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -538,9 +542,11 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
     `X-Forwarded-For`, falsifiable, n'est pas lu) ;
   - un attaquant disposant de nombreuses adresses IP n'est pas freiné ;
   - les webhooks WhatsApp et Messenger ne sont pas limités : ils sont
-    authentifiés par leur signature HMAC, mais seulement si
-    `WHATSAPP_APP_SECRET` / `MESSENGER_APP_SECRET` sont définis (sinon
-    la signature n'est pas vérifiée).
+    authentifiés par leur signature HMAC. WhatsApp exige
+    `WHATSAPP_APP_SECRET` (sans lui, requêtes refusées et démarrage
+    impossible si le canal est configuré) ; Messenger vérifie la
+    signature seulement si `MESSENGER_APP_SECRET` est défini (sinon, il
+    l'accepte sans vérification).
 - La restriction des origines (CORS pour HTTP, vérification de
   l'en-tête `Origin` pour `/ws/{client_id}`) protège les visiteurs
   contre un site tiers ouvert dans leur navigateur. Elle ne bloque pas

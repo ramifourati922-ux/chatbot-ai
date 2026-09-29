@@ -56,6 +56,15 @@ async def lifespan(app: FastAPI):
             "ADMIN_USERNAME et ADMIN_PASSWORD dans le fichier .env (voir .env.example) "
             "pour créer le premier compte admin du tableau de bord (/admin)."
         )
+    # Bloquant : canal WhatsApp configuré sans secret d'application, les
+    # signatures Meta ne pourraient pas être vérifiées. Plutôt que d'exposer
+    # un webhook public qui accepterait de faux messages, on refuse de démarrer.
+    if settings.whatsapp_enabled and not settings.WHATSAPP_APP_SECRET:
+        raise RuntimeError(
+            "WHATSAPP_APP_SECRET manquant alors que le canal WhatsApp est configuré "
+            "(WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_ACCESS_TOKEN / WHATSAPP_VERIFY_TOKEN) : "
+            "renseignez le secret de l'application Meta dans le fichier .env (voir .env.example)."
+        )
     # Non bloquant en cas d'échec (ex: ChromaDB pas encore démarré) :
     # l'API démarre quand même, les composants se chargeront au premier appel.
     try:

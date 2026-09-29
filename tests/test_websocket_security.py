@@ -124,17 +124,17 @@ def test_ws_client_id_equal_to_a_whatsapp_number_gets_a_separate_session():
 
 
 @pytest.mark.asyncio
-async def test_whatsapp_webhook_keeps_the_raw_number_as_session(monkeypatch):
+async def test_whatsapp_webhook_keeps_the_raw_number_as_session(monkeypatch, sign_whatsapp):
     """Les deux espaces de noms sont disjoints : WhatsApp garde le numéro brut."""
     from app.api.routes import whatsapp as wa_route
 
-    monkeypatch.setattr(settings, "WHATSAPP_APP_SECRET", None)      # signature non exigée
     monkeypatch.setattr(settings, "WHATSAPP_ACCESS_TOKEN", None)    # aucun envoi réel
     monkeypatch.setattr(wa_route, "handle_message", _fake_handle_message)
     payload = {"entry": [{"changes": [{"value": {"messages": [
         {"from": WHATSAPP_NUMBER, "type": "text", "text": {"body": "bonjour"}}]}}]}]}
+    body, headers = sign_whatsapp(payload)  # requête signée comme par Meta
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
-        assert (await c.post("/webhook/whatsapp", json=payload)).status_code == 200
+        assert (await c.post("/webhook/whatsapp", content=body, headers=headers)).status_code == 200
     assert calls == [{"message": "bonjour", "session_id": WHATSAPP_NUMBER, "channel": "whatsapp"}]
 
 

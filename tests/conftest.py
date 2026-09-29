@@ -10,12 +10,16 @@ est indisponible. dispose(close=False) : une boucle asyncio par test, cf.
 test_conversation_persistence.
 """
 
+import hashlib
+import hmac
+import json
 from types import SimpleNamespace
 
 import pytest
 import pytest_asyncio
 from sqlalchemy import delete, text
 
+from app.config import settings
 from app.db import database
 from app.models.agent import Agent
 from app.services.agent_auth import hash_password
@@ -59,3 +63,22 @@ async def agent_accounts():
     await database.engine.dispose(close=False)
     await _delete_test_agents()
     await database.engine.dispose(close=False)
+
+
+@pytest.fixture
+def sign_whatsapp(monkeypatch):
+    """
+    Secret d'application de test, et fonction qui signe un corps de requête
+    comme Meta (HMAC-SHA256, en-tête X-Hub-Signature-256). Le webhook refuse
+    toute requête non signée : les tests passent par ici.
+    Usage : body, headers = sign_whatsapp(payload)
+    """
+    test_secret = "cle-de-test-webhook-whatsapp"
+    monkeypatch.setattr(settings, "WHATSAPP_APP_SECRET", test_secret)
+
+    def sign(payload: dict):
+        body = json.dumps(payload).encode("utf-8")
+        signature = hmac.new(test_secret.encode("utf-8"), body, hashlib.sha256).hexdigest()
+        return body, {"Content-Type": "application/json", "X-Hub-Signature-256": f"sha256={signature}"}
+
+    return sign

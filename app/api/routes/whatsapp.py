@@ -79,11 +79,11 @@ def _verify_signature(raw_body: bytes, signature_header: str) -> bool:
     injecter du contenu arbitraire traité comme un vrai message client.
     """
     if not settings.WHATSAPP_APP_SECRET:
-        logger.warning(
-            "⚠️ WHATSAPP_APP_SECRET non configuré — signature NON vérifiée "
-            "(acceptable uniquement en dev sans webhook public exposé)"
-        )
-        return True
+        # Sans secret, impossible de vérifier : requête refusée (jamais
+        # acceptée sans vérification). Si le canal est configuré, l'API
+        # refuse d'ailleurs de démarrer (voir main.lifespan).
+        logger.warning("❌ WHATSAPP_APP_SECRET non configuré — requête WhatsApp refusée")
+        return False
     if not signature_header or not signature_header.startswith("sha256="):
         return False
     expected = hmac.new(
