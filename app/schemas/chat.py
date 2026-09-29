@@ -21,7 +21,13 @@ class ChatMessage(BaseModel):
     )
     session_id: Optional[str] = Field(
         None,
-        description="ID de session (pour continuer une conversation)"
+        description="ID de session attribué par le serveur (pour continuer une conversation) ; "
+                    "absent = nouvelle session"
+    )
+    session_signature: Optional[str] = Field(
+        None,
+        description="Signature du session_id, renvoyée par le serveur (POST /chat/ ou "
+                    "GET /chat/session) ; obligatoire avec session_id"
     )
     channel: str = Field(
         default="web",
@@ -50,6 +56,7 @@ class ChatResponse(BaseModel):
     """
     response: str = Field(..., description="La réponse du chatbot")
     session_id: str = Field(..., description="ID de session à conserver")
+    session_signature: str = Field(..., description="Signature du session_id, à renvoyer avec lui")
     intent: Optional[str] = Field(None, description="Intent détecté")
     confidence: Optional[float] = Field(
         None,

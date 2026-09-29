@@ -14,10 +14,12 @@ chiffres, ils ne commencent jamais par "web:", donc les deux espaces de
 noms ne peuvent pas se recouvrir. Le client continue de voir son
 identifiant sans préfixe.
 
-Pour le WebSocket, l'identifiant est en plus attribué par le serveur
-(GET /chat/session) et signé (HMAC-SHA256) : /ws refuse un identifiant
-sans la signature correspondante. Un client ne peut donc ni choisir son
-identifiant ni reprendre celui d'un autre en le devinant.
+L'identifiant est en plus attribué par le serveur (GET /chat/session, ou
+POST /chat/ sans session_id) et signé (HMAC-SHA256) : /ws et POST /chat/
+refusent un identifiant sans la signature correspondante. Un client ne
+peut donc ni choisir son identifiant ni reprendre celui d'un autre en le
+devinant. Même clé pour les deux routes : une session ouverte sur l'une
+est valide sur l'autre (même préfixe "web:", même session).
 """
 
 import hashlib

@@ -1,11 +1,10 @@
 # app/api/routes/chat.py
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 import logging
-import uuid
 
 from app.api.rate_limit import chat_limit, limiter
-from app.api.web_session import new_signed_client_id, web_session_id
+from app.api.web_session import client_id_signature_valid, new_signed_client_id, web_session_id
 from app.schemas.chat import ChatMessage, ChatResponse, WebSessionResponse
 from app.services.dialogue_manager import handle_message
 
@@ -16,10 +15,10 @@ logger = logging.getLogger(__name__)
 @router.get("/session", response_model=WebSessionResponse)
 async def new_web_session():
     """
-    Identifiant de session pour le chat en temps réel (WebSocket), attribué
-    et signé par le serveur : /ws/{client_id} exige la signature
-    correspondante. Le navigateur ne choisit donc pas son identifiant, et
-    ne peut pas reprendre celui d'un autre client.
+    Identifiant de session web, attribué et signé par le serveur :
+    /ws/{client_id} et POST /chat/ exigent la signature correspondante. Le
+    navigateur ne choisit donc pas son identifiant, et ne peut pas
+    reprendre celui d'un autre client.
     """
     client_id, signature = new_signed_client_id()
     return WebSessionResponse(client_id=client_id, signature=signature)
@@ -39,11 +38,24 @@ async def chat(request: Request, message: ChatMessage):
     ConversationRepository) est une amélioration possible mais hors
     scope de cette tâche.
     """
+    # Identifiant attribué et signé par le serveur, comme pour /ws : sans
+    # session_id, nouvelle session ; avec, la signature doit correspondre
+    # (sinon 403, rien n'est traité). Un client ne peut donc ni choisir son
+    # identifiant ni reprendre celui d'un autre en le devinant.
+    if message.session_id is None:
+        session_id, signature = new_signed_client_id()
+    elif client_id_signature_valid(message.session_id, message.session_signature):
+        session_id, signature = message.session_id, message.session_signature
+    else:
+        raise HTTPException(
+            status_code=403,
+            detail="session_id sans signature valide : omettez session_id pour ouvrir "
+                   "une session, puis renvoyez le session_id et la session_signature reçus.",
+        )
     # Préfixe "web:" (canal réel : cette route HTTP, quel que soit le
     # champ channel déclaré) : un session_id égal à un numéro WhatsApp ne
     # rejoint pas cette session (voir web_session.py). Le client reçoit
     # et renvoie son identifiant sans préfixe.
-    session_id = message.session_id or str(uuid.uuid4())
     result = await handle_message(
         message=message.message,
         session_id=web_session_id(session_id),
@@ -53,6 +65,7 @@ async def chat(request: Request, message: ChatMessage):
     return ChatResponse(
         response=result.response,
         session_id=session_id,
+        session_signature=signature,
         intent=result.intent,
         confidence=result.confidence,
         sources=[s for s in result.sources if s],

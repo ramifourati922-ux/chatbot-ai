@@ -18,6 +18,7 @@ import pytest_asyncio
 from sqlalchemy import delete, text
 
 from app.api.routes import messenger, websocket, whatsapp
+from app.api.web_session import sign_client_id
 from app.config import settings
 from app.db import database
 from app.main import app
@@ -278,7 +279,8 @@ async def test_web_client_gets_an_empty_handled_by_agent_answer(prefix, client, 
         await repo.add_message(conv_id, "agent", AGENT_TEXT, {}, created_at=now)
         await repo.take_over(conv, SimpleNamespace(username="conseiller-test", id=uuid.uuid4()), now)
         await db.commit()
-    response = await client.post("/chat/", json={"message": "d'accord", "session_id": web_id})
+    response = await client.post("/chat/", json={
+        "message": "d'accord", "session_id": web_id, "session_signature": sign_client_id(web_id)})
     await wait_for_pending_persistence()
     assert response.status_code == 200
     assert response.json()["handled_by_agent"] is True

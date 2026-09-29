@@ -389,8 +389,10 @@ curl -X POST http://localhost:8000/chat/ \
   -d '{"message": "Quels sont les frais de livraison ?", "channel": "web"}'
 ```
 
-La réponse contient le texte, l'identifiant de session à réutiliser,
-l'intention, la confiance, les sources consultées, le temps de
+La réponse contient le texte, l'identifiant de session attribué par le
+serveur et sa signature (`session_id`, `session_signature`, à renvoyer
+tous deux pour continuer la conversation ; un `session_id` sans
+signature valide est refusé en 403), l'intention, la confiance, les sources consultées, le temps de
 traitement et, le cas échéant, la raison du transfert.
 
 **Démonstration** : un scénario vérifié en 8 étapes, une checklist de
@@ -403,7 +405,7 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**451 tests** : détection de langue, classification (escalade,
+**460 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), suivi de commande, persistance PostgreSQL, tableau de bord `/admin`
@@ -437,7 +439,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (451 tests)
+tests/                         # suite pytest (460 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -565,9 +567,12 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
   processus serveur exigent de définir la clé. La signature ne protège
   pas un identifiant **déjà connu** avec sa signature (par exemple
   copié depuis le navigateur de la victime).
-- **`POST /chat/`** : le `session_id` reste **choisi par le client**, sans
-  signature. Un client qui connaît l'identifiant d'un autre client web
-  peut reprendre sa session par cette route. Par ailleurs, le champ
+- **`POST /chat/`** : même mécanisme. Sans `session_id`, le serveur en
+  attribue un et renvoie sa `session_signature` ; un `session_id` envoyé
+  sans signature valide est refusé en 403. Même clé que `/ws` : une
+  session de `GET /chat/session` vaut aussi pour `POST /chat/`. Mêmes
+  limites (clé éphémère sans `WS_SESSION_SECRET`, identifiant déjà connu
+  avec sa signature). Par ailleurs, le champ
   `channel` de `POST /chat/` est déclaratif : une conversation web peut
   apparaître sous le canal « WhatsApp » dans `/admin` (l'identifiant du
   client y commence alors par `web:`).
@@ -627,8 +632,7 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 - Notifications hors navigateur (e-mail, push) ; écran de gestion des
   comptes conseillers dans `/admin`, connexion par session plutôt que
   HTTP Basic.
-- Authentification des clients sur l'API ; `session_id` de `POST /chat/`
-  attribué par le serveur, comme pour le WebSocket.
+- Authentification des clients sur l'API.
 - Reranking réservé au français et à l'anglais (la mesure RAGas montre
   la régression en arabe) ; normalisation de l'arabizi avant la
   recherche.

@@ -4,8 +4,9 @@ Sécurité des sessions web :
 - /ws/{client_id} : l'en-tête Origin doit appartenir à la liste CORS
   (settings.cors_origins), sinon la connexion est fermée avec le code
   1008 sans qu'aucun message ne soit traité ;
-- /ws et POST /chat/ : l'identifiant choisi par le client est préfixé
-  par "web:", il ne peut plus désigner une session WhatsApp/Messenger.
+- /ws et POST /chat/ : l'identifiant du client est préfixé par "web:",
+  il ne peut plus désigner une session WhatsApp/Messenger (même signé :
+  défense en profondeur, voir aussi test_chat_session_signature.py).
 handle_message est remplacé par un bouchon (ni Groq, ni Redis, ni
 PostgreSQL), sauf dans le test de bout en bout, sans appel au LLM.
 """
@@ -146,7 +147,8 @@ async def test_http_chat_session_id_is_namespaced_whatever_the_declared_channel(
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
         # Le client prétend être sur WhatsApp : le préfixe suit le canal réel (HTTP = web)
         claimed = await c.post("/chat/", json={
-            "message": "bonjour", "session_id": WHATSAPP_NUMBER, "channel": "whatsapp"})
+            "message": "bonjour", "session_id": WHATSAPP_NUMBER,
+            "session_signature": sign_client_id(WHATSAPP_NUMBER), "channel": "whatsapp"})
         generated = await c.post("/chat/", json={"message": "bonjour"})
     assert calls[0]["session_id"] == f"web:{WHATSAPP_NUMBER}"
     assert claimed.json()["session_id"] == WHATSAPP_NUMBER
@@ -178,7 +180,8 @@ async def test_web_client_does_not_touch_the_whatsapp_history():
 
         # Un client web utilise ce numéro comme identifiant de session
         async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
-            response = await c.post("/chat/", json={"message": "Bonjour", "session_id": number})
+            response = await c.post("/chat/", json={
+                "message": "Bonjour", "session_id": number, "session_signature": sign_client_id(number)})
         assert response.status_code == 200
 
         whatsapp_after = await sessions.get_session(number)
