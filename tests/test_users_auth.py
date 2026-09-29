@@ -1,9 +1,10 @@
 # tests/test_users_auth.py
 """
-Authentification HTTP Basic sur /users/ : même dépendance require_admin
-que /admin. Sans identifiants ou avec de mauvais identifiants : 401 +
-WWW-Authenticate, sur les 5 routes. Avec les bons : la requête atteint la
-route (base remplacée par des bouchons : pas de PostgreSQL nécessaire).
+Authentification HTTP Basic sur /users/ : comptes conseillers en base,
+rôle admin exigé (require_admin, un conseiller reçoit 403, voir
+test_admin_auth). Sans identifiants ou avec de mauvais identifiants : 401
++ WWW-Authenticate, sur les 5 routes. Avec un compte admin : la requête
+atteint la route (dépôt des clients remplacé par des bouchons).
 """
 
 import uuid
@@ -20,7 +21,6 @@ from app.db.database import get_db
 from app.db.repositories.user_repository import UserRepository
 from app.main import app
 
-USER, PASSWORD = "conseiller-test", "mot-de-passe-test"
 USER_ID = uuid.uuid4()
 
 
@@ -58,8 +58,6 @@ async def _no_users(self, *args, **kwargs):
 
 @pytest.fixture(autouse=True)
 def setup(monkeypatch):
-    monkeypatch.setattr(settings, "ADMIN_USERNAME", USER)
-    monkeypatch.setattr(settings, "ADMIN_PASSWORD", PASSWORD)
     monkeypatch.setattr(UserRepository, "create", _created)
     monkeypatch.setattr(UserRepository, "get_by_id", _no_user)
     monkeypatch.setattr(UserRepository, "update", _no_user)
@@ -90,18 +88,18 @@ async def test_without_credentials_is_rejected(client, method, path, body):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("method,path,body", _routes())
-async def test_wrong_password_is_rejected(client, method, path, body):
-    _assert_rejected(await client.request(method, path, json=body, auth=(USER, "mauvais")))
+async def test_wrong_password_is_rejected(client, agent_accounts, method, path, body):
+    _assert_rejected(await client.request(method, path, json=body, auth=("test-admin-compte", "mauvais")))
 
 
 @pytest.mark.asyncio
-async def test_wrong_username_is_rejected(client):
-    _assert_rejected(await client.get("/users/", auth=("intrus", PASSWORD)))
+async def test_wrong_username_is_rejected(client, agent_accounts):
+    _assert_rejected(await client.get("/users/", auth=("intrus", "mot-de-passe-admin")))
 
 
 @pytest.mark.asyncio
-async def test_correct_credentials_reach_every_route(client):
-    auth = (USER, PASSWORD)
+async def test_correct_credentials_reach_every_route(client, agent_accounts):
+    auth = agent_accounts.admin.auth
     expected = {
         ("POST", "/users/"): 201,
         ("GET", "/users/"): 200,

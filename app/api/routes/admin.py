@@ -7,64 +7,37 @@ statut "escalated" en base (dialogue_manager._persist_exchange). Ces
 routes permettent à un conseiller de voir les conversations en attente
 et de marquer une prise en charge comme traitée (statut "resolved").
 
-Protégé par HTTP Basic (ADMIN_USERNAME / ADMIN_PASSWORD dans .env) :
-ces routes exposent les identifiants et les questions des clients.
-Première barrière seulement : un seul compte partagé, pas de rôles, et
-les identifiants circulent en clair (encodés en base64) → HTTPS
-obligatoire en production.
+Protégé par HTTP Basic, un compte par conseiller (table agents, voir
+app/api/auth.py) : ces routes exposent les identifiants et les questions
+des clients. Réponses, prises en main et résolutions sont rattachées au
+conseiller authentifié. Les identifiants circulent encodés en base64, non
+chiffrés → HTTPS obligatoire en production.
 """
 
-import secrets
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.api.auth import require_agent
 
 from app.api.routes import messenger, websocket, whatsapp
 from app.api.web_session import WEB_SESSION_PREFIX
 from app.config import settings
 from app.db.database import get_db
 from app.db.repositories.conversation_repository import ConversationRepository
+from app.services.agent_auth import AuthenticatedAgent
 from app.services.dialogue_manager import record_agent_message
 from app.schemas.admin import (
-    ConversationHistory, EscalationItem, MessageItem, ReplyRequest, ReplyResponse, ResolveResponse,
+    ConversationHistory, CurrentAgent, EscalationItem, MessageItem, ReplyRequest, ReplyResponse,
+    ResolveResponse,
 )
 
-_REALM = "Liss Strike - conseillers"
-# auto_error=True : sans en-tête Authorization, FastAPI répond déjà 401
-# avec WWW-Authenticate (le navigateur affiche son invite de connexion).
-_security = HTTPBasic(realm=_REALM)
-
-
-def require_admin(credentials: HTTPBasicCredentials = Depends(_security)) -> str:
-    """
-    Vérifie l'identifiant et le mot de passe du conseiller.
-    secrets.compare_digest : durée de comparaison indépendante du contenu
-    (pas d'attaque par mesure du temps de réponse). Les deux comparaisons
-    sont toujours faites, pour ne pas révéler lequel des deux est faux.
-    """
-    expected_password = settings.ADMIN_PASSWORD or ""
-    username_ok = secrets.compare_digest(
-        credentials.username.encode("utf-8"), settings.ADMIN_USERNAME.encode("utf-8")
-    )
-    password_ok = secrets.compare_digest(
-        credentials.password.encode("utf-8"), expected_password.encode("utf-8")
-    )
-    if not (expected_password and username_ok and password_ok):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Identifiants incorrects",
-            headers={"WWW-Authenticate": f'Basic realm="{_REALM}"'},
-        )
-    return credentials.username
-
-
-router = APIRouter(tags=["Admin"], dependencies=[Depends(require_admin)])
+router = APIRouter(tags=["Admin"], dependencies=[Depends(require_agent)])
 
 _ADMIN_PAGE = Path(__file__).resolve().parents[3] / "static" / "admin.html"
 
@@ -73,6 +46,12 @@ _ADMIN_PAGE = Path(__file__).resolve().parents[3] / "static" / "admin.html"
 async def admin_page():
     """Page HTML du tableau de bord (liste + bouton « Marquer traitée »)."""
     return FileResponse(_ADMIN_PAGE)
+
+
+@router.get("/admin/me", response_model=CurrentAgent)
+async def current_agent(agent: AuthenticatedAgent = Depends(require_agent)):
+    """Conseiller connecté (affiché dans l'en-tête de la page)."""
+    return CurrentAgent(username=agent.username, role=agent.role)
 
 
 @router.get("/admin/escalations", response_model=List[EscalationItem])
@@ -87,8 +66,12 @@ async def list_escalations(db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/admin/escalations/{conversation_id}/resolve", response_model=ResolveResponse)
-async def resolve_escalation(conversation_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
-    """Marque une escalade comme traitée par un conseiller."""
+async def resolve_escalation(
+    conversation_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    agent: AuthenticatedAgent = Depends(require_agent),
+):
+    """Marque une escalade comme traitée, par le conseiller authentifié."""
     repo = ConversationRepository(db)
     conv = await repo.get_by_id(conversation_id)
     if conv is None:
@@ -97,7 +80,7 @@ async def resolve_escalation(conversation_id: uuid.UUID, db: AsyncSession = Depe
     if conv.status not in ("escalated", "agent"):
         raise HTTPException(status_code=409, detail=f"Conversation non escaladée (statut : {conv.status})")
     resolved_at = datetime.now(timezone.utc)
-    await repo.resolve(conversation_id, resolved_at)
+    await repo.resolve(conversation_id, resolved_at, agent)
     return ResolveResponse(conversation_id=conversation_id, status="resolved", resolved_at=resolved_at)
 
 
@@ -130,7 +113,10 @@ async def conversation_history(conversation_id: uuid.UUID, db: AsyncSession = De
         conversation_id=conv.id, customer_id=customer_id, channel=channel,
         status=await repo.displayed_status(conv),
         messages=[
-            MessageItem(role=m.role, content=m.content, created_at=m.created_at)
+            MessageItem(
+                role=m.role, content=m.content, created_at=m.created_at,
+                agent=(m.metadata_ or {}).get("agent") if m.role == "agent" else None,
+            )
             for m in await repo.get_full_history(conv.id)
         ],
     )
@@ -196,7 +182,7 @@ async def reply_to_customer(
     conversation_id: uuid.UUID,
     body: ReplyRequest,
     db: AsyncSession = Depends(get_db),
-    agent: str = Depends(require_admin),  # identifiant du conseiller, conservé avec le message
+    agent: AuthenticatedAgent = Depends(require_agent),  # conseiller authentifié, conservé avec le message
 ):
     """
     Le conseiller répond au client, sur le canal d'origine de la conversation.
@@ -214,7 +200,10 @@ async def reply_to_customer(
     await _send_to_customer(channel, customer_id, text)
 
     sent_at = datetime.now(timezone.utc)
-    await repo.add_message(conv.id, "agent", text, {"agent": agent, "sent_via": channel}, created_at=sent_at)
+    await repo.add_message(
+        conv.id, "agent", text,
+        {"agent": agent.username, "agent_id": str(agent.id), "sent_via": channel}, created_at=sent_at,
+    )
     await repo.take_over(conv, agent, sent_at)
     await record_agent_message(customer_id, text)
     return ReplyResponse(conversation_id=conv.id, channel=channel, sent_at=sent_at)

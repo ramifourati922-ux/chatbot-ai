@@ -10,6 +10,7 @@ des messages sans LLM (demande d'humain) : seul PostgreSQL est requis.
 """
 
 import uuid
+from types import SimpleNamespace
 
 import httpx
 import pytest
@@ -65,12 +66,10 @@ def sent(monkeypatch):
 
 
 @pytest_asyncio.fixture
-async def client(monkeypatch):
-    monkeypatch.setattr(settings, "ADMIN_USERNAME", "conseiller-test")
-    monkeypatch.setattr(settings, "ADMIN_PASSWORD", "mot-de-passe-test")
+async def client(agent_accounts):
     async with httpx.AsyncClient(
         transport=httpx.ASGITransport(app=app), base_url="http://test",
-        auth=("conseiller-test", "mot-de-passe-test"),
+        auth=agent_accounts.conseiller.auth,
     ) as c:
         yield c
 
@@ -277,7 +276,7 @@ async def test_web_client_gets_an_empty_handled_by_agent_answer(prefix, client, 
         conv = await repo.get_by_id(conv_id)
         now = datetime.now(timezone.utc)
         await repo.add_message(conv_id, "agent", AGENT_TEXT, {}, created_at=now)
-        await repo.take_over(conv, "conseiller-test", now)
+        await repo.take_over(conv, SimpleNamespace(username="conseiller-test", id=uuid.uuid4()), now)
         await db.commit()
     response = await client.post("/chat/", json={"message": "d'accord", "session_id": web_id})
     await wait_for_pending_persistence()
@@ -367,3 +366,42 @@ async def test_expired_takeover_is_displayed_as_waiting_without_writing(prefix, 
     async with database.AsyncSessionLocal() as db:  # rien d'écrit en base par la lecture
         stored = (await db.execute(text("select status from conversations where id = :c"), {"c": conv_id})).scalar_one()
     assert stored == "agent"
+
+
+# ── Traçabilité : chaque action est rattachée au conseiller authentifié ─
+
+@pytest.mark.asyncio
+async def test_each_reply_records_the_authenticated_agent(prefix, client, sent, agent_accounts):
+    conv_id = await _escalate(f"{prefix}wa", "whatsapp")
+    conseiller, admin = agent_accounts.conseiller, agent_accounts.admin
+    assert (await client.post(f"/admin/escalations/{conv_id}/reply", json={"text": "Réponse 1"},
+                              auth=conseiller.auth)).status_code == 200
+    assert (await client.post(f"/admin/escalations/{conv_id}/reply", json={"text": "Réponse 2"},
+                              auth=admin.auth)).status_code == 200
+
+    history = (await _history(client, conv_id))["messages"]
+    assert [(m["content"], m["agent"]) for m in history if m["role"] == "agent"] == [
+        ("Réponse 1", conseiller.username), ("Réponse 2", admin.username)]
+    assert all(m["agent"] is None for m in history if m["role"] != "agent")
+
+    async with database.AsyncSessionLocal() as db:
+        rows = (await db.execute(text(
+            "select metadata from messages where conversation_id = :c and role = 'agent' order by created_at"),
+            {"c": conv_id})).scalars().all()
+    assert [(m["agent"], m["agent_id"]) for m in rows] == [
+        (conseiller.username, str(conseiller.id)), (admin.username, str(admin.id))]
+
+
+@pytest.mark.asyncio
+async def test_takeover_and_resolution_record_the_agent(prefix, client, sent, agent_accounts):
+    conseiller, admin = agent_accounts.conseiller, agent_accounts.admin
+    session_id, conv_id = await _take_over(client, prefix)  # réponse envoyée par le conseiller
+    [item] = [e for e in (await client.get("/admin/escalations")).json() if e["conversation_id"] == str(conv_id)]
+    assert item["taken_over_by"] == conseiller.username
+
+    assert (await client.post(f"/admin/escalations/{conv_id}/resolve", auth=admin.auth)).status_code == 200
+    async with database.AsyncSessionLocal() as db:
+        context = (await db.execute(text("select context from conversations where id = :c"),
+                                    {"c": conv_id})).scalar_one()
+    assert (context["taken_over_by"], context["taken_over_by_id"]) == (conseiller.username, str(conseiller.id))
+    assert (context["resolved_by"], context["resolved_by_id"]) == (admin.username, str(admin.id))

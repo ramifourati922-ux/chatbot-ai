@@ -77,8 +77,9 @@ bord protégé.
   d'attente), historique complet de chaque conversation, **réponse au
   client** sur son canal d'origine (WhatsApp, Messenger, ou chat du site
   s'il est encore connecté), bouton « Marquer traitée », notification du
-  navigateur à chaque nouveau transfert. Protégé par identifiant et mot
-  de passe (HTTP Basic).
+  navigateur à chaque nouveau transfert. **Un compte par conseiller**
+  (HTTP Basic), rôles `conseiller` et `admin` ; chaque réponse, prise en
+  main et résolution est rattachée au conseiller qui l'a faite.
 - **Prise en main** : dès que le conseiller a envoyé une réponse, le bot
   ne répond plus à ce client (les messages du client restent enregistrés
   et s'affichent sur `/admin`, marqués « Pris en main »). Le bot reprend
@@ -218,26 +219,46 @@ téléchargement reste bloqué, définir `HF_HUB_DISABLE_XET=1`.
 
 ### Accès au tableau de bord des conseillers
 
-Les routes `/admin`, `/admin/escalations` et
-`/admin/escalations/{id}/resolve` exposent les identifiants des clients
-(numéros WhatsApp…) et leurs questions ; les routes `/users/` permettent
-de lister, créer, modifier et désactiver leurs comptes. Toutes sont
-protégées par le même **HTTP Basic** :
+Les routes `/admin/…` exposent les identifiants des clients (numéros
+WhatsApp…) et leurs questions ; les routes `/users/` permettent de
+lister, créer, modifier et désactiver leurs comptes. Chaque conseiller a
+**son propre compte** (table `agents`, mot de passe haché avec bcrypt),
+vérifié en **HTTP Basic** :
+
+| Rôle | Accès |
+|---|---|
+| `conseiller` | `/admin` : liste, historique, réponse au client, prise en main, « Marquer traitée » |
+| `admin` | Tout ce qui précède, plus `/users/` et la gestion des comptes conseillers (`/admin/agents`) |
+
+**Premier compte** : au démarrage, si aucun compte n'existe, un compte
+**admin** est créé à partir de `ADMIN_USERNAME` / `ADMIN_PASSWORD`
+(`.env`) :
 
 ```env
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=un-vrai-mot-de-passe
 ```
 
-- `ADMIN_PASSWORD` est **obligatoire** : s'il est absent ou vide, l'API
-  refuse de démarrer avec un message explicite. `ADMIN_USERNAME` vaut
-  `admin` par défaut.
+- Ces deux variables ne servent **qu'à cette création** : ensuite, les
+  comptes vivent en base, et modifier `ADMIN_PASSWORD` dans `.env` n'a
+  plus d'effet (changer le mot de passe par l'API, ci-dessous). L'API
+  refuse de démarrer si aucun compte n'existe et que `ADMIN_PASSWORD`
+  est absent.
+- **Gestion des comptes** (rôle `admin`, depuis `/docs` ou curl ; pas
+  d'écran dédié) : `GET` / `POST /admin/agents` (lister, créer),
+  `POST /admin/agents/{id}/deactivate` et `/activate`,
+  `PUT /admin/agents/{id}/password`. Le dernier admin actif ne peut pas
+  être désactivé. Mot de passe : 8 caractères minimum, 72 octets
+  maximum (limite de bcrypt).
+- **Traçabilité** : chaque réponse enregistre le conseiller qui l'a
+  envoyée (affiché dans l'historique de `/admin`), la prise en main et
+  « Marquer traitée » enregistrent aussi leur auteur. Un compte
+  désactivé ne peut plus se connecter, mais son historique est conservé.
 - Le navigateur affiche sa propre invite de connexion à l'ouverture de
-  `/admin`.
-- Protection minimale : un seul compte partagé, sans rôles ni journal de
-  qui a traité quoi. HTTP Basic transmet les identifiants encodés
-  (base64), non chiffrés : **HTTPS indispensable** en dehors d'une
-  machine locale.
+  `/admin` ; l'en-tête indique le conseiller connecté. HTTP Basic n'a pas
+  de vraie déconnexion : pour changer de compte, fermer le navigateur.
+  Les identifiants sont transmis encodés (base64), non chiffrés :
+  **HTTPS indispensable** en dehors d'une machine locale.
 
 ### Origines autorisées (CORS)
 
@@ -326,7 +347,8 @@ Points d'entrée de l'API :
 | Web (temps réel) | `GET /chat/session` (identifiant signé), puis `WS /ws/{client_id}?signature=…` |
 | WhatsApp Business Cloud API | `GET` / `POST /webhook/whatsapp` |
 | Facebook Messenger | `GET` / `POST /webhook/messenger` |
-| Conseillers | `GET /admin`, `GET /admin/escalations`, `GET /admin/escalations/{id}/messages`, `POST /admin/escalations/{id}/reply`, `POST /admin/escalations/{id}/resolve` |
+| Conseillers | `GET /admin`, `GET /admin/me`, `GET /admin/escalations`, `GET /admin/escalations/{id}/messages`, `POST /admin/escalations/{id}/reply`, `POST /admin/escalations/{id}/resolve` |
+| Comptes conseillers (rôle admin) | `GET` / `POST /admin/agents`, `POST /admin/agents/{id}/deactivate`, `/activate`, `PUT /admin/agents/{id}/password` |
 | Utilisateurs (CRUD, identifiants requis) | `/users/` |
 | Supervision | `GET /health` |
 
@@ -352,7 +374,7 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**372 tests** : détection de langue, classification (escalade,
+**382 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin`
@@ -386,7 +408,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (372 tests)
+tests/                         # suite pytest (382 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -446,7 +468,9 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ### Sécurité
 
-- `/admin` et `/users/` : un seul compte partagé, sans rôles (voir
+- `/admin` et `/users/` : un compte par conseiller, deux rôles
+  seulement (`conseiller`, `admin`), sans permissions plus fines ni
+  journal des connexions (voir
   [Accès au tableau de bord](#accès-au-tableau-de-bord-des-conseillers)).
   Les tentatives de connexion ne sont pas limitées : l'authentification
   est vérifiée avant la limitation de débit, donc les essais de mot de
@@ -547,10 +571,11 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ## Perspectives
 
-- Notifications hors navigateur (e-mail, push) ; comptes conseillers
-  individuels avec rôles et traçabilité.
-- Authentification et limitation de débit sur l'API ; identifiants de
-  session générés côté serveur.
+- Notifications hors navigateur (e-mail, push) ; écran de gestion des
+  comptes conseillers dans `/admin`, connexion par session plutôt que
+  HTTP Basic.
+- Authentification des clients sur l'API ; `session_id` de `POST /chat/`
+  attribué par le serveur, comme pour le WebSocket.
 - Reranking réservé au français et à l'anglais (la mesure RAGas montre
   la régression en arabe) ; normalisation de l'arabizi avant la
   recherche.

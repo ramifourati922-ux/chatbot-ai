@@ -191,6 +191,7 @@ class ConversationRepository:
                 "status": await self.displayed_status(conv),
                 "last_question": question,
                 "reason": (transfer.metadata_ or {}).get("escalation_reason") if transfer else None,
+                "taken_over_by": (conv.context or {}).get("taken_over_by") if conv.status == "agent" else None,
                 "escalated_at": transfer.created_at if transfer else conv.started_at,
             })
         escalations.sort(key=lambda e: e["escalated_at"], reverse=True)
@@ -225,7 +226,7 @@ class ConversationRepository:
             return "escalated"
         return "agent"
 
-    async def take_over(self, conv: Conversation, agent: str, at: datetime) -> None:
+    async def take_over(self, conv: Conversation, agent, at: datetime) -> None:
         """
         Un conseiller a répondu : il prend la main, le bot ne répond plus à
         ce client (voir dialogue_manager.agent_has_the_conversation) jusqu'à
@@ -233,10 +234,13 @@ class ConversationRepository:
         """
         conv.status = "agent"
         # Nouveau dict : SQLAlchemy ne détecte pas une modification en place du JSONB
-        conv.context = {**(conv.context or {}), "taken_over_by": agent, "taken_over_at": at.isoformat()}
+        conv.context = {
+            **(conv.context or {}),
+            "taken_over_by": agent.username, "taken_over_by_id": str(agent.id), "taken_over_at": at.isoformat(),
+        }
         await self.db.flush()
 
-    async def resolve(self, conv_id: uuid.UUID, resolved_at: datetime) -> Optional[Conversation]:
+    async def resolve(self, conv_id: uuid.UUID, resolved_at: datetime, agent=None) -> Optional[Conversation]:
         """
         Un conseiller a pris en charge l'escalade : statut "resolved" et
         heure de résolution dans le contexte JSON (pas de migration
@@ -247,6 +251,9 @@ class ConversationRepository:
         if conv:
             conv.status = "resolved"
             # Nouveau dict : SQLAlchemy ne détecte pas une modification en place du JSONB
-            conv.context = {**(conv.context or {}), "resolved_at": resolved_at.isoformat()}
+            resolved = {"resolved_at": resolved_at.isoformat()}
+            if agent is not None:  # conseiller authentifié qui a traité la conversation
+                resolved.update(resolved_by=agent.username, resolved_by_id=str(agent.id))
+            conv.context = {**(conv.context or {}), **resolved}
             await self.db.flush()
         return conv

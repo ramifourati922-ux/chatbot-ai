@@ -35,13 +35,22 @@ def _preload_rag():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Bloquant : sans mot de passe, /admin (données des clients) ne peut
-    # pas être protégé, on refuse de démarrer plutôt que de l'exposer.
-    if not settings.ADMIN_PASSWORD:
+    # Comptes conseillers (table agents) : si aucun n'existe, compte admin
+    # d'amorçage créé depuis ADMIN_USERNAME / ADMIN_PASSWORD. Bloquant si la
+    # table est vide et ADMIN_PASSWORD absent : personne ne pourrait se
+    # connecter à /admin. PostgreSQL injoignable : avertissement seulement
+    # (même logique que le reste de l'API, qui démarre sans la base).
+    from app.services.agent_auth import bootstrap_admin_if_needed
+    try:
+        bootstrap = await bootstrap_admin_if_needed()
+    except Exception as e:
+        bootstrap = None
+        logger.warning(f"⚠️ Comptes conseillers non vérifiés (PostgreSQL injoignable ?) : {e}")
+    if bootstrap == "missing_password":
         raise RuntimeError(
-            "ADMIN_PASSWORD manquant : définissez ADMIN_USERNAME et ADMIN_PASSWORD "
-            "dans le fichier .env (voir .env.example) pour protéger le tableau de "
-            "bord des conseillers (/admin)."
+            "Aucun compte conseiller en base et ADMIN_PASSWORD manquant : définissez "
+            "ADMIN_USERNAME et ADMIN_PASSWORD dans le fichier .env (voir .env.example) "
+            "pour créer le premier compte admin du tableau de bord (/admin)."
         )
     # Non bloquant en cas d'échec (ex: ChromaDB pas encore démarré) :
     # l'API démarre quand même, les composants se chargeront au premier appel.
@@ -86,6 +95,7 @@ from app.api.routes import whatsapp
 from app.api.routes import messenger
 from app.api.routes import websocket
 from app.api.routes import admin
+from app.api.routes import agents
 
 app.include_router(users.router)
 app.include_router(chat.router)
@@ -93,6 +103,7 @@ app.include_router(whatsapp.router)
 app.include_router(messenger.router)
 app.include_router(websocket.router)
 app.include_router(admin.router)
+app.include_router(agents.router)
 
 
 @app.get("/", tags=["System"])

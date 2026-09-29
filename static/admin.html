@@ -152,7 +152,7 @@
 <header>
   <div>
     <h1>Liss Strike — Conversations transférées</h1>
-    <p>Clients que l'assistant a transférés à un conseiller</p>
+    <p>Clients que l'assistant a transférés à un conseiller<span id="whoami"></span></p>
   </div>
   <div class="counter" id="counter">…</div>
 </header>
@@ -178,7 +178,7 @@
     </form>
     <div class="feedback" id="feedback" hidden></div>
   </section>
-  <p class="note">Liste actualisée automatiquement toutes les 10 secondes. Page interne protégée par identifiant et mot de passe (HTTP Basic).</p>
+  <p class="note">Liste actualisée automatiquement toutes les 10 secondes. Page interne : un compte par conseiller (HTTP Basic) ; pour changer de compte, fermer le navigateur.</p>
 </main>
 
 <script>
@@ -269,7 +269,7 @@
         // Conseiller aux commandes : le bot ne répond plus à ce client
         const takenBadge = document.createElement("span");
         takenBadge.className = "taken";
-        takenBadge.textContent = "Pris en main";
+        takenBadge.textContent = e.taken_over_by ? `Pris en main par ${e.taken_over_by}` : "Pris en main";
         reasonCell.append(document.createElement("br"), takenBadge);
       }
       row.appendChild(reasonCell);
@@ -365,7 +365,8 @@
       div.className = `msg ${m.role}`;
       const who = document.createElement("span");
       who.className = "who";
-      who.textContent = `${WHO[m.role] || m.role} · ${new Date(m.created_at).toLocaleTimeString("fr-FR")}`;
+      who.textContent = [WHO[m.role] || m.role, m.agent, new Date(m.created_at).toLocaleTimeString("fr-FR")]
+        .filter(Boolean).join(" · ");  // "Conseiller · sarra · 14:02:10"
       div.append(who, document.createTextNode(m.content));  // texte brut, jamais de HTML
       history.appendChild(div);
     }
@@ -497,6 +498,11 @@
     notifyButton.addEventListener("click", requestNotifications);
     updateNotifyButton();
   }
+
+  // Conseiller connecté (chaque conseiller a son propre compte)
+  fetch("/admin/me").then((r) => (r.ok ? r.json() : null)).then((me) => {
+    if (me) document.getElementById("whoami").textContent = ` · connecté : ${me.username} (${me.role})`;
+  }).catch(() => {});
 
   document.getElementById("refresh").addEventListener("click", load);
   load();
