@@ -24,7 +24,7 @@ import logging
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from app.api import rate_limit
-from app.api.web_session import web_session_id
+from app.api.web_session import client_id_signature_valid, web_session_id
 from app.config import settings
 from app.services.dialogue_manager import handle_message
 
@@ -89,7 +89,7 @@ def _origin_allowed(websocket: WebSocket) -> bool:
 
 
 @router.websocket("/ws/{client_id}")
-async def websocket_endpoint(websocket: WebSocket, client_id: str):
+async def websocket_endpoint(websocket: WebSocket, client_id: str, signature: str | None = None):
     """
     Boucle de vie d'une connexion WebSocket : accepte, reçoit les
     messages texte du client un par un, appelle handle_message() avec
@@ -107,6 +107,15 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             f"⛔ WebSocket refusé (origine non autorisée) : origin={websocket.headers.get('origin')!r} "
             f"client={client_id}"
         )
+        return
+
+    # Identifiant attribué et signé par le serveur (GET /chat/session) :
+    # sans la bonne signature, un client ne peut ni choisir son identifiant
+    # ni reprendre celui d'un autre (voir web_session.py).
+    if not client_id_signature_valid(client_id, signature):
+        await websocket.accept()
+        await websocket.close(code=rate_limit.WS_POLICY_VIOLATION, reason="invalid session signature")
+        logger.warning(f"⛔ WebSocket refusé (signature de session absente ou invalide) : client={client_id}")
         return
 
     # slowapi ne couvre pas les WebSockets : limites manuelles par IP

@@ -5,12 +5,24 @@ import logging
 import uuid
 
 from app.api.rate_limit import chat_limit, limiter
-from app.api.web_session import web_session_id
-from app.schemas.chat import ChatMessage, ChatResponse
+from app.api.web_session import new_signed_client_id, web_session_id
+from app.schemas.chat import ChatMessage, ChatResponse, WebSessionResponse
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 logger = logging.getLogger(__name__)
+
+
+@router.get("/session", response_model=WebSessionResponse)
+async def new_web_session():
+    """
+    Identifiant de session pour le chat en temps réel (WebSocket), attribué
+    et signé par le serveur : /ws/{client_id} exige la signature
+    correspondante. Le navigateur ne choisit donc pas son identifiant, et
+    ne peut pas reprendre celui d'un autre client.
+    """
+    client_id, signature = new_signed_client_id()
+    return WebSessionResponse(client_id=client_id, signature=signature)
 
 
 @router.post("/", response_model=ChatResponse)

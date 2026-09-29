@@ -20,6 +20,7 @@ from starlette.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 
 from app.api import rate_limit
+from app.api.web_session import sign_client_id
 from app.api.routes import chat as chat_route
 from app.api.routes import websocket as ws_route
 from app.config import settings
@@ -32,6 +33,11 @@ WINDOW_S = 1
 ADMIN = ("conseiller-test", "mot-de-passe-test")
 # Origine autorisée, comme un navigateur sur /chat-demo (vérifiée par /ws)
 ORIGIN = {"origin": settings.cors_origins[0]}
+
+
+def ws_path(client_id):
+    """Chemin /ws avec la signature que délivre GET /chat/session."""
+    return f"/ws/{client_id}?signature={sign_client_id(client_id)}"
 
 
 async def _fake_handle_message(message, session_id=None, channel="web"):
@@ -158,14 +164,14 @@ def _assert_rejected(ws, expected_text):
 
 
 def test_ws_messages_under_limit_pass():
-    with TestClient(app).websocket_connect("/ws/test-a", headers=ORIGIN) as ws:
+    with TestClient(app).websocket_connect(ws_path("test-a"), headers=ORIGIN) as ws:
         for i in range(LIMIT):
             ws.send_text(f"message {i}")
             assert ws.receive_json()["response"] == f"écho : message {i}"
 
 
 def test_ws_too_many_messages_closes_connection():
-    with TestClient(app).websocket_connect("/ws/test-a", headers=ORIGIN) as ws:
+    with TestClient(app).websocket_connect(ws_path("test-a"), headers=ORIGIN) as ws:
         for i in range(LIMIT):
             ws.send_text(f"message {i}")
             ws.receive_json()
@@ -175,41 +181,41 @@ def test_ws_too_many_messages_closes_connection():
 
 def test_ws_message_limit_counts_all_connections_of_the_ip():
     client = TestClient(app)
-    with client.websocket_connect("/ws/test-a", headers=ORIGIN) as ws:
+    with client.websocket_connect(ws_path("test-a"), headers=ORIGIN) as ws:
         for i in range(LIMIT):
             ws.send_text(f"message {i}")
             ws.receive_json()
     # Nouvelle connexion, même IP : la limite n'est pas remise à zéro
-    with client.websocket_connect("/ws/test-b", headers=ORIGIN) as ws:
+    with client.websocket_connect(ws_path("test-b"), headers=ORIGIN) as ws:
         ws.send_text("un de trop")
         _assert_rejected(ws, "Trop de messages")
 
 
 def test_ws_message_limit_resets_after_window():
     client = TestClient(app)
-    with client.websocket_connect("/ws/test-a", headers=ORIGIN) as ws:
+    with client.websocket_connect(ws_path("test-a"), headers=ORIGIN) as ws:
         for i in range(LIMIT):
             ws.send_text(f"message {i}")
             ws.receive_json()
     _wait_for_new_window()
-    with client.websocket_connect("/ws/test-b", headers=ORIGIN) as ws:
+    with client.websocket_connect(ws_path("test-b"), headers=ORIGIN) as ws:
         ws.send_text("de nouveau autorisé")
         assert ws.receive_json()["response"] == "écho : de nouveau autorisé"
 
 
 def test_ws_too_many_simultaneous_connections_is_rejected():
     client = TestClient(app)
-    with client.websocket_connect("/ws/test-a", headers=ORIGIN), client.websocket_connect("/ws/test-b", headers=ORIGIN):
-        with client.websocket_connect("/ws/test-c", headers=ORIGIN) as third:
+    with client.websocket_connect(ws_path("test-a"), headers=ORIGIN), client.websocket_connect(ws_path("test-b"), headers=ORIGIN):
+        with client.websocket_connect(ws_path("test-c"), headers=ORIGIN) as third:
             _assert_rejected(third, "Trop de connexions")
 
 
 def test_ws_closed_connection_frees_a_slot():
     client = TestClient(app)
-    with client.websocket_connect("/ws/test-a", headers=ORIGIN):
-        with client.websocket_connect("/ws/test-b", headers=ORIGIN):
+    with client.websocket_connect(ws_path("test-a"), headers=ORIGIN):
+        with client.websocket_connect(ws_path("test-b"), headers=ORIGIN):
             pass
         # test-b fermée : une nouvelle connexion est acceptée
-        with client.websocket_connect("/ws/test-c", headers=ORIGIN) as ws:
+        with client.websocket_connect(ws_path("test-c"), headers=ORIGIN) as ws:
             ws.send_text("bonjour")
             assert ws.receive_json()["response"] == "écho : bonjour"

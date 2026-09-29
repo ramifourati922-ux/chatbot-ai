@@ -37,6 +37,13 @@ class ChatMessage(BaseModel):
         }
 
 
+class WebSessionResponse(BaseModel):
+    """Identifiant de session WebSocket attribué et signé par le serveur
+    (GET /chat/session), à présenter à /ws/{client_id}?signature=..."""
+    client_id: str
+    signature: str
+
+
 class ChatResponse(BaseModel):
     """
     Réponse DU chatbot vers l'utilisateur.

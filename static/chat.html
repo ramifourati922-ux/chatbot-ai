@@ -329,9 +329,10 @@
 </div>
 
 <script>
-  const clientId = crypto.randomUUID();
+  // Identifiant de session attribué et signé par le serveur (GET
+  // /chat/session) : le WebSocket refuse un identifiant sans sa signature.
   const wsProtocol = location.protocol === "https:" ? "wss:" : "ws:";
-  const wsUrl = `${wsProtocol}//${location.host}/ws/${clientId}`;
+  let wsUrl = null;
 
   const messagesEl = document.getElementById("messages");
   const inputEl = document.getElementById("msg-input");
@@ -452,7 +453,22 @@
     if (e.key === "Enter") sendMessage();
   });
 
-  connect();
+  async function start() {
+    setStatus("connecting");
+    try {
+      const response = await fetch("/chat/session");
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const session = await response.json();
+      wsUrl = `${wsProtocol}//${location.host}/ws/${encodeURIComponent(session.client_id)}`
+        + `?signature=${encodeURIComponent(session.signature)}`;
+    } catch (err) {
+      setStatus("disconnected");
+      return;
+    }
+    connect();
+  }
+
+  start();
 </script>
 </body>
 </html>

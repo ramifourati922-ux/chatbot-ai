@@ -323,7 +323,7 @@ Points d'entrée de l'API :
 | Canal / usage | Route |
 |---|---|
 | Web (HTTP) | `POST /chat/` |
-| Web (temps réel) | `WS /ws/{client_id}` |
+| Web (temps réel) | `GET /chat/session` (identifiant signé), puis `WS /ws/{client_id}?signature=…` |
 | WhatsApp Business Cloud API | `GET` / `POST /webhook/whatsapp` |
 | Facebook Messenger | `GET` / `POST /webhook/messenger` |
 | Conseillers | `GET /admin`, `GET /admin/escalations`, `GET /admin/escalations/{id}/messages`, `POST /admin/escalations/{id}/reply`, `POST /admin/escalations/{id}/resolve` |
@@ -352,7 +352,7 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**365 tests** : détection de langue, classification (escalade,
+**372 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
 types de transfert), persistance PostgreSQL, tableau de bord `/admin`
@@ -386,7 +386,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (365 tests)
+tests/                         # suite pytest (372 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -482,13 +482,22 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
   contre un site tiers ouvert dans leur navigateur. Elle ne bloque pas
   un client hors navigateur (curl, script), qui peut envoyer l'en-tête
   `Origin` de son choix.
-- Les identifiants de session des canaux web (`/ws/{client_id}`,
-  `session_id` de `POST /chat/`) sont choisis par le client, mais
-  préfixés en interne par `web:` : un client web ne peut plus rejoindre
-  une session WhatsApp (numéro de téléphone) ou Messenger (PSID). En
-  revanche, rien n'empêche un client web de reprendre la session d'un
-  **autre client web** s'il en connaît l'identifiant (`/chat-demo`
-  génère un UUID aléatoire, difficile à deviner). Par ailleurs, le champ
+- Les identifiants de session des canaux web sont préfixés en interne
+  par `web:` : un client web ne peut pas rejoindre une session WhatsApp
+  (numéro de téléphone) ou Messenger (PSID).
+- **WebSocket** : l'identifiant est **attribué et signé par le serveur**
+  (`GET /chat/session`, HMAC-SHA256 avec `WS_SESSION_SECRET`) ;
+  `/ws/{client_id}` refuse avec le code 1008 un identifiant sans sa
+  signature. Un client ne peut donc ni choisir son identifiant, ni
+  reprendre celui d'un autre en le devinant. Sans `WS_SESSION_SECRET`,
+  la clé est aléatoire et propre au processus : les sessions ouvertes
+  sont invalidées au redémarrage (recharger la page), et plusieurs
+  processus serveur exigent de définir la clé. La signature ne protège
+  pas un identifiant **déjà connu** avec sa signature (par exemple
+  copié depuis le navigateur de la victime).
+- **`POST /chat/`** : le `session_id` reste **choisi par le client**, sans
+  signature. Un client qui connaît l'identifiant d'un autre client web
+  peut reprendre sa session par cette route. Par ailleurs, le champ
   `channel` de `POST /chat/` est déclaratif : une conversation web peut
   apparaître sous le canal « WhatsApp » dans `/admin` (l'identifiant du
   client y commence alors par `web:`).

@@ -149,6 +149,12 @@ class Settings(BaseSettings):
     # sont servis par l'API elle-même (même origine), donc non concernés.
     CORS_ALLOWED_ORIGINS: str = ""
 
+    # Clé de signature des identifiants de session WebSocket, attribués par
+    # GET /chat/session (voir app/api/web_session.py). Optionnelle : sans
+    # elle, clé aléatoire propre au processus (identifiants invalidés au
+    # redémarrage). À définir avec plusieurs processus serveur.
+    WS_SESSION_SECRET: Optional[str] = None
+
     # Limitation de débit par IP (voir app/api/rate_limit.py), syntaxe de
     # la bibliothèque `limits` : "20/minute", "5/10 seconds"...
     # POST /chat/ et messages WebSocket : 20/min. Un client humain envoie

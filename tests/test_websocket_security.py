@@ -19,11 +19,17 @@ from starlette.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 
 from app.api import rate_limit
+from app.api.web_session import sign_client_id
 from app.api.routes import websocket as ws_route
 from app.config import settings
 from app.main import app
 
 calls = []
+
+
+def ws_path(client_id):
+    """Chemin /ws avec la signature que délivre GET /chat/session."""
+    return f"/ws/{client_id}?signature={sign_client_id(client_id)}"
 
 
 async def _fake_handle_message(message, session_id=None, channel="web"):
@@ -44,7 +50,7 @@ def stub(monkeypatch):
 
 
 def _assert_refused(headers):
-    with TestClient(app).websocket_connect("/ws/test-origin", headers=headers) as ws:
+    with TestClient(app).websocket_connect(ws_path("test-origin"), headers=headers) as ws:
         with pytest.raises(WebSocketDisconnect) as closed:
             ws.receive_text()
     assert closed.value.code == rate_limit.WS_POLICY_VIOLATION
@@ -56,7 +62,7 @@ def _assert_refused(headers):
 @pytest.mark.parametrize("origin", ["http://localhost:8000", "http://127.0.0.1:8000"])
 def test_allowed_origin_is_accepted(origin):
     assert origin in settings.cors_origins
-    with TestClient(app).websocket_connect("/ws/test-origin", headers={"origin": origin}) as ws:
+    with TestClient(app).websocket_connect(ws_path("test-origin"), headers={"origin": origin}) as ws:
         ws.send_text("bonjour")
         assert ws.receive_json()["response"] == "écho : bonjour"
 
@@ -78,7 +84,7 @@ def test_missing_origin_is_refused():
 def test_origin_list_follows_configuration(monkeypatch):
     monkeypatch.setattr(settings, "CORS_ALLOWED_ORIGINS", "https://demo.ngrok-free.app")
     with TestClient(app).websocket_connect(
-        "/ws/test-origin", headers={"origin": "https://demo.ngrok-free.app"}
+        ws_path("test-origin"), headers={"origin": "https://demo.ngrok-free.app"}
     ) as ws:
         ws.send_text("bonjour")
         assert ws.receive_json()["response"] == "écho : bonjour"
@@ -92,7 +98,7 @@ def test_refused_origin_does_not_use_a_connection_slot(monkeypatch):
     _assert_refused({"origin": "https://evil.test"})
     _assert_refused({"origin": "https://evil.test"})
     with TestClient(app).websocket_connect(
-        "/ws/test-origin", headers={"origin": settings.cors_origins[0]}
+        ws_path("test-origin"), headers={"origin": settings.cors_origins[0]}
     ) as ws:
         ws.send_text("bonjour")
         assert ws.receive_json()["response"] == "écho : bonjour"
@@ -108,7 +114,7 @@ WHATSAPP_NUMBER = "21600000099"  # fictif
 
 def test_ws_client_id_equal_to_a_whatsapp_number_gets_a_separate_session():
     with TestClient(app).websocket_connect(
-        f"/ws/{WHATSAPP_NUMBER}", headers={"origin": settings.cors_origins[0]}
+        ws_path(WHATSAPP_NUMBER), headers={"origin": settings.cors_origins[0]}
     ) as ws:
         ws.send_text("bonjour")
         data = ws.receive_json()
@@ -191,3 +197,71 @@ async def test_web_client_does_not_touch_the_whatsapp_history():
         except Exception:
             pass  # PostgreSQL absent : rien n'a été persisté
         await database.engine.dispose(close=False)
+
+
+# ── Identifiant de session attribué et signé par le serveur ─────────────
+# Avant : le navigateur choisissait son client_id (crypto.randomUUID) et /ws
+# l'acceptait tel quel ; qui connaissait l'identifiant d'un autre client
+# pouvait rejoindre sa session.
+
+ALLOWED = {"origin": settings.cors_origins[0]}
+
+
+def _assert_signature_refused(path):
+    with TestClient(app).websocket_connect(path, headers=ALLOWED) as ws:
+        with pytest.raises(WebSocketDisconnect) as closed:
+            ws.receive_text()
+    assert closed.value.code == rate_limit.WS_POLICY_VIOLATION
+    assert calls == []  # aucun message traité
+
+
+def test_server_issues_a_signed_session_that_the_websocket_accepts():
+    client = TestClient(app)
+    first, second = client.get("/chat/session").json(), client.get("/chat/session").json()
+    assert first["client_id"] != second["client_id"]
+    uuid.UUID(first["client_id"])  # identifiant aléatoire attribué par le serveur
+    path = f"/ws/{first['client_id']}?signature={first['signature']}"
+    with client.websocket_connect(path, headers=ALLOWED) as ws:
+        ws.send_text("bonjour")
+        assert ws.receive_json()["response"] == "écho : bonjour"
+    assert calls[0]["session_id"] == f"web:{first['client_id']}"
+
+
+def test_missing_signature_is_refused():
+    _assert_signature_refused("/ws/test-sans-signature")
+
+
+def test_invalid_signature_is_refused():
+    _assert_signature_refused("/ws/test-client?signature=" + "0" * 64)
+
+
+def test_signature_of_another_client_id_is_refused():
+    """Un client qui connaît sa propre signature ne peut pas l'utiliser pour
+    un autre identifiant (celui d'un autre client, deviné ou volé)."""
+    mine = TestClient(app).get("/chat/session").json()
+    _assert_signature_refused(f"/ws/{uuid.uuid4()}?signature={mine['signature']}")
+    _assert_signature_refused(f"/ws/{mine['client_id']}x?signature={mine['signature']}")
+
+
+def test_client_chosen_id_without_server_signature_is_refused():
+    """L'ancien fonctionnement : un identifiant choisi par le client."""
+    _assert_signature_refused(f"/ws/{uuid.uuid4()}")
+    _assert_signature_refused(f"/ws/{WHATSAPP_NUMBER}")
+
+
+def test_signature_depends_on_the_configured_secret(monkeypatch):
+    signed_with_other_key = ws_path("test-cle")
+    monkeypatch.setattr(settings, "WS_SESSION_SECRET", "une-autre-cle-secrete")
+    _assert_signature_refused(signed_with_other_key)
+    with TestClient(app).websocket_connect(ws_path("test-cle"), headers=ALLOWED) as ws:
+        ws.send_text("bonjour")
+        assert ws.receive_json()["response"] == "écho : bonjour"
+
+
+def test_refused_signature_does_not_use_a_connection_slot(monkeypatch):
+    monkeypatch.setattr(settings, "RATE_LIMIT_WS_CONNECTIONS", 1)
+    _assert_signature_refused("/ws/test-a?signature=fausse")
+    _assert_signature_refused("/ws/test-a?signature=fausse")
+    with TestClient(app).websocket_connect(ws_path("test-a"), headers=ALLOWED) as ws:
+        ws.send_text("bonjour")
+        assert ws.receive_json()["response"] == "écho : bonjour"
