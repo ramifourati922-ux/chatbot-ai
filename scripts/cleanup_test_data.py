@@ -13,7 +13,11 @@ correspond à une règle explicite, jamais la base entière :
       identifiés à la main, ex. une session /chat-demo de test).
 
 Côté PostgreSQL, la suppression d'un utilisateur supprime ses
-conversations et leurs messages (clés étrangères ON DELETE CASCADE).
+conversations et leurs messages (clés étrangères ON DELETE CASCADE). Ses
+commandes (table orders, ex. celles de scripts/seed_demo_orders.py) sont
+supprimées explicitement avant : leur clé étrangère est ON DELETE SET
+NULL, pour qu'un vrai client supprimé ne fasse pas disparaître ses
+commandes.
 Côté Redis, les clés session:<identifiant> correspondantes.
 
 Par défaut, simulation : affiche ce qui serait supprimé. --apply
@@ -65,10 +69,17 @@ async def clean_postgres(extra_ids: set, apply: bool) -> None:
         for ext in sorted(missing):
             print(f"  ? --id {ext} : aucun utilisateur correspondant en base")
 
+        target_ids = [u["id"] for u in targets]
+        orders = await db.fetch(
+            "select order_number from orders where user_id = any($1::uuid[]) order by order_number", target_ids)
+        print(f"  Commandes de ces utilisateurs : {len(orders)}"
+              + (f" ({', '.join(o['order_number'] for o in orders)})" if orders else ""))
+
         if apply and targets:
             async with db.transaction():
-                deleted = await db.execute("delete from users where id = any($1::uuid[])", [u["id"] for u in targets])
-            print(f"  → supprimé : {deleted}")
+                deleted_orders = await db.execute("delete from orders where user_id = any($1::uuid[])", target_ids)
+                deleted = await db.execute("delete from users where id = any($1::uuid[])", target_ids)
+            print(f"  → supprimé : {deleted} ; commandes : {deleted_orders}")
         orphan_convs = await db.fetchval(
             "select count(*) from conversations c left join users u on u.id = c.user_id where u.id is null")
         orphan_msgs = await db.fetchval(

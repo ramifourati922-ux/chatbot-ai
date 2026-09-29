@@ -61,7 +61,7 @@ class ChatResponse(BaseModel):
     processing_time_ms: Optional[int] = Field(None, description="Temps en ms")
     escalated: bool = Field(default=False, description="Transféré à un humain ?")
     escalation_reason: Optional[str] = Field(
-        None, description="Raison de l'escalade : explicit | frustration | repeated_rag_failure | low_rag_confidence"
+        None, description="Raison de l'escalade : explicit | frustration | repeated_rag_failure | low_rag_confidence | order_tracking"
     )
     handled_by_agent: bool = Field(
         default=False,

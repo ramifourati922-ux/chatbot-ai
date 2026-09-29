@@ -5,3 +5,4 @@
 from app.models.user import User
 from app.models.conversation import Conversation, Message
 from app.models.agent import Agent
+from app.models.order import Order

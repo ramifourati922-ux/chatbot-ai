@@ -8,7 +8,7 @@ from alembic import context
 
 # ── Importer tes modèles ──────────────────────────────────
 from app.db.database import Base
-from app.models import User, Conversation, Message, Agent  # IMPORTANT
+from app.models import User, Conversation, Message, Agent, Order  # IMPORTANT
 from app.config import settings
 
 # Configuration Alembic

@@ -56,7 +56,27 @@ bord protégé.
   uniquement à partir des passages trouvés, dire « je n'ai pas
   l'information » plutôt qu'inventer, refuser les questions hors sujet.
 
-### Transfert vers un humain (4 déclencheurs)
+### Suivi de commande (sans LLM)
+
+- **Statut lu en base** (table `orders`), jamais généré par le LLM : pas
+  d'invention possible sur un statut, un montant ou une date. Réponse :
+  numéro, statut (reçue, en préparation, expédiée, livrée, annulée),
+  articles, total et date de livraison estimée, en fr / en / ar / tn.
+- **Numéro de commande** : format `CMD-AAAA-NNNNN` (ex.
+  `CMD-2026-00123`), reconnu quelle que soit la casse, avec tiret, espace
+  ou rien entre les blocs (« cmd 2026 00123 »).
+- **Détection** : un numéro valide dans le message, ou une demande sur
+  *sa* commande en français ou en anglais (« où est ma commande », « suivi
+  de ma commande », « where is my order », « order status »…). Les
+  questions générales (« comment passer une commande ») restent traitées
+  par le RAG, et une demande d'humain ou une frustration reste
+  prioritaire.
+- **Une seule relance** : sans numéro, ou avec un numéro introuvable, le
+  bot demande de le préciser (en rappelant que le lien de suivi arrive
+  par SMS et e-mail) ; si ça se reproduit juste après, ou si la base est
+  indisponible, le client est transféré à un conseiller.
+
+### Transfert vers un humain (5 déclencheurs)
 
 | Raison | Déclencheur | Appel au LLM |
 |---|---|---|
@@ -64,6 +84,7 @@ bord protégé.
 | `frustration` | Mécontentement envers le service | Non |
 | `low_rag_confidence` | Confiance de la recherche sous le seuil (0,35) | Non |
 | `repeated_rag_failure` | 3 réponses « je n'ai pas l'information » consécutives | Oui (réponses précédentes) |
+| `order_tracking` | Commande toujours introuvable (ou sans numéro) après une relance | Non |
 
 ### Canaux et suivi
 
@@ -122,6 +143,9 @@ flowchart TD
     B --> C[Classification par règles]
     C -->|demande d'humain<br/>ou frustration| T[Message de transfert<br/>sans LLM]
     C -->|politesse| P[Réponse toute prête<br/>sans LLM]
+    C -->|suivi de commande| O[Statut lu en base<br/>sans LLM]
+    O -->|introuvable après<br/>une relance| T
+    O --> DB
     C -->|question| S[Question de suivi ?<br/>rattachée à la précédente]
     S --> R[Recherche hybride<br/>BM25 + dense + RRF<br/>puis reranking]
     R --> K{Confiance<br/>≥ 0,35 ?}
@@ -208,6 +232,7 @@ docker compose up -d
 # 4. Schéma de la base, puis indexation de la base de connaissances
 alembic upgrade head
 python scripts/ingest_knowledge_base.py
+python scripts/seed_demo_orders.py   # optionnel : 5 commandes fictives, CMD-2026-00101 à 00105
 
 # 5. Lancement
 uvicorn app.main:app --reload
@@ -374,10 +399,10 @@ démarrage et une transcription de secours sont dans
 pytest tests/ -v
 ```
 
-**382 tests** : détection de langue, classification (escalade,
+**432 tests** : détection de langue, classification (escalade,
 politesse, faux positifs), recherche hybride et reranking, mémoire
 conversationnelle, compteur de boucle RAG, orchestrateur complet (les 4
-types de transfert), persistance PostgreSQL, tableau de bord `/admin`
+types de transfert), suivi de commande, persistance PostgreSQL, tableau de bord `/admin`
 (historique, réponse au client, prise en main),
 authentification de `/admin` et `/users/`, restriction CORS et origine
 du WebSocket, séparation des sessions web / WhatsApp, limitation de débit, structure de
@@ -408,7 +433,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, génération de données, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (382 tests)
+tests/                         # suite pytest (432 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -538,7 +563,14 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
   webhooks passent par ngrok en local.
 - Dépendance à l'offre gratuite de Groq (quota de tokens par jour et par
   modèle).
-- Pas de suivi de commande : le bot n'a accès à aucune base de commandes.
+- **Suivi de commande sur données fictives** : aucune intégration avec
+  une vraie boutique en ligne ; les commandes viennent de
+  `scripts/seed_demo_orders.py` (supprimées par `cleanup_test_data.py`
+  avec le client de démo `test-demo-client`). Le numéro de commande est
+  la seule clé : quiconque le connaît voit le statut, les articles et le
+  total (aucune donnée personnelle), et les numéros sont séquentiels,
+  donc devinables. Tournures détectées en français et en anglais
+  seulement (en arabe ou en tunisien, il faut donner le numéro).
 
 ### Langues et qualité des réponses
 

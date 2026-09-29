@@ -17,7 +17,7 @@ class EscalationItem(BaseModel):
     taken_over_by: Optional[str] = Field(None, description="Conseiller qui a pris la main (statut agent)")
     last_question: str = Field(..., description="Question du client qui a déclenché le transfert")
     reason: Optional[str] = Field(
-        None, description="explicit | frustration | low_rag_confidence | repeated_rag_failure"
+        None, description="explicit | frustration | low_rag_confidence | repeated_rag_failure | order_tracking"
     )
     escalated_at: datetime
     waiting_seconds: int = Field(..., description="Temps d'attente depuis le transfert, en secondes")

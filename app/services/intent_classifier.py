@@ -39,6 +39,7 @@ class Category(str, Enum):
     GENERAL = "general"
     ESCALATE = "escalate"
     SMALL_TALK = "small_talk"  # salutation / remerciement / au revoir seuls
+    ORDER_TRACKING = "order_tracking"  # statut d'une commande, lu en base (sans LLM)
 
 
 @dataclass
@@ -96,6 +97,38 @@ _SMALL_TALK_WORDS = {
     "عسلامة": ("greeting", "tn"), "شكرا": ("thanks", "ar"), "جزيلا": ("thanks", None),
     "مع": ("goodbye", None), "السلامة": ("goodbye", "ar"), "وداعا": ("goodbye", "ar"),
 }
+# ── Suivi de commande ─────────────────────────────────────────────────
+# Numéro de commande : CMD-AAAA-NNNNN (ex. CMD-2026-00123). Saisie tolérante
+# (casse, tiret, espace ou rien entre les blocs), normalisée ensuite.
+ORDER_NUMBER_PATTERN = re.compile(r"\bCMD[-\s]?(\d{4})[-\s]?(\d{5})\b", re.IGNORECASE)
+
+# Demande de suivi sans numéro : tournures qui portent sur LA commande du
+# client ("ma commande", "my order"), pas sur les commandes en général
+# ("comment passer une commande" reste une question pour le RAG).
+_ORDER_TRACKING_PATTERNS = [
+    # ─── Français ───
+    r"\bo[uù]\s+(en\s+)?(est|sont)\s+(ma|mes)\s+commandes?\b",
+    r"\bsuivi\s+de\s+(ma|mes)\s+commandes?\b",
+    r"\bsuivre\s+(ma|mes)\s+commandes?\b",
+    r"\b(statut|[ée]tat|avancement)\s+de\s+(ma|mes)\s+commandes?\b",
+    r"\b(ma|mes)\s+commandes?\s+(n'?est|ne\s+sont|n'?a|n'?ont|est-elle|arrive|arrivera|est\s+en\s+retard|est\s+partie)",
+    r"\bquand\s+(vais-je|je\s+vais|est-ce\s+que\s+je\s+vais)\s+recevoir\s+(ma|mes)\s+commandes?\b",
+    r"^\s*suivi\s+de\s+commande\s*[.!?]*\s*$",
+    # ─── Anglais ───
+    r"\bwhere\s+(is|are)\s+my\s+orders?\b",
+    r"\btrack(ing)?\s+(of\s+)?my\s+orders?\b",
+    r"\b(status|tracking)\s+of\s+my\s+orders?\b",
+    r"\bmy\s+orders?\s+(status|has\s+not|hasn'?t|did\s+not|didn'?t|is\s+late|is\s+delayed)",
+    r"^\s*(order\s+(status|tracking)|track\s+(an\s+)?order)\s*[.!?]*\s*$",
+]
+
+
+def extract_order_number(text: str) -> Optional[str]:
+    """Numéro de commande normalisé (CMD-2026-00123), ou None."""
+    match = ORDER_NUMBER_PATTERN.search(text)
+    return f"CMD-{match.group(1)}-{match.group(2)}" if match else None
+
+
 # Au-delà, ce n'est plus un simple échange de politesse.
 _SMALL_TALK_MAX_WORDS = 5
 _SMALL_TALK_PRIORITY = ("thanks", "goodbye", "greeting")  # "merci, au revoir" → remerciement
@@ -109,6 +142,7 @@ class IntentClassifier:
         self._explicit_patterns = self._load_explicit_escalation_patterns()
         self._frustration_patterns = self._load_frustration_patterns()
         self._satisfaction_patterns = self._load_satisfaction_patterns()
+        self._order_tracking_patterns = [re.compile(p, re.IGNORECASE) for p in _ORDER_TRACKING_PATTERNS]
         self._entity_patterns = self._load_entity_patterns()
 
     def _load_explicit_escalation_patterns(self) -> list:
@@ -285,6 +319,20 @@ class IntentClassifier:
                     requires_escalation=True,
                     escalation_reason="frustration",
                 )
+
+        # Suivi de commande : un numéro valide, ou une demande sur "ma
+        # commande". Après l'escalade (un client qui demande un humain ou se
+        # plaint du service est transféré, même s'il parle de sa commande).
+        order_number = extract_order_number(text)
+        if order_number or any(p.search(text_lower) for p in self._order_tracking_patterns):
+            if order_number:
+                entities["order_reference"] = order_number
+            return IntentResult(
+                intent="order_tracking",
+                category=Category.ORDER_TRACKING,
+                confidence=0.9,
+                entities=entities,
+            )
 
         small_talk = self._detect_small_talk(text_lower)
         if small_talk:

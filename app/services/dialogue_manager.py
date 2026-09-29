@@ -15,6 +15,9 @@ Pour chaque message reçu :
    déclencheurs).
 3. Si escalade demandée (explicite ou frustration) → réponse canned
    immédiate, pas d'appel LLM ; compteur de boucle RAG réinitialisé.
+3 ter. Si suivi de commande (numéro CMD-AAAA-NNNNN ou "où est ma
+   commande") → statut lu en base (order_tracking), sans RAG ni LLM ;
+   une seule relance, puis transfert à un conseiller.
 3 bis. Si simple échange de politesse ("bonjour", "merci", "au revoir",
    dans les 4 langues) → réponse toute prête, sans RAG ni LLM ; compteur
    de boucle RAG réinitialisé.
@@ -59,7 +62,8 @@ from app.db.database import AsyncSessionLocal
 from app.db.repositories.conversation_repository import ConversationRepository
 from app.db.repositories.user_repository import UserRepository
 from app.services.language_detector import detect_language
-from app.services.intent_classifier import Category, IntentClassifier
+from app.services import order_tracking
+from app.services.intent_classifier import ORDER_NUMBER_PATTERN, Category, IntentClassifier
 from app.services.session_manager import SessionManager
 from app.services.rag import retriever
 from app.services.rag.llm_factory import ask
@@ -90,6 +94,12 @@ ESCALATION_MESSAGES = {
         "en": "I notice I haven't been able to answer your request precisely after a few tries. I'm connecting you with a human agent who can better assist you.",
         "ar": "ألاحظ أنني لم أتمكن من الإجابة على طلبك بدقة رغم عدة محاولات. سأقوم بتحويلك إلى أحد ممثلي خدمة العملاء لمساعدتك بشكل أفضل.",
         "tn": "Chft eli ma najjamtch njawbek b'des9a b3d 3adet mohawalet. Bch na3addik l wa7ed agent humain ykhalmek ahsen.",
+    },
+    "order_tracking": {
+        "fr": "Je n'arrive pas à retrouver votre commande. Je vous mets en relation avec un conseiller qui pourra vérifier son statut.",
+        "en": "I can't find your order. I'm connecting you with an agent who can check its status.",
+        "ar": "لم أتمكن من العثور على طلبيتك. سأقوم بتحويلك إلى أحد ممثلي خدمة العملاء للتحقق من حالتها.",
+        "tn": "Ma l9itech commande mte3ek. Bch na3addik l wa7ed conseiller ychouflek l'etat mte3ha.",
     },
     "low_rag_confidence": {
         "fr": "Je ne dispose pas d'informations suffisamment fiables sur ce sujet précis. Je préfère vous mettre en relation avec un conseiller humain plutôt que de vous donner une réponse imprécise.",
@@ -434,6 +444,74 @@ async def record_agent_message(session_id: str, text: str) -> None:
         logger.warning(f"⚠️ Message du conseiller non ajouté à la session Redis | session={session_id} : {e}")
 
 
+async def _conversation_language(message: str, session_id: str, detected: str) -> str:
+    """
+    Message réduit au numéro de commande ("CMD-2026-00123", en réponse à la
+    relance) : trop peu de texte pour détecter la langue, on garde celle du
+    message précédent du client. Sinon, la langue détectée.
+    """
+    if re.sub(r"[^\w]", "", ORDER_NUMBER_PATTERN.sub("", message)):
+        return detected
+    previous = [m["content"] for m in await _session_manager.get_history(session_id) if m["role"] == "user"]
+    for text in reversed(previous[:-1]):  # le dernier est le message courant
+        if re.sub(r"[^\w]", "", ORDER_NUMBER_PATTERN.sub("", text)):
+            return detect_language(text)
+    return detected
+
+
+async def _handle_order_tracking(message: str, intent_result, session_id: str, language: str,
+                                 start: float) -> DialogueResult:
+    """
+    Numéro trouvé → statut de la commande. Sinon, une seule relance
+    (demande du numéro, ou numéro à vérifier) ; si le client ne fournit
+    toujours pas de numéro valide juste après, ou si la base est
+    indisponible → transfert à un conseiller (raison "order_tracking").
+    """
+    language = await _conversation_language(message, session_id, language)
+    number = intent_result.entities.get("order_reference")
+    context = await _session_manager.get_context(session_id)
+    already_prompted = bool(context.get(order_tracking.PROMPTED_CONTEXT_KEY))
+    await _session_manager.reset_rag_attempts(session_id)
+
+    order, lookup_failed = None, False
+    if number:
+        try:
+            order = await order_tracking.find_order(number)
+        except Exception as e:
+            lookup_failed = True
+            logger.warning(f"⚠️ Suivi de commande : base indisponible, transfert | session={session_id} : {e}")
+
+    if order is None and (already_prompted or lookup_failed):
+        response_text = _get_escalation_message("order_tracking", language)
+        await _session_manager.clear_context_key(session_id, order_tracking.PROMPTED_CONTEXT_KEY)
+        await _session_manager.add_message(
+            session_id, "assistant", response_text, {"escalated": True, "escalation_reason": "order_tracking"},
+        )
+        logger.info(f"🚨 Escalade (suivi de commande, numéro {number or 'absent'}) | session={session_id}")
+        return DialogueResult(
+            response=response_text, session_id=session_id, language=language, intent="order_tracking",
+            confidence=intent_result.confidence, escalated=True,
+            processing_time_ms=int((time.time() - start) * 1000), sources=[], escalation_reason="order_tracking",
+        )
+
+    if order is not None:
+        response_text = order_tracking.format_order(order, language)
+        await _session_manager.clear_context_key(session_id, order_tracking.PROMPTED_CONTEXT_KEY)
+        logger.info(f"📦 Suivi de commande {number} : {order.status} | session={session_id}")
+    else:
+        response_text = (order_tracking.not_found(number, language) if number
+                         else order_tracking.ask_for_number(language))
+        await _session_manager.update_context(session_id, {order_tracking.PROMPTED_CONTEXT_KEY: True})
+        logger.info(f"📦 Suivi de commande : relance ({'numéro introuvable' if number else 'sans numéro'}) "
+                    f"| session={session_id}")
+    await _session_manager.add_message(session_id, "assistant", response_text, {"intent": "order_tracking"})
+    return DialogueResult(
+        response=response_text, session_id=session_id, language=language, intent="order_tracking",
+        confidence=intent_result.confidence, escalated=False,
+        processing_time_ms=int((time.time() - start) * 1000), sources=[],
+    )
+
+
 async def _handle_message(message: str, session_id: str, channel: str) -> DialogueResult:
     start = time.time()
 
@@ -469,6 +547,13 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
             escalated=True, processing_time_ms=processing_time, sources=[],
             escalation_reason=intent_result.escalation_reason,
         )
+
+    # 4 ter. Suivi de commande → statut lu en base, sans RAG ni LLM (pas
+    # d'hallucination possible sur un statut ou une date). Tout autre
+    # message efface une relance restée sans suite.
+    if intent_result.category == Category.ORDER_TRACKING:
+        return await _handle_order_tracking(message, intent_result, session_id, language, start)
+    await _session_manager.clear_context_key(session_id, order_tracking.PROMPTED_CONTEXT_KEY)
 
     # 4 bis. Échange de politesse seul ("bonjour", "merci", "au revoir"...)
     # → réponse toute prête, sans RAG ni LLM. Sans ça, la base ne contenant
