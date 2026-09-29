@@ -21,7 +21,7 @@ from app.models import User
 from app.services import dialogue_manager
 from app.services.dialogue_manager import SMALL_TALK_MESSAGES, handle_message, wait_for_pending_persistence
 from app.services.intent_classifier import Category, IntentClassifier
-from app.services.rag import vector_store
+from tests.helpers import kb_indexed as _kb_indexed  # une seule vérification par exécution
 
 clf = IntentClassifier()
 
@@ -36,13 +36,6 @@ FALSE_ESCALATIONS = [
     ("aslema", "greeting", "tn"),
     ("مرحبا", "greeting", "ar"),
 ]
-
-
-def _kb_indexed():
-    try:
-        return vector_store.count() > 0
-    except Exception:
-        return False
 
 
 GROQ_KEY_MISSING = not settings.GROQ_API_KEY or settings.GROQ_API_KEY == "your_groq_api_key_here"
@@ -139,6 +132,7 @@ async def test_explicit_escalation_still_escalates(session_prefix):
     assert result.escalation_reason == "explicit"
 
 
+@pytest.mark.integration
 @pytest.mark.skipif(GROQ_KEY_MISSING or not _kb_indexed(), reason="GROQ_API_KEY manquante ou ChromaDB non peuplé")
 @pytest.mark.asyncio
 async def test_question_with_greeting_still_goes_to_rag(session_prefix):

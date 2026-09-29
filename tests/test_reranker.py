@@ -11,7 +11,8 @@ import pytest
 from huggingface_hub import try_to_load_from_cache
 
 from app.config import settings
-from app.services.rag import vector_store, retriever, reranker
+from app.services.rag import retriever, reranker
+from tests.helpers import kb_indexed as _kb_indexed  # une seule vérification par exécution
 
 
 class _FakeModel:
@@ -30,13 +31,6 @@ def _model_cached():
     return isinstance(try_to_load_from_cache(settings.RERANKER_MODEL, "model.safetensors"), str)
 
 
-def _kb_indexed():
-    try:
-        return vector_store.count() > 0
-    except Exception:
-        return False
-
-
 needs_model = pytest.mark.skipif(not _model_cached(), reason=f"{settings.RERANKER_MODEL} pas en cache local")
 needs_kb = pytest.mark.skipif(not _kb_indexed(), reason="ChromaDB non peuplé")
 
@@ -53,6 +47,7 @@ def test_rerank_empty(fake_model):
     assert reranker.rerank("x", [], top_n=3) == []
 
 
+@pytest.mark.integration
 @needs_kb
 def test_advanced_mode_reranks_hybrid_candidates(fake_model, monkeypatch):
     monkeypatch.setattr(retriever.settings, "RAG_RETRIEVAL_MODE", "advanced")
@@ -61,6 +56,7 @@ def test_advanced_mode_reranks_hybrid_candidates(fake_model, monkeypatch):
     assert all("rerank_score" in h and "rrf_score" in h for h in hits)
 
 
+@pytest.mark.integration
 @needs_model
 def test_real_reranker_prefers_relevant_multilingual():
     hits = [
@@ -71,7 +67,6 @@ def test_real_reranker_prefers_relevant_multilingual():
     out = reranker.rerank("ما هي مدة الضمان", hits, top_n=2)
     assert "garantie" in out[0]["document"]
     assert 0.0 <= out[1]["rerank_score"] <= out[0]["rerank_score"] <= 1.0
-
 
 
 def test_confidence_signal_defaults_to_cosine_and_switches_to_reranker(monkeypatch):

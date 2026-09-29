@@ -7,15 +7,9 @@ corpus nécessitent ChromaDB peuplé (scripts/ingest_knowledge_base.py).
 
 import pytest
 
-from app.services.rag import vector_store, retriever, hybrid_retriever
+from app.services.rag import retriever, hybrid_retriever
 from app.services.rag.hybrid_retriever import rrf_fuse, tokenize
-
-
-def _kb_indexed():
-    try:
-        return vector_store.count() > 0
-    except Exception:
-        return False
+from tests.helpers import kb_indexed as _kb_indexed  # une seule vérification par exécution
 
 
 needs_kb = pytest.mark.skipif(
@@ -53,6 +47,7 @@ def test_tokenize_arabic_script():
 
 # --- Recherche sur le corpus réel ---
 
+@pytest.mark.integration
 @needs_kb
 def test_hybrid_policy_search_finds_retours():
     hits = hybrid_retriever.search("Quel est le délai pour retourner un produit ?", top_k=3, type_filter="policy")
@@ -60,6 +55,7 @@ def test_hybrid_policy_search_finds_retours():
     assert any(h["metadata"]["category"] == "retours" for h in hits)
 
 
+@pytest.mark.integration
 @needs_kb
 def test_hybrid_hits_sorted_by_rrf_and_keep_distance():
     hits = hybrid_retriever.search("carte Arduino Uno R3", top_k=5)
@@ -69,6 +65,7 @@ def test_hybrid_hits_sorted_by_rrf_and_keep_distance():
     assert all(0 <= h["distance"] <= hybrid_retriever.MAX_RELEVANT_DISTANCE for h in hits)
 
 
+@pytest.mark.integration
 @needs_kb
 def test_hybrid_mixes_policy_and_products_without_filter():
     """Même garantie que la dual search du Basic RAG : une question SAV
@@ -77,6 +74,7 @@ def test_hybrid_mixes_policy_and_products_without_filter():
     assert any(h["metadata"]["type"] == "policy" for h in hits)
 
 
+@pytest.mark.integration
 @needs_kb
 def test_basic_mode_still_available(monkeypatch):
     monkeypatch.setattr(retriever.settings, "RAG_RETRIEVAL_MODE", "basic")

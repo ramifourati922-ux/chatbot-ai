@@ -22,17 +22,10 @@ from app.db import database
 from app.models import User
 from app.services import dialogue_manager
 from app.services.dialogue_manager import RAG_LOOP_THRESHOLD, handle_message, wait_for_pending_persistence
-from app.services.rag import vector_store
+from tests.helpers import kb_indexed as _kb_indexed  # une seule vérification par exécution
 
 
-def _kb_indexed():
-    try:
-        return vector_store.count() > 0
-    except Exception:
-        return False
-
-
-pytestmark = pytest.mark.skipif(not _kb_indexed(), reason="ChromaDB non peuplé")
+needs_kb = pytest.mark.skipif(not _kb_indexed(), reason="ChromaDB non peuplé")
 
 # Questions bien couvertes par la base (confiance > seuil, pas d'escalade)
 QUESTIONS = [
@@ -70,6 +63,8 @@ async def _ask_all(session_id, n):
     return [await handle_message(q, session_id=session_id, channel="web") for q in QUESTIONS[:n]]
 
 
+@pytest.mark.integration
+@needs_kb
 @pytest.mark.asyncio
 async def test_good_answers_in_a_row_do_not_escalate(session_id, llm_answers):
     """Le bug : 3 bonnes réponses d'affilée déclenchaient repeated_rag_failure."""
@@ -79,6 +74,8 @@ async def test_good_answers_in_a_row_do_not_escalate(session_id, llm_answers):
     assert all(r.response == GOOD_ANSWER for r in results)
 
 
+@pytest.mark.integration
+@needs_kb
 @pytest.mark.asyncio
 async def test_consecutive_no_info_answers_escalate(session_id, llm_answers):
     """Vrais échecs : le 3e "je n'ai pas l'information" d'affilée est remplacé
@@ -95,6 +92,8 @@ async def test_consecutive_no_info_answers_escalate(session_id, llm_answers):
     assert results[-1].escalated is False  # compteur remis à zéro après le transfert
 
 
+@pytest.mark.integration
+@needs_kb
 @pytest.mark.asyncio
 async def test_informative_answer_resets_the_failure_streak(session_id, llm_answers):
     """Échec, échec, bonne réponse, échec, échec : jamais 3 échecs

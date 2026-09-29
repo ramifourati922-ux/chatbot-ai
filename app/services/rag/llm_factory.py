@@ -21,11 +21,13 @@ Modèle de secours : openai/gpt-oss-20b
 
 import logging
 from functools import lru_cache
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from langchain_groq import ChatGroq
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from groq import RateLimitError, APIStatusError
+
+if TYPE_CHECKING:  # import réel dans _get_client : langchain_groq tire transformers (~12 s)
+    from langchain_groq import ChatGroq
 
 from app.config import settings
 
@@ -82,8 +84,10 @@ BASE_SYSTEM_PROMPT = (
 
 
 @lru_cache()
-def _get_client(model: str) -> ChatGroq:
+def _get_client(model: str) -> "ChatGroq":
     """Un client ChatGroq par modèle, réutilisé entre les appels (lru_cache)."""
+    from langchain_groq import ChatGroq
+
     if not settings.GROQ_API_KEY or settings.GROQ_API_KEY == "your_groq_api_key_here":
         raise RuntimeError(
             "GROQ_API_KEY manquante ou non renseignée dans .env. "
@@ -98,7 +102,7 @@ def _get_client(model: str) -> ChatGroq:
     )
 
 
-def get_llm(model: Optional[str] = None) -> ChatGroq:
+def get_llm(model: Optional[str] = None) -> "ChatGroq":
     """Retourne un client ChatGroq configuré. Par défaut : modèle principal."""
     return _get_client(model or settings.GROQ_MODEL)
 

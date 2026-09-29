@@ -9,24 +9,18 @@ import uuid
 import pytest
 
 from app.config import settings
-from app.services.rag import retriever, vector_store
+from app.services.rag import retriever
 from app.services import dialogue_manager
 from app.services.dialogue_manager import handle_message, RAG_LOOP_THRESHOLD
+from tests.helpers import kb_indexed as _kb_indexed  # une seule vérification par exécution
 
 GROQ_KEY_MISSING = not settings.GROQ_API_KEY or settings.GROQ_API_KEY == "your_groq_api_key_here"
 
 
-def _kb_indexed():
-    try:
-        return vector_store.count() > 0
-    except Exception:
-        return False
-
-
-pytestmark = pytest.mark.skipif(
+pytestmark = [pytest.mark.integration, pytest.mark.skipif(
     GROQ_KEY_MISSING or not _kb_indexed(),
     reason="GROQ_API_KEY manquante ou ChromaDB non peuplé (lancer scripts/ingest_knowledge_base.py)",
-)
+)]
 
 
 @pytest.mark.asyncio

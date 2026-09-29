@@ -36,19 +36,22 @@ import logging
 from typing import List
 from functools import lru_cache
 
-from langchain_huggingface import HuggingFaceEmbeddings
-
 from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 
 @lru_cache()
-def _get_model() -> HuggingFaceEmbeddings:
+def _get_model():
     """
     Charge le modèle une seule fois (le chargement prend quelques
     secondes) et le garde en mémoire pour tous les appels suivants.
+    Import ici plutôt qu'en tête de module : langchain_huggingface tire
+    transformers et torch (~12 s), inutiles tant qu'aucun texte n'est
+    embeddé (tests unitaires, démarrage des scripts).
     """
+    from langchain_huggingface import HuggingFaceEmbeddings
+
     logger.info(f"⏳ Chargement du modèle d'embeddings : {settings.EMBEDDING_MODEL}")
     model = HuggingFaceEmbeddings(
         model_name=f"sentence-transformers/{settings.EMBEDDING_MODEL}",

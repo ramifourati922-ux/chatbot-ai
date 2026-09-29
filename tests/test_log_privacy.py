@@ -62,6 +62,7 @@ def test_uvicorn_access_log_masks_sensitive_query_parameters():
     assert "0123456789abcdef" not in ws.getMessage()
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_dialogue_logs_neither_the_phone_number_nor_the_message(caplog):
     """Au niveau DEBUG (le plus bavard), avec les filtres de l'application."""

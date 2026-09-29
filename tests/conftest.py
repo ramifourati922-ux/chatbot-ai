@@ -1,6 +1,13 @@
 # tests/conftest.py
 """
-Fixtures partagées.
+Fixtures partagées, et marqueur « integration ».
+
+integration : test qui a besoin d'un service externe (PostgreSQL,
+ChromaDB peuplé, Groq) ou qui charge un modèle d'embeddings / de
+reranking. Tests unitaires seuls, sans aucun service, en quelques
+secondes : pytest -m "not integration". Les tests qui utilisent une
+fixture de base de données (DB_FIXTURES) sont marqués automatiquement ;
+les autres portent @pytest.mark.integration (ou pytestmark du module).
 
 agent_accounts : un compte admin et un compte conseiller en base (table
 agents), supprimés après le test. Hachage bcrypt au coût minimal (4) pour
@@ -29,6 +36,21 @@ CONSEILLER = ("test-conseiller-compte", "mot-de-passe-conseiller")
 INACTIVE = ("test-inactif-compte", "mot-de-passe-inactif")
 CREATED = "test-nouveau-compte"  # créé par les tests de gestion des comptes
 TEST_USERNAMES = [ADMIN[0], CONSEILLER[0], INACTIVE[0], CREATED]
+
+
+# Fixtures qui ouvrent une connexion PostgreSQL (tests ignorés sans base)
+DB_FIXTURES = {"agent_accounts", "orders", "prefix", "session_prefix", "db_session_id"}
+
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "integration: service externe requis (PostgreSQL, ChromaDB, Groq) ou modèle ML chargé")
+
+
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        if DB_FIXTURES.intersection(getattr(item, "fixturenames", ())):
+            item.add_marker(pytest.mark.integration)
 
 
 async def _delete_test_agents():

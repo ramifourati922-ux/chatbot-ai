@@ -402,7 +402,9 @@ démarrage et une transcription de secours sont dans
 ## Tests
 
 ```bash
-pytest tests/ -v
+pytest tests/                        # suite complète (512 tests, ~2 min 30)
+pytest tests/ -m "not integration"   # tests unitaires seuls (389), ~15 s, sans aucun service
+pytest tests/ -m integration         # tests d'intégration seuls (123)
 ```
 
 **512 tests** : détection de langue, classification (escalade,
@@ -414,9 +416,14 @@ authentification de `/admin` et `/users/`, restriction CORS et origine
 du WebSocket, séparation des sessions web / WhatsApp, limitation de débit, structure de
 la base de connaissances.
 
-- Les tests d'intégration ont besoin des services (`docker compose up
-  -d`), d'une base de connaissances indexée et d'une clé Groq ; sans eux,
-  ils sont ignorés (*skipped*).
+- Les tests d'intégration (marqueur `integration`) ont besoin des
+  services (`docker compose up -d`), d'une base de connaissances indexée,
+  d'une clé Groq, ou chargent les modèles d'embeddings et de reranking ;
+  sans ces services, ils sont ignorés (*skipped*). Un test qui utilise
+  une fixture de base de données est marqué automatiquement (voir
+  `tests/conftest.py`).
+- Les tests unitaires ne demandent ni Docker, ni clé Groq, ni modèle
+  téléchargé : c'est la partie à lancer en intégration continue.
 - Certains tests appellent réellement Groq (consommation du quota
   gratuit) et les tests de l'orchestrateur écrivent des conversations
   dans la base PostgreSQL locale.
@@ -623,9 +630,10 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 
 ### Suite de tests
 
-- Les tests de l'orchestrateur laissent des conversations dans la base
-  locale et consomment le quota Groq ; tests unitaires et d'intégration
-  ne sont pas séparés.
+- Les tests d'intégration de l'orchestrateur laissent des conversations
+  dans la base locale (nettoyage : `scripts/cleanup_test_data.py`) et
+  consomment le quota Groq. Aucune intégration continue ne les lance
+  encore, ni les tests unitaires.
 
 ## Perspectives
 
@@ -636,8 +644,8 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 - Reranking réservé au français et à l'anglais (la mesure RAGas montre
   la régression en arabe) ; normalisation de l'arabizi avant la
   recherche.
-- `Dockerfile`, intégration continue, séparation des tests unitaires et
-  d'intégration.
+- `Dockerfile`, intégration continue (tests unitaires à chaque push,
+  tests d'intégration avec PostgreSQL et Redis en services).
 - Suivi de commande relié à un back-office.
 
 ## Licence

@@ -12,6 +12,9 @@ import pytest
 
 from app.services.rag.embedding_service import embed, embed_batch
 
+# Charge le modèle d'embeddings (téléchargé depuis Hugging Face au premier lancement)
+pytestmark = pytest.mark.integration
+
 
 def cosine_similarity(a, b):
     a, b = np.array(a), np.array(b)

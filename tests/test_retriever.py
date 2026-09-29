@@ -6,20 +6,14 @@ scripts/ingest_knowledge_base.py ait été lancé au préalable).
 
 import pytest
 
-from app.services.rag import vector_store, retriever
+from app.services.rag import retriever
+from tests.helpers import kb_indexed as _kb_indexed  # une seule vérification par exécution
 
 
-def _kb_indexed():
-    try:
-        return vector_store.count() > 0
-    except Exception:
-        return False
-
-
-pytestmark = pytest.mark.skipif(
+pytestmark = [pytest.mark.integration, pytest.mark.skipif(
     not _kb_indexed(),
     reason="ChromaDB non peuplé — lancer scripts/ingest_knowledge_base.py d'abord",
-)
+)]
 
 
 def test_policy_search_finds_relevant_chunk():

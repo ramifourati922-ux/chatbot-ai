@@ -18,10 +18,10 @@ GROQ_KEY_MISSING = (
     not settings.GROQ_API_KEY or settings.GROQ_API_KEY == "your_groq_api_key_here"
 )
 
-pytestmark = pytest.mark.skipif(
+pytestmark = [pytest.mark.integration, pytest.mark.skipif(
     GROQ_KEY_MISSING,
     reason="GROQ_API_KEY non configurée dans .env — voir https://console.groq.com/keys",
-)
+)]
 
 
 @pytest.mark.parametrize("language,message", [

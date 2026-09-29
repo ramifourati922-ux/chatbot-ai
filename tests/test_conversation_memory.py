@@ -15,17 +15,11 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from app.config import settings
 from app.services.dialogue_manager import _build_retrieval_query, _is_follow_up, handle_message
-from app.services.rag import retriever, vector_store
+from app.services.rag import retriever
 from app.services.rag.llm_factory import HISTORY_MESSAGE_MAX_CHARS, build_messages
+from tests.helpers import kb_indexed as _kb_indexed  # une seule vérification par exécution
 
 ARDUINO_UNO_SKUS = {"LS-CP-000001", "LS-CP-000002"}  # Uno R3 original / clone
-
-
-def _kb_indexed():
-    try:
-        return vector_store.count() > 0
-    except Exception:
-        return False
 
 
 GROQ_KEY_MISSING = not settings.GROQ_API_KEY or settings.GROQ_API_KEY == "your_groq_api_key_here"
@@ -108,6 +102,7 @@ def test_build_messages_truncates_long_history_and_keeps_old_behaviour():
 
 # --- Recherche RAG sur le vrai corpus ---
 
+@pytest.mark.integration
 @needs_kb
 def test_follow_up_warranty_question_finds_arduino_and_its_warranty():
     """ "et la garantie ?" après "Avez-vous l'Arduino Uno ?" doit retrouver
@@ -123,6 +118,7 @@ def test_follow_up_warranty_question_finds_arduino_and_its_warranty():
 
 # --- Bout en bout (Groq) ---
 
+@pytest.mark.integration
 @needs_kb_and_groq
 @pytest.mark.asyncio
 async def test_handle_message_follow_up_keeps_the_subject():

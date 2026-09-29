@@ -30,17 +30,19 @@ dépendant du modèle choisi.
 import logging
 from functools import lru_cache
 
-import torch
-from sentence_transformers import CrossEncoder
-
 from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 
 @lru_cache()
-def _get_model() -> CrossEncoder:
-    """Chargé une seule fois (plusieurs secondes) — préchargé au démarrage, voir main.py."""
+def _get_model():
+    """Chargé une seule fois (plusieurs secondes) — préchargé au démarrage, voir main.py.
+    torch et sentence_transformers importés ici (~10 s) : inutiles tant que
+    le modèle n'est pas chargé (tests unitaires)."""
+    import torch
+    from sentence_transformers import CrossEncoder
+
     logger.info(f"⏳ Chargement du reranker : {settings.RERANKER_MODEL}")
     model = CrossEncoder(
         settings.RERANKER_MODEL,

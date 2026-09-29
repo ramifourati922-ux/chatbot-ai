@@ -156,6 +156,7 @@ async def test_http_chat_session_id_is_namespaced_whatever_the_declared_channel(
     assert calls[1]["session_id"] == f"web:{generated.json()['session_id']}"
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_web_client_does_not_touch_the_whatsapp_history():
     """
