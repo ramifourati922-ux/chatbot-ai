@@ -8,7 +8,6 @@
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-1.4.1-FF6F00)
 ![Tests](https://img.shields.io/badge/tests-512%20au%20vert-2EA44F)
-![Statut](https://img.shields.io/badge/statut-prototype%20acad%C3%A9mique-lightgrey)
 
 [Fonctionnalités](#fonctionnalités) ·
 [Architecture](#architecture) ·
