@@ -33,12 +33,6 @@
 - **transfère** la conversation à un conseiller humain dans 5 situations,
   et outille les conseillers avec un tableau de bord dédié.
 
-> [!NOTE]
-> **Projet académique — prototype.** La base de connaissances (politiques
-> SAV et catalogue de 11 050 produits) et les commandes sont **fictives**,
-> rédigées ou générées pour le projet. Le système n'est pas prêt pour une
-> mise en production en l'état : voir [Limites connues](#limites-connues).
-
 ## Fonctionnalités
 
 ### Comprendre le message
