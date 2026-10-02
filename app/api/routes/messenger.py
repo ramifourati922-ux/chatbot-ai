@@ -64,11 +64,11 @@ def _verify_signature(raw_body: bytes, signature_header: str) -> bool:
     publique, seule la signature HMAC-SHA256 (secret MESSENGER_APP_SECRET)
     garantit que la requête vient bien de Meta et n'a pas été altérée."""
     if not settings.MESSENGER_APP_SECRET:
-        logger.warning(
-            "⚠️ MESSENGER_APP_SECRET non configuré — signature NON vérifiée "
-            "(acceptable uniquement en dev sans webhook public exposé)"
-        )
-        return True
+        # Sans secret, impossible de vérifier : requête refusée (jamais
+        # acceptée sans vérification). Si le canal est configuré, l'API
+        # refuse d'ailleurs de démarrer (voir main.lifespan).
+        logger.warning("❌ MESSENGER_APP_SECRET non configuré — requête Messenger refusée")
+        return False
     if not signature_header or not signature_header.startswith("sha256="):
         return False
     expected = hmac.new(

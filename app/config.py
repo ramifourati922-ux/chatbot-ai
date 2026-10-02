@@ -179,6 +179,11 @@ class Settings(BaseSettings):
     RATE_LIMIT_LOGIN_FAILURES: str = "5/15 minutes"
 
     @property
+    def messenger_enabled(self) -> bool:
+        """Canal Messenger configuré (au moins un identifiant Meta défini)."""
+        return bool(self.MESSENGER_PAGE_ACCESS_TOKEN or self.MESSENGER_VERIFY_TOKEN)
+
+    @property
     def whatsapp_enabled(self) -> bool:
         """Canal WhatsApp configuré (au moins un identifiant Meta défini)."""
         return bool(self.WHATSAPP_PHONE_NUMBER_ID or self.WHATSAPP_ACCESS_TOKEN or self.WHATSAPP_VERIFY_TOKEN)

@@ -65,6 +65,13 @@ async def lifespan(app: FastAPI):
             "(WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_ACCESS_TOKEN / WHATSAPP_VERIFY_TOKEN) : "
             "renseignez le secret de l'application Meta dans le fichier .env (voir .env.example)."
         )
+    # Même règle pour Messenger.
+    if settings.messenger_enabled and not settings.MESSENGER_APP_SECRET:
+        raise RuntimeError(
+            "MESSENGER_APP_SECRET manquant alors que le canal Messenger est configuré "
+            "(MESSENGER_PAGE_ACCESS_TOKEN / MESSENGER_VERIFY_TOKEN) : "
+            "renseignez le secret de l'application Meta dans le fichier .env (voir .env.example)."
+        )
     # Non bloquant en cas d'échec (ex: ChromaDB pas encore démarré) :
     # l'API démarre quand même, les composants se chargeront au premier appel.
     try:

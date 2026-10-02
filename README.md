@@ -7,7 +7,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-1.4.1-FF6F00)
-![Tests](https://img.shields.io/badge/tests-518%20au%20vert-2EA44F)
+![Tests](https://img.shields.io/badge/tests-527%20au%20vert-2EA44F)
 
 [Fonctionnalités](#fonctionnalités) ·
 [Architecture](#architecture) ·
@@ -262,7 +262,8 @@ Les principales :
 | `DATABASE_URL`, `REDIS_URL`, `CHROMA_HOST`, `CHROMA_PORT` | Non | Adresses des services (valeurs adaptées à `docker compose`) |
 | `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_VERIFY_TOKEN` | Pour WhatsApp | Identifiants Meta du canal WhatsApp |
 | `WHATSAPP_APP_SECRET` | **Oui** si WhatsApp est configuré | Vérification des signatures Meta ; sans lui, l'API refuse de démarrer |
-| `MESSENGER_PAGE_ACCESS_TOKEN`, `MESSENGER_VERIFY_TOKEN`, `MESSENGER_APP_SECRET` | Pour Messenger | Identifiants Meta du canal Messenger |
+| `MESSENGER_PAGE_ACCESS_TOKEN`, `MESSENGER_VERIFY_TOKEN` | Pour Messenger | Identifiants Meta du canal Messenger |
+| `MESSENGER_APP_SECRET` | **Oui** si Messenger est configuré | Vérification des signatures Meta ; sans lui, l'API refuse de démarrer |
 | `CORS_ALLOWED_ORIGINS` | Non | Origines web autorisées (défaut : `localhost:8000` et `127.0.0.1:8000`) |
 | `WS_SESSION_SECRET` | Recommandée | Clé de signature des sessions web ; vide = clé aléatoire à chaque démarrage |
 | `RAG_RETRIEVAL_MODE` | Non | `advanced` (défaut), `hybrid` ou `basic` |
@@ -452,8 +453,8 @@ Limites actuelles :
 ## Tests
 
 ```bash
-pytest tests/                        # suite complète : 518 tests, ~2 min 30
-pytest tests/ -m "not integration"   # 395 tests unitaires, ~15 s, sans aucun service
+pytest tests/                        # suite complète : 527 tests, ~2 min 30
+pytest tests/ -m "not integration"   # 404 tests unitaires, ~15 s, sans aucun service
 pytest tests/ -m integration         # 123 tests d'intégration
 ```
 
@@ -501,7 +502,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, données de démo, nettoyage, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (518 tests)
+tests/                         # suite pytest (527 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -608,11 +609,10 @@ déroulable en dessous.
     `X-Forwarded-For`, falsifiable, n'est pas lu) ;
   - un attaquant disposant de nombreuses adresses IP n'est pas freiné ;
   - les webhooks WhatsApp et Messenger ne sont pas limités : ils sont
-    authentifiés par leur signature HMAC. WhatsApp exige
-    `WHATSAPP_APP_SECRET` (sans lui, requêtes refusées et démarrage
-    impossible si le canal est configuré) ; Messenger vérifie la
-    signature seulement si `MESSENGER_APP_SECRET` est défini (sinon, il
-    l'accepte sans vérification).
+    authentifiés par leur signature HMAC, obligatoire sur les deux
+    canaux : sans `WHATSAPP_APP_SECRET` ou `MESSENGER_APP_SECRET`, les
+    requêtes du canal sont refusées, et l'API refuse de démarrer si le
+    canal est configuré.
 - La restriction des origines (CORS pour HTTP, vérification de
   l'en-tête `Origin` pour `/ws/{client_id}`) protège les visiteurs
   contre un site tiers ouvert dans leur navigateur. Elle ne bloque pas
