@@ -14,13 +14,15 @@ conseiller authentifié. Les identifiants circulent encodés en base64, non
 chiffrés → HTTPS obligatoire en production.
 """
 
+import csv
+import io
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.auth import require_agent
@@ -36,7 +38,7 @@ from app.services.agent_auth import AuthenticatedAgent
 from app.services.dialogue_manager import record_agent_message
 from app.schemas.admin import (
     ConversationHistory, CurrentAgent, EscalationItem, MessageItem, ReplyRequest, ReplyResponse,
-    ResolveResponse, StatsResponse,
+    LeadItem, ResolveResponse, StatsResponse,
 )
 
 router = APIRouter(tags=["Admin"], dependencies=[Depends(require_agent)])
@@ -67,6 +69,45 @@ async def stats(days: int = Query(30, ge=1, le=365, description="Période, en jo
     (à ajouter à la base de connaissances). Voir app/services/analytics.py.
     """
     return await analytics.compute_stats(db, days)
+
+
+@router.get("/admin/leads", response_model=List[LeadItem])
+async def leads(days: int = Query(30, ge=1, le=365, description="Période, en jours"),
+                limit: int = Query(50, ge=1, le=1000), db: AsyncSession = Depends(get_db)):
+    """
+    Prospects : clients qui se sont renseignés sur un produit, avec les
+    produits d'intérêt, l'intention d'achat et le canal pour les recontacter.
+    Intention d'achat d'abord, puis les plus récents.
+    """
+    return await analytics.compute_leads(db, days, limit)
+
+
+def _csv_cell(value) -> str:
+    """Neutralise une cellule qui serait lue comme une formule par un
+    tableur (injection CSV) : le texte vient des messages des clients."""
+    text_ = "" if value is None else str(value)
+    return "'" + text_ if text_[:1] in ("=", "+", "-", "@", "\t", "\r") else text_
+
+
+@router.get("/admin/leads.csv")
+async def leads_csv(days: int = Query(30, ge=1, le=365), db: AsyncSession = Depends(get_db)):
+    """Export des prospects pour le suivi commercial (séparateur « ; » et
+    encodage UTF-8 avec BOM, lus directement par Excel en français)."""
+    rows = await analytics.compute_leads(db, days, limit=1000)
+    buffer = io.StringIO()
+    writer = csv.writer(buffer, delimiter=";")
+    writer.writerow(["client", "canal", "recontactable", "langue", "premier_contact", "dernier_contact",
+                     "questions_produit", "intention_achat", "produits", "derniere_question"])
+    for lead in rows:
+        writer.writerow([_csv_cell(v) for v in (
+            lead["customer_id"], lead["channel"], "oui" if lead["recontactable"] else "non", lead["language"],
+            lead["first_seen"].isoformat(timespec="minutes"), lead["last_seen"].isoformat(timespec="minutes"),
+            lead["product_questions"], "oui" if lead["purchase_intent"] else "non",
+            " | ".join(f"{p['name']} ({p['price_dt']:.2f} DT)" for p in lead["products"]), lead["last_question"],
+        )])
+    filename = f"prospects-{datetime.now(timezone.utc):%Y-%m-%d}.csv"
+    return Response(content="﻿" + buffer.getvalue(), media_type="text/csv; charset=utf-8",
+                    headers={"Content-Disposition": f'attachment; filename="{filename}"'})
 
 
 @router.get("/admin/me", response_model=CurrentAgent)

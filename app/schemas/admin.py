@@ -121,6 +121,32 @@ class UnansweredQuestion(BaseModel):
     reasons: List[str] = Field(..., description="reponse_non_trouvee | echecs_repetes | sans_information")
 
 
+class LeadsSummary(BaseModel):
+    total: int = Field(..., description="Clients qui se sont renseignés sur un produit")
+    purchase_intent: int = Field(..., description="Dont intention d'achat exprimée (prix, disponibilité, achat)")
+    recontactable: int = Field(..., description="Dont joignables après coup (WhatsApp, Messenger)")
+
+
+class LeadProduct(BaseModel):
+    sku: str
+    name: str
+    category: str
+    price_dt: float
+
+
+class LeadItem(BaseModel):
+    customer_id: str = Field(..., description="N° WhatsApp, PSID Messenger ou session web")
+    channel: str
+    recontactable: bool = Field(..., description="Joignable après coup : WhatsApp et Messenger")
+    language: Optional[str] = None
+    first_seen: datetime
+    last_seen: datetime
+    product_questions: int
+    purchase_intent: bool
+    last_question: str
+    products: List[LeadProduct] = Field(..., description="Produits d'intérêt, les plus cités d'abord")
+
+
 class StatsResponse(BaseModel):
     since: datetime
     until: datetime
@@ -135,3 +161,4 @@ class StatsResponse(BaseModel):
     daily: List[DailyStats]
     rag_no_info_answers: int = Field(..., description="Réponses RAG « je n'ai pas l'information »")
     unanswered_questions: List[UnansweredQuestion]
+    leads: LeadsSummary

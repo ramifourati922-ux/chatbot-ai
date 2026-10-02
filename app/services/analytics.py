@@ -10,19 +10,28 @@ intention, transfert et sa raison, temps de traitement de chaque réponse.
 
 Deux temps :
 - load_period() lit en base les conversations et messages de la période ;
-- build_stats() calcule les indicateurs : fonction pure, testée sans base.
+- build_stats() et build_leads() calculent les indicateurs et les
+  prospects : fonctions pures, testées sans base.
+
+Prospects (leads) : clients qui se sont renseignés sur un produit. Ils
+sont déduits de l'historique (sources des réponses RAG = références
+produits), sans table supplémentaire : rien n'est à saisir, et
+l'historique enregistré reste la seule source de vérité.
 Les messages de la période sont chargés en mémoire : adapté au volume
 d'une petite boutique (quelques milliers de messages par mois). Au-delà,
 il faudrait agréger directement en SQL.
 """
 
+import csv
 import re
 import statistics
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta, timezone
-from typing import Optional
+from datetime import datetime, timedelta, timezone
+from functools import lru_cache
+from pathlib import Path
+from typing import Iterator, Optional
 from zoneinfo import ZoneInfo
 
 from sqlalchemy import text
@@ -38,6 +47,22 @@ SMALL_TALK_INTENTS = {"greeting", "thanks", "goodbye"}
 # Transferts dus à une question à laquelle le bot n'a pas trouvé de réponse
 UNANSWERED_REASONS = {"low_rag_confidence", "repeated_rag_failure"}
 CONVERSATION_ESCALATED_STATUSES = {"escalated", "agent", "resolved"}
+
+PRODUCTS_CSV = Path(__file__).resolve().parents[2] / "data" / "knowledge_base" / "ecommerce" / "produits.csv"
+# Référence produit dans les sources d'une réponse RAG (les politiques ont
+# pour source un chemin de fichier, ex. "sav/garantie.txt")
+SKU_RE = re.compile(r"^LS-[A-Z]{2}-\d{6}$")
+# Intention d'achat, dans les 4 langues : prix, disponibilité, achat
+PURCHASE_INTENT_RE = re.compile(
+    r"\b(prix|tarif|co[uû]te?|combien|disponib\w*|en stock|stock|acheter|achat|commander|"
+    r"price|cost|how much|available|availability|in stock|buy|purchase|"
+    r"9adeh|b9adeh|b9adech|9adech|soumou|famma|3andkom|3andek|nechri|nchri)\b"
+    r"|سعر|بكم|ثمن|متوفر|متاح|شراء|نشري|عندكم|قداش|بقداش",
+    re.IGNORECASE,
+)
+# Canaux où le client peut être recontacté après coup (le chat du site,
+# seulement tant que son onglet est ouvert)
+RECONTACTABLE_CHANNELS = {"whatsapp", "messenger"}
 
 
 @dataclass
@@ -56,6 +81,7 @@ class MessageRow:
     metadata: dict
     processing_time_ms: Optional[int]
     created_at: datetime
+    customer_id: Optional[str] = None  # n° WhatsApp, PSID Messenger, session web
 
 
 def real_channel(channel: str, external_id: Optional[str]) -> str:
@@ -80,6 +106,24 @@ def normalize_question(question: str) -> str:
     text_ = unicodedata.normalize("NFKD", question.lower())
     text_ = "".join(c for c in text_ if not unicodedata.combining(c))
     return " ".join(re.findall(r"\w+", text_))
+
+
+def question_reply_pairs(messages: list) -> Iterator[tuple]:
+    """(question du client, réponse du bot) : chaque réponse du bot est
+    associée au dernier message du client qui la précède dans la même
+    conversation, une seule fois."""
+    by_conversation = defaultdict(list)
+    for m in messages:
+        by_conversation[m.conversation_id].append(m)
+    for conv_messages in by_conversation.values():
+        conv_messages.sort(key=lambda m: m.created_at)
+        last_question = None
+        for m in conv_messages:
+            if m.role == "user":
+                last_question = m
+            elif m.role == "assistant" and last_question is not None:
+                yield last_question, m
+                last_question = None
 
 
 def _latency(values: list) -> Optional[dict]:
@@ -141,42 +185,30 @@ def build_stats(conversations: list, messages: list, since: datetime, until: dat
     # ── Questions sans réponse : la question du client qui précède un
     # transfert « réponse non trouvée » ou une réponse RAG « je n'ai pas
     # l'information » ──
-    by_conversation = defaultdict(list)
-    for m in messages:
-        by_conversation[m.conversation_id].append(m)
     unanswered = {}
     no_info_answers = 0
-    for conv_messages in by_conversation.values():
-        conv_messages.sort(key=lambda m: m.created_at)
-        last_question = None
-        for m in conv_messages:
-            if m.role == "user":
-                last_question = m
-                continue
-            if m.role != "assistant" or last_question is None:
-                continue
-            reason = m.metadata.get("escalation_reason")
-            if reason in UNANSWERED_REASONS:
-                kind = "reponse_non_trouvee" if reason == "low_rag_confidence" else "echecs_repetes"
-            elif reply_type(m.metadata) == "rag" and _is_no_info_answer(m.content):
-                kind = "sans_information"
-                no_info_answers += 1
-            else:
-                continue
-            key = normalize_question(last_question.content)
-            if not key:
-                continue
-            item = unanswered.setdefault(key, {
-                "question": last_question.content, "occurrences": 0, "last_asked_at": last_question.created_at,
-                "language": last_question.metadata.get("language"), "channels": set(), "reasons": set(),
-            })
-            item["occurrences"] += 1
-            if last_question.created_at >= item["last_asked_at"]:
-                item["last_asked_at"] = last_question.created_at
-                item["question"] = last_question.content  # formulation la plus récente
-            item["channels"].add(m.channel)
-            item["reasons"].add(kind)
-            last_question = None  # une question ne compte qu'une fois
+    for question, reply in question_reply_pairs(messages):
+        reason = reply.metadata.get("escalation_reason")
+        if reason in UNANSWERED_REASONS:
+            kind = "reponse_non_trouvee" if reason == "low_rag_confidence" else "echecs_repetes"
+        elif reply_type(reply.metadata) == "rag" and _is_no_info_answer(reply.content):
+            kind = "sans_information"
+            no_info_answers += 1
+        else:
+            continue
+        key = normalize_question(question.content)
+        if not key:
+            continue
+        item = unanswered.setdefault(key, {
+            "question": question.content, "occurrences": 0, "last_asked_at": question.created_at,
+            "language": question.metadata.get("language"), "channels": set(), "reasons": set(),
+        })
+        item["occurrences"] += 1
+        if question.created_at >= item["last_asked_at"]:
+            item["last_asked_at"] = question.created_at
+            item["question"] = question.content  # formulation la plus récente
+        item["channels"].add(reply.channel)
+        item["reasons"].add(kind)
     top_unanswered = sorted(unanswered.values(), key=lambda i: (-i["occurrences"], -i["last_asked_at"].timestamp()))
 
     return {
@@ -205,6 +237,59 @@ def build_stats(conversations: list, messages: list, since: datetime, until: dat
     }
 
 
+@lru_cache(maxsize=1)
+def product_catalog() -> dict:
+    """Référence produit -> nom, catégorie, prix (catalogue indexé dans le RAG)."""
+    with open(PRODUCTS_CSV, encoding="utf-8") as f:
+        return {row["sku"]: {"name": row["nom"], "category": row["categorie"], "price_dt": float(row["prix_dt"])}
+                for row in csv.DictReader(f)}
+
+
+def build_leads(messages: list, catalog: dict, limit: int = 50) -> list:
+    """
+    Prospects : clients qui se sont renseignés sur un produit (fonction pure).
+
+    Une question compte si la réponse RAG s'appuie sur une fiche produit en
+    première source (la question portait sur ce produit), ou si elle
+    exprime une intention d'achat (prix, disponibilité, achat) et que la
+    réponse cite des produits. Les produits d'intérêt sont les deux
+    premières sources produit de chaque réponse, les plus fréquents d'abord.
+    """
+    leads = {}
+    for question, reply in question_reply_pairs(messages):
+        if reply_type(reply.metadata) != "rag" or not question.customer_id:
+            continue
+        sources = reply.metadata.get("sources") or []
+        skus = [s for s in sources if isinstance(s, str) and SKU_RE.match(s) and s in catalog]
+        if not skus:
+            continue
+        intent = bool(PURCHASE_INTENT_RE.search(question.content))
+        if not intent and sources[0] != skus[0]:
+            continue  # question sur une politique, qui a seulement fait remonter des produits
+        lead = leads.setdefault(question.customer_id, {
+            "customer_id": question.customer_id, "channel": reply.channel,
+            "recontactable": reply.channel in RECONTACTABLE_CHANNELS,
+            "language": question.metadata.get("language"),
+            "first_seen": question.created_at, "last_seen": question.created_at,
+            "product_questions": 0, "purchase_intent": False, "last_question": question.content,
+            "_products": Counter(),
+        })
+        lead["product_questions"] += 1
+        lead["purchase_intent"] = lead["purchase_intent"] or intent
+        lead["first_seen"] = min(lead["first_seen"], question.created_at)
+        if question.created_at >= lead["last_seen"]:
+            lead["last_seen"] = question.created_at
+            lead["last_question"] = question.content
+        lead["_products"].update(skus[:2])  # au-delà, souvent des produits voisins sans rapport
+    # Intention d'achat d'abord, puis les plus récents
+    ranked = sorted(leads.values(), key=lambda lead: (not lead["purchase_intent"], -lead["last_seen"].timestamp()))
+    result = []
+    for lead in ranked[:limit]:
+        products = [{"sku": sku, **catalog[sku]} for sku, _ in lead.pop("_products").most_common(3)]
+        result.append({**lead, "products": products})
+    return result
+
+
 async def load_period(db: AsyncSession, since: datetime) -> tuple:
     """Conversations commencées et messages écrits depuis `since`."""
     conv_rows = await db.execute(text("""
@@ -225,7 +310,8 @@ async def load_period(db: AsyncSession, since: datetime) -> tuple:
         WHERE m.created_at >= :since
     """), {"since": since})
     messages = [MessageRow(conversation_id=r[0], channel=real_channel(r[1], r[2]), role=r[3], content=r[4],
-                           metadata=r[5] or {}, processing_time_ms=r[6], created_at=r[7]) for r in msg_rows]
+                           metadata=r[5] or {}, processing_time_ms=r[6], created_at=r[7], customer_id=r[2])
+                for r in msg_rows]
     return conversations, messages
 
 
@@ -233,4 +319,17 @@ async def compute_stats(db: AsyncSession, days: int, now: Optional[datetime] = N
     until = now or datetime.now(timezone.utc)
     since = until - timedelta(days=days)
     conversations, messages = await load_period(db, since)
-    return build_stats(conversations, messages, since, until)
+    stats = build_stats(conversations, messages, since, until)
+    leads = build_leads(messages, product_catalog(), limit=len(messages) or 1)
+    stats["leads"] = {
+        "total": len(leads),
+        "purchase_intent": sum(1 for lead in leads if lead["purchase_intent"]),
+        "recontactable": sum(1 for lead in leads if lead["recontactable"]),
+    }
+    return stats
+
+
+async def compute_leads(db: AsyncSession, days: int, limit: int = 50) -> list:
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    _, messages = await load_period(db, since)
+    return build_leads(messages, product_catalog(), limit=limit)

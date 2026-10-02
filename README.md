@@ -7,7 +7,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-1.4.1-FF6F00)
-![Tests](https://img.shields.io/badge/tests-544%20au%20vert-2EA44F)
+![Tests](https://img.shields.io/badge/tests-563%20au%20vert-2EA44F)
 
 [Fonctionnalités](#fonctionnalités) ·
 [Architecture](#architecture) ·
@@ -101,6 +101,12 @@
   mené à un transfert « réponse non trouvée » ou à une réponse « je n'ai
   pas l'information », regroupées et comptées, à ajouter à la base de
   connaissances.
+- **Prospects** (même page, export CSV) : clients qui se sont renseignés
+  sur un produit, avec les produits d'intérêt (nom, prix), le nombre de
+  questions, la dernière question, l'intention d'achat exprimée (prix,
+  disponibilité, achat, dans les 4 langues) et le canal pour les
+  recontacter. Déduits de l'historique (références produits citées par
+  les réponses RAG), sans table ni saisie supplémentaires.
 
 ### Persistance et sécurité
 
@@ -297,7 +303,7 @@ Les principales :
 | --- | --- |
 | <http://localhost:8000/chat-demo> | Interface de démonstration (chat en temps réel) |
 | <http://localhost:8000/admin> | Tableau de bord des conseillers (identifiants requis) |
-| <http://localhost:8000/admin/statistiques> | Statistiques et questions sans réponse (identifiants requis) |
+| <http://localhost:8000/admin/statistiques> | Statistiques, questions sans réponse et prospects (identifiants requis) |
 | <http://localhost:8000/docs> | Documentation interactive de l'API (Swagger) |
 | <http://localhost:8080> | Adminer (administration PostgreSQL) |
 
@@ -309,7 +315,7 @@ Les principales :
 | Web (temps réel) | `GET /chat/session` (identifiant signé), puis `WS /ws/{client_id}?signature=…` |
 | WhatsApp Business Cloud API | `GET` / `POST /webhook/whatsapp` |
 | Facebook Messenger | `GET` / `POST /webhook/messenger` |
-| Conseillers | `GET /admin`, `GET /admin/me`, `GET /admin/stats?days=30`, `GET /admin/escalations`, `GET /admin/escalations/{id}/messages`, `POST /admin/escalations/{id}/reply`, `POST /admin/escalations/{id}/resolve` |
+| Conseillers | `GET /admin`, `GET /admin/me`, `GET /admin/stats?days=30`, `GET /admin/leads`, `GET /admin/leads.csv`, `GET /admin/escalations`, `GET /admin/escalations/{id}/messages`, `POST /admin/escalations/{id}/reply`, `POST /admin/escalations/{id}/resolve` |
 | Comptes conseillers (rôle admin) | `GET` / `POST /admin/agents`, `POST /admin/agents/{id}/deactivate`, `/activate`, `PUT /admin/agents/{id}/password` |
 | Utilisateurs (rôle admin) | `/users/` |
 | Supervision | `GET /health` |
@@ -461,9 +467,9 @@ Limites actuelles :
 ## Tests
 
 ```bash
-pytest tests/                        # suite complète : 544 tests, ~2 min 30
-pytest tests/ -m "not integration"   # 420 tests unitaires, ~15 s, sans aucun service
-pytest tests/ -m integration         # 124 tests d'intégration
+pytest tests/                        # suite complète : 563 tests, ~2 min 30
+pytest tests/ -m "not integration"   # 438 tests unitaires, ~15 s, sans aucun service
+pytest tests/ -m integration         # 125 tests d'intégration
 ```
 
 Les tests couvrent la détection de langue, la classification (escalade,
@@ -499,7 +505,7 @@ app/
 ├── api/routes/                # chat, websocket, whatsapp, messenger, admin, agents, users
 ├── services/
 │   ├── dialogue_manager.py    # orchestrateur : langue, règles, RAG, LLM, persistance
-│   ├── analytics.py           # statistiques et questions sans réponse (/admin/stats)
+│   ├── analytics.py           # statistiques, questions sans réponse, prospects (/admin/stats, /admin/leads)
 │   ├── intent_classifier.py   # transfert, frustration, politesse, suivi de commande (règles)
 │   ├── language_detector.py   # fr / en / ar / tn
 │   ├── order_tracking.py      # statut des commandes, lu en base
@@ -511,7 +517,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, données de démo, nettoyage, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html et statistiques.html (conseillers)
-tests/                         # suite pytest (544 tests)
+tests/                         # suite pytest (563 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -543,6 +549,7 @@ déroulable en dessous.
 | Qualité des réponses | Régression du reranker en arabe ; questions anglaises parfois mal servies par une base rédigée en français |
 | Suivi de commande | Données fictives ; numéro de commande seule clé d'accès, numéros séquentiels |
 | Tests | Les tests d'intégration consomment le quota Groq et écrivent dans la base locale |
+| Statistiques et prospects | Règles de comptage simples (voir le détail) ; données en mémoire, adaptées à une petite boutique |
 
 <details>
 <summary>Mise en production</summary>
@@ -709,6 +716,29 @@ déroulable en dessous.
   domaine** ; il isole rarement les questions du domaine mal couvertes
   par la base (catalogue très large). Les deux mécanismes contre le
   hors-sujet (seuil et consigne du LLM) se recouvrent en partie.
+
+</details>
+
+<details>
+<summary>Statistiques et prospects</summary>
+
+- Une conversation « traitée sans conseiller » est une conversation jamais
+  transférée : cela ne garantit pas que le client a obtenu sa réponse
+  (il peut être parti sans rien dire).
+- Les questions « je n'ai pas l'information » sont reconnues par
+  mots-clés, comme pour le compteur de boucle RAG : une formulation
+  inédite du LLM n'est pas comptée.
+- Un prospect est reconnu à partir des sources des réponses RAG et de
+  mots d'intention d'achat : un client qui cite un produit sans que la
+  recherche le retrouve n'apparaît pas. Pas de statut de suivi
+  commercial (« recontacté », « converti ») : l'export CSV sert à ce
+  suivi.
+- Les messages de la période sont chargés en mémoire pour le calcul :
+  adapté à quelques milliers de messages par mois ; au-delà, il faudrait
+  agréger en SQL.
+- Les clients du chat du site ne sont joignables que tant que leur
+  onglet est ouvert : ils figurent parmi les prospects, mais marqués
+  « non joignable ».
 
 </details>
 

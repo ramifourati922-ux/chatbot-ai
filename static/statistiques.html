@@ -97,6 +97,11 @@
     display: inline-block; border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 600;
     background: var(--escalate-bg); color: var(--escalate-text); margin: 0 4px 4px 0; white-space: nowrap;
   }
+  .tag.channel-tag { background: #eef2ff; color: var(--primary); }
+  .tag.muted { background: #f3f4f6; color: var(--text-muted); }
+  .customer { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; color: var(--text-muted); word-break: break-all; margin-bottom: 6px; }
+  .export { float: right; font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none; }
+  .export:hover { text-decoration: underline; }
   .chart { padding: 14px 18px 18px; }
   .chart svg { width: 100%; height: 190px; display: block; }
   .legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); padding: 0 18px 14px; }
@@ -294,7 +299,41 @@
     return box;
   }
 
-  function render(s) {
+  function leadsTable(leads) {
+    const box = card("Prospects",
+      "Clients qui se sont renseignés sur un produit : intention d'achat (prix, disponibilité, achat) d'abord, " +
+      "puis les plus récents. Sur WhatsApp et Messenger, ils peuvent être recontactés.");
+    const exportLink = el("a", "export", "Exporter en CSV");
+    exportLink.href = `/admin/leads.csv?days=${days}`;
+    box.querySelector("h2").append(exportLink);
+    if (!leads.length) { box.append(el("div", "empty", "Aucun prospect sur la période.")); return box; }
+    const table = el("table");
+    const head = el("tr");
+    head.append(el("th", null, "Client"), el("th", null, "Produits d'intérêt"), el("th", "num", "Questions"),
+                el("th", null, "Dernière question"), el("th", "num", "Dernier contact"));
+    table.append(head);
+    for (const lead of leads) {
+      const tr = el("tr");
+      const who = el("td");
+      who.append(el("div", "customer", lead.customer_id));
+      const tags = el("div");
+      tags.append(el("span", "tag channel-tag", label(CHANNELS, lead.channel)));
+      if (lead.purchase_intent) tags.append(el("span", "tag", "Intention d'achat"));
+      if (!lead.recontactable) tags.append(el("span", "tag muted", "Non joignable"));
+      who.append(tags);
+      const products = el("td");
+      for (const p of lead.products) {
+        products.append(el("div", null, `${p.name} — ${p.price_dt.toFixed(2)} DT`));
+      }
+      tr.append(who, products, el("td", "num", fmt(lead.product_questions)), el("td", "question", lead.last_question),
+                el("td", "num", new Date(lead.last_seen).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })));
+      table.append(tr);
+    }
+    box.append(table);
+    return box;
+  }
+
+  function render(s, leads) {
     content.replaceChildren();
     const c = s.conversations;
     const latency = (l) => l ? `${fmt(l.median_ms)} ms` : "—";
@@ -307,23 +346,27 @@
       kpi("Temps de réponse RAG", latency(s.latency.rag),
           s.latency.rag ? `médiane · 90 % sous ${fmt(s.latency.rag.p90_ms)} ms` : "médiane"),
       kpi("Temps sans LLM", latency(s.latency.sans_llm), "politesse, transferts, commandes"),
+      kpi("Prospects", fmt(s.leads.total),
+          `${fmt(s.leads.purchase_intent)} avec intention d'achat · ${fmt(s.leads.recontactable)} joignable(s)`),
     );
     const row1 = el("div", "grid2");
     row1.append(countTable("Réponses du bot par type", s.replies_by_type, REPLY_TYPES),
                 countTable("Transferts par raison", s.transfers_by_reason, REASONS, true));
     const row2 = el("div", "grid2");
     row2.append(channelTable(s.by_channel), countTable("Messages par langue", s.by_language, LANGUAGES));
-    content.append(kpis, dailyChart(s.daily), row1, row2, unansweredTable(s.unanswered_questions));
+    content.append(kpis, dailyChart(s.daily), row1, row2, unansweredTable(s.unanswered_questions), leadsTable(leads));
   }
 
   async function load() {
     periodLabel.textContent = "Chargement…";
     try {
-      const response = await fetch(`/admin/stats?days=${days}`);
-      if (response.status === 429) throw new Error("Trop de tentatives de connexion : réessayez dans quelques minutes.");
-      if (!response.ok) throw new Error(`Erreur ${response.status}`);
-      const stats = await response.json();
-      render(stats);
+      const responses = await Promise.all([fetch(`/admin/stats?days=${days}`), fetch(`/admin/leads?days=${days}`)]);
+      for (const response of responses) {
+        if (response.status === 429) throw new Error("Trop de tentatives de connexion : réessayez dans quelques minutes.");
+        if (!response.ok) throw new Error(`Erreur ${response.status}`);
+      }
+      const [stats, leads] = await Promise.all(responses.map((r) => r.json()));
+      render(stats, leads);
       const since = new Date(stats.since).toLocaleDateString("fr-FR");
       periodLabel.textContent = `Du ${since} à aujourd'hui (${days} jours)`;
     } catch (err) {
