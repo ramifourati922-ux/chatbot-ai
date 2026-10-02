@@ -7,7 +7,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-1.4.1-FF6F00)
-![Tests](https://img.shields.io/badge/tests-512%20au%20vert-2EA44F)
+![Tests](https://img.shields.io/badge/tests-518%20au%20vert-2EA44F)
 
 [Fonctionnalités](#fonctionnalités) ·
 [Architecture](#architecture) ·
@@ -268,6 +268,7 @@ Les principales :
 | `RAG_RETRIEVAL_MODE` | Non | `advanced` (défaut), `hybrid` ou `basic` |
 | `RAG_CONFIDENCE_THRESHOLD` | Non | Seuil de confiance sous lequel la question est transférée (défaut : 0,35) |
 | `RATE_LIMIT_CHAT`, `RATE_LIMIT_WS_MESSAGES`, `RATE_LIMIT_WS_CONNECTIONS`, `RATE_LIMIT_USERS` | Non | Limites de débit par adresse IP |
+| `RATE_LIMIT_LOGIN_FAILURES` | Non | Échecs de connexion tolérés avant blocage (défaut : 5 en 15 minutes, par IP et par identifiant) |
 | `SQL_ECHO` | Non | Journal SQL, pour déboguer uniquement (désactivé par défaut) |
 
 > [!WARNING]
@@ -451,8 +452,8 @@ Limites actuelles :
 ## Tests
 
 ```bash
-pytest tests/                        # suite complète : 512 tests, ~2 min 30
-pytest tests/ -m "not integration"   # 389 tests unitaires, ~15 s, sans aucun service
+pytest tests/                        # suite complète : 518 tests, ~2 min 30
+pytest tests/ -m "not integration"   # 395 tests unitaires, ~15 s, sans aucun service
 pytest tests/ -m integration         # 123 tests d'intégration
 ```
 
@@ -500,7 +501,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, données de démo, nettoyage, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html (conseillers)
-tests/                         # suite pytest (512 tests)
+tests/                         # suite pytest (518 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -527,7 +528,7 @@ déroulable en dessous.
 | Domaine | Limite principale |
 | --- | --- |
 | Mise en production | Pas de `Dockerfile` pour l'API ni d'intégration continue ; WhatsApp sur le numéro de test de Meta ; offre gratuite de Groq |
-| Sécurité | Essais de mot de passe non limités sur `/admin` ; aucune authentification des clients sur `/chat/` et `/ws` |
+| Sécurité | Aucune authentification des clients sur `/chat/` et `/ws` ; HTTP Basic pour les conseillers (pas de vraie déconnexion) |
 | Relais humain | Client du site joignable seulement tant que son onglet est ouvert ; notifications seulement dans le navigateur |
 | Qualité des réponses | Régression du reranker en arabe ; questions anglaises parfois mal servies par une base rédigée en français |
 | Suivi de commande | Données fictives ; numéro de commande seule clé d'accès, numéros séquentiels |
@@ -577,10 +578,14 @@ déroulable en dessous.
   à supprimer s'ils ont été conservés.
 - `/admin` et `/users/` : un compte par conseiller, deux rôles
   seulement (`conseiller`, `admin`), sans permissions plus fines ni
-  journal des connexions. Les tentatives de connexion ne sont pas
-  limitées : l'authentification est vérifiée avant la limitation de
-  débit, donc les essais de mot de passe refusés (401) ne sont pas
-  comptés, et `/admin` n'a pas de limite.
+  journal des connexions. **Échecs de connexion limités** : après 5
+  échecs en 15 minutes (`RATE_LIMIT_LOGIN_FAILURES`) pour une même
+  adresse IP **ou** un même identifiant, toute tentative est refusée
+  (429), bon mot de passe compris, jusqu'à la fin de la fenêtre ; les
+  connexions réussies ne sont pas comptées. Le compteur par identifiant
+  freine une attaque répartie sur plusieurs IP, mais permet aussi à un
+  tiers de bloquer temporairement un compte (15 minutes au plus) ;
+  compteurs en mémoire, comme les autres limites.
 - Les routes `/chat/` et `/ws/{client_id}`, destinées aux clients, n'ont
   **aucune authentification**. Une **limitation de débit par adresse
   IP** freine les abus (épuisement du quota Groq, appels en boucle) sans
@@ -713,8 +718,9 @@ déroulable en dessous.
 - [x] Séparation des tests unitaires et d'intégration (marqueur `integration`)
 - [ ] `Dockerfile` et intégration continue (tests unitaires à chaque push,
       tests d'intégration avec PostgreSQL et Redis en services)
-- [ ] Limitation des tentatives de connexion sur `/admin` ; connexion par
-      session plutôt que HTTP Basic ; écran de gestion des comptes
+- [x] Limitation des tentatives de connexion sur `/admin` et `/users/`
+- [ ] Connexion par session plutôt que HTTP Basic ; écran de gestion des
+      comptes
 - [ ] Authentification des clients sur l'API
 - [ ] Reranking réservé au français et à l'anglais (régression mesurée en
       arabe) ; normalisation de l'arabizi avant la recherche

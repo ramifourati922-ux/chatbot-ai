@@ -173,6 +173,10 @@ class Settings(BaseSettings):
     # /users/ (toutes routes confondues) : plus strict, aucun usage
     # légitime en rafale (l'interface de démo ne l'appelle jamais).
     RATE_LIMIT_USERS: str = "10/minute"
+    # Connexion à /admin et /users/ : échecs tolérés par IP ET par
+    # identifiant (attaque répartie sur plusieurs IP) avant blocage (429),
+    # mot de passe correct compris, jusqu'à la fin de la fenêtre.
+    RATE_LIMIT_LOGIN_FAILURES: str = "5/15 minutes"
 
     @property
     def whatsapp_enabled(self) -> bool:

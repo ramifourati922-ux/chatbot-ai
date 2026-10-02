@@ -87,6 +87,17 @@ async def agent_accounts():
     await database.engine.dispose(close=False)
 
 
+@pytest.fixture(autouse=True)
+def _reset_rate_limits():
+    """Compteurs de débit et d'échecs de connexion remis à zéro autour de
+    chaque test : sinon les échecs voulus d'un test (mauvais mot de passe)
+    bloqueraient la connexion dans les tests suivants (même IP)."""
+    from app.api import rate_limit
+    rate_limit.reset()
+    yield
+    rate_limit.reset()
+
+
 @pytest.fixture
 def sign_whatsapp(monkeypatch):
     """

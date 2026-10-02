@@ -1,6 +1,7 @@
 # app/api/rate_limit.py
 """
-Limitation de débit par adresse IP : POST /chat/, /users/ et /ws.
+Limitation de débit par adresse IP : POST /chat/, /users/ et /ws, et
+échecs de connexion des conseillers (par IP et par identifiant).
 
 - HTTP : slowapi (décorateurs sur les routes, réponse 429).
 - WebSocket : slowapi ne s'applique qu'aux requêtes HTTP (son décorateur
@@ -47,6 +48,27 @@ async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) 
         status_code=429,
         content={"detail": f"Trop de requêtes (limite : {exc.detail}). Réessayez dans un instant."},
     )
+
+
+# ── Échecs de connexion (/admin, /users/) ───────────────────────────────
+# Seuls les échecs sont comptés : un conseiller qui se connecte souvent
+# n'est jamais bloqué. Deux compteurs : par IP, et par identifiant (une
+# attaque répartie sur plusieurs IP vise le même compte).
+
+
+def _login_keys(ip: str, username: str) -> list:
+    return [("login-fail-ip", ip), ("login-fail-user", username.strip().lower())]
+
+
+def login_blocked(ip: str, username: str) -> bool:
+    limit = parse(settings.RATE_LIMIT_LOGIN_FAILURES)
+    return any(not limiter.limiter.test(limit, scope, key) for scope, key in _login_keys(ip, username))
+
+
+def login_failed(ip: str, username: str) -> None:
+    limit = parse(settings.RATE_LIMIT_LOGIN_FAILURES)
+    for scope, key in _login_keys(ip, username):
+        limiter.limiter.hit(limit, scope, key)
 
 
 # ── WebSocket ───────────────────────────────────────────────────────────

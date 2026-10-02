@@ -12,11 +12,16 @@ rattachées (traçabilité).
 
 HTTP Basic transmet les identifiants encodés (base64), non chiffrés :
 HTTPS obligatoire en production.
+
+Essais de mot de passe : après RATE_LIMIT_LOGIN_FAILURES échecs (par IP
+ou par identifiant), toute tentative est refusée en 429, mot de passe
+correct compris, jusqu'à la fin de la fenêtre (voir rate_limit.py).
 """
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
+from app.api import rate_limit
 from app.services.agent_auth import AuthenticatedAgent, authenticate
 
 REALM = "Liss Strike - conseillers"
@@ -25,9 +30,19 @@ REALM = "Liss Strike - conseillers"
 _security = HTTPBasic(realm=REALM)
 
 
-async def require_agent(credentials: HTTPBasicCredentials = Depends(_security)) -> AuthenticatedAgent:
+async def require_agent(request: Request,
+                        credentials: HTTPBasicCredentials = Depends(_security)) -> AuthenticatedAgent:
+    ip = request.client.host if request.client else "inconnue"
+    if rate_limit.login_blocked(ip, credentials.username):
+        # Vérifié AVANT le mot de passe : pendant le blocage, même le bon
+        # mot de passe est refusé (sinon le blocage ne ralentirait rien).
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Trop de tentatives de connexion échouées. Réessayez dans quelques minutes.",
+        )
     agent = await authenticate(credentials.username, credentials.password)
     if agent is None:
+        rate_limit.login_failed(ip, credentials.username)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Identifiants incorrects",
