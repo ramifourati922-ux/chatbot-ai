@@ -62,8 +62,8 @@ def test_purchase_intent_counts_even_when_a_policy_comes_first():
     assert lead["products"][0]["sku"] == "LS-MO-000017"
 
 
-@pytest.mark.parametrize("question", ["b9adeh el arduino ?", "بكم الأردوينو؟", "how much is the arduino?",
-                                      "Est-il disponible en stock ?"])
+@pytest.mark.parametrize("question", ["b9adeh el arduino ?", "بكم Arduino Uno؟", "how much is the arduino?",
+                                      "L'Arduino est-il disponible en stock ?"])
 def test_purchase_intent_in_the_four_languages(question):
     [lead] = build_leads(exchange("c1", question, ["LS-CP-000001"]), CATALOG)
     assert lead["purchase_intent"] is True
@@ -86,6 +86,27 @@ def test_leads_with_purchase_intent_come_first_then_most_recent():
                 + exchange("recent-intention", "combien coûte l'arduino ?", ["LS-CP-000001"], 20))
     assert [lead["customer_id"] for lead in build_leads(messages, CATALOG)] == \
         ["recent-intention", "ancien-intention", "recent"]
+
+
+def test_off_topic_question_that_brought_up_products_is_not_a_lead():
+    """Faux positif constaté sur de vraies données : « combien » (intention
+    d'achat) et des panneaux solaires en sources, sans rapport avec la question."""
+    catalog = {**CATALOG, "LS-AL-000042": {"name": "Panneau solaire 5V 1W", "category": "Alimentation",
+                                            "price_dt": 14.77}}
+    assert build_leads(exchange("c1", "Combien de lunes a la planète Jupiter ?", ["LS-AL-000042"]), catalog) == []
+
+
+def test_no_lead_when_the_bot_did_not_find_the_product():
+    """Faux positif constaté : le bot répond ne pas avoir l'information, les
+    produits en sources ne sont pas ceux demandés."""
+    messages = exchange("c1", "b9adeh el arduino ?", ["LS-CP-000001"])
+    messages[1].content = "Je n'ai pas l'information sur ce produit."
+    assert build_leads(messages, CATALOG) == []
+
+
+def test_product_name_in_arabic_script_is_a_known_limit():
+    """Le catalogue est en français : « أردوينو » ne correspond à aucun nom."""
+    assert build_leads(exchange("c1", "بكم أردوينو أونو؟", ["LS-CP-000001"]), CATALOG) == []
 
 
 def test_web_customer_is_not_recontactable():

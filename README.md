@@ -7,7 +7,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-1.4.1-FF6F00)
-![Tests](https://img.shields.io/badge/tests-563%20au%20vert-2EA44F)
+![Tests](https://img.shields.io/badge/tests-566%20au%20vert-2EA44F)
 
 [Fonctionnalités](#fonctionnalités) ·
 [Architecture](#architecture) ·
@@ -467,8 +467,8 @@ Limites actuelles :
 ## Tests
 
 ```bash
-pytest tests/                        # suite complète : 563 tests, ~2 min 30
-pytest tests/ -m "not integration"   # 438 tests unitaires, ~15 s, sans aucun service
+pytest tests/                        # suite complète : 566 tests, ~2 min 30
+pytest tests/ -m "not integration"   # 441 tests unitaires, ~15 s, sans aucun service
 pytest tests/ -m integration         # 125 tests d'intégration
 ```
 
@@ -517,7 +517,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, données de démo, nettoyage, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html et statistiques.html (conseillers)
-tests/                         # suite pytest (563 tests)
+tests/                         # suite pytest (566 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -728,9 +728,11 @@ déroulable en dessous.
 - Les questions « je n'ai pas l'information » sont reconnues par
   mots-clés, comme pour le compteur de boucle RAG : une formulation
   inédite du LLM n'est pas comptée.
-- Un prospect est reconnu à partir des sources des réponses RAG et de
-  mots d'intention d'achat : un client qui cite un produit sans que la
-  recherche le retrouve n'apparaît pas. Pas de statut de suivi
+- Un prospect est une question qui **nomme** un produit cité par la
+  réponse RAG (un mot commun avec son nom), sauf si le bot a répondu ne
+  pas avoir l'information. Un client qui cite un produit sans que la
+  recherche le retrouve n'apparaît pas, ni un nom de produit écrit en
+  lettres arabes (le catalogue est en français). Pas de statut de suivi
   commercial (« recontacté », « converti ») : l'export CSV sert à ce
   suivi.
 - Les messages de la période sont chargés en mémoire pour le calcul :

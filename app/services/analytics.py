@@ -245,27 +245,49 @@ def product_catalog() -> dict:
                 for row in csv.DictReader(f)}
 
 
+# Mots trop généraux pour désigner un produit (comparaison sans accents)
+_GENERIC_WORDS = {
+    "les", "des", "une", "pour", "avec", "sans", "est", "vous", "avez", "quel", "quelle", "prix", "combien",
+    "the", "and", "for", "with", "you", "have", "how", "much", "what", "price",
+    "original", "compatible", "clone", "module", "carte", "kit", "version",
+}
+
+
+def _product_words(text_: str) -> set:
+    return {w for w in normalize_question(text_).split() if len(w) >= 3 and w not in _GENERIC_WORDS}
+
+
+def _names_a_product(question: str, product_names: list) -> bool:
+    """La question partage-t-elle un mot significatif avec le nom d'un produit cité ?"""
+    asked = _product_words(question)
+    return any(asked & _product_words(name) for name in product_names)
+
+
 def build_leads(messages: list, catalog: dict, limit: int = 50) -> list:
     """
     Prospects : clients qui se sont renseignés sur un produit (fonction pure).
 
-    Une question compte si la réponse RAG s'appuie sur une fiche produit en
-    première source (la question portait sur ce produit), ou si elle
-    exprime une intention d'achat (prix, disponibilité, achat) et que la
-    réponse cite des produits. Les produits d'intérêt sont les deux
-    premières sources produit de chaque réponse, les plus fréquents d'abord.
+    Une question compte si la réponse RAG cite des fiches produits ET que
+    la question nomme l'un de ces produits (un mot commun avec son nom :
+    « arduino », « nema17 », « hc sr04 »…), sauf si le bot a répondu ne pas
+    avoir l'information. Sans cette condition, une question hors sujet ou
+    sur une politique qui a seulement fait remonter des produits voisins
+    passait pour un prospect (« Combien de lunes a Jupiter ? » → panneaux
+    solaires). Limite : un nom de produit écrit en lettres arabes ne
+    correspond pas au catalogue, rédigé en français.
+    L'intention d'achat (prix, disponibilité, achat) sert au tri. Les
+    produits d'intérêt sont les deux premières sources produit de chaque
+    réponse, les plus fréquents d'abord.
     """
     leads = {}
     for question, reply in question_reply_pairs(messages):
-        if reply_type(reply.metadata) != "rag" or not question.customer_id:
+        if reply_type(reply.metadata) != "rag" or not question.customer_id or _is_no_info_answer(reply.content):
             continue
         sources = reply.metadata.get("sources") or []
-        skus = [s for s in sources if isinstance(s, str) and SKU_RE.match(s) and s in catalog]
-        if not skus:
+        skus = [s for s in sources if isinstance(s, str) and SKU_RE.match(s) and s in catalog][:2]
+        if not skus or not _names_a_product(question.content, [catalog[s]["name"] for s in skus]):
             continue
         intent = bool(PURCHASE_INTENT_RE.search(question.content))
-        if not intent and sources[0] != skus[0]:
-            continue  # question sur une politique, qui a seulement fait remonter des produits
         lead = leads.setdefault(question.customer_id, {
             "customer_id": question.customer_id, "channel": reply.channel,
             "recontactable": reply.channel in RECONTACTABLE_CHANNELS,
@@ -280,7 +302,7 @@ def build_leads(messages: list, catalog: dict, limit: int = 50) -> list:
         if question.created_at >= lead["last_seen"]:
             lead["last_seen"] = question.created_at
             lead["last_question"] = question.content
-        lead["_products"].update(skus[:2])  # au-delà, souvent des produits voisins sans rapport
+        lead["_products"].update(skus)  # 2 premières : au-delà, souvent des produits voisins sans rapport
     # Intention d'achat d'abord, puis les plus récents
     ranked = sorted(leads.values(), key=lambda lead: (not lead["purchase_intent"], -lead["last_seen"].timestamp()))
     result = []
