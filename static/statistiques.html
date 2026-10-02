@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liss Strike — Statistiques</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Mêmes couleurs que le tableau de bord (static/admin.html) */
+  :root {
+    --bg-a: #eef1fb;
+    --bg-b: #f8f9fd;
+    --panel: #ffffff;
+    --border: #e6e8f2;
+    --text: #191c28;
+    --text-muted: #6b7280;
+    --primary: #4338ca;
+    --primary-light: #6366f1;
+    --primary-dark: #312a91;
+    --accent-green: #10b981;
+    --escalate-border: #f59e0b;
+    --escalate-bg: #fff7ed;
+    --escalate-text: #92400e;
+    --danger: #dc2626;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-a) 100%);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    background: linear-gradient(120deg, var(--primary-dark), var(--primary) 55%, var(--primary-light));
+    color: #fff;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header h1 { margin: 0; font-size: 20px; font-weight: 700; }
+  header p { margin: 4px 0 0; font-size: 13px; opacity: .85; }
+  header a { color: #fff; font-weight: 600; font-size: 14px; text-decoration: none; opacity: .9; }
+  header a:hover { opacity: 1; text-decoration: underline; }
+  main { max-width: 1100px; margin: 28px auto; padding: 0 20px; }
+  .toolbar {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 18px; color: var(--text-muted); font-size: 13px;
+  }
+  .period { display: flex; gap: 6px; }
+  .period button {
+    background: var(--panel); border: 1px solid var(--border); color: var(--primary);
+    border-radius: var(--radius-sm); padding: 7px 14px; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .period button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 30px rgba(49, 42, 145, .08);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .card h2 { margin: 0; padding: 16px 18px 0; font-size: 15px; font-weight: 700; }
+  .card .hint { margin: 4px 18px 0; font-size: 13px; color: var(--text-muted); }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .kpi { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+  .kpi .label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .kpi .value { font-size: 28px; font-weight: 700; margin-top: 6px; }
+  .kpi .sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .kpi.main { border-color: var(--primary-light); background: #eef2ff; }
+  .kpi.main .value { color: var(--primary); }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .grid2 .card { margin-bottom: 0; }
+  .grid2 + .card, .grid2 + .grid2 { margin-top: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--text-muted); font-weight: 600; padding: 12px 18px; border-bottom: 1px solid var(--border);
+  }
+  td { padding: 11px 18px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  .bar { height: 8px; border-radius: 4px; background: var(--primary-light); min-width: 2px; }
+  .bar.escalate { background: var(--escalate-border); }
+  .question { word-wrap: break-word; max-width: 460px; }
+  .tag {
+    display: inline-block; border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 600;
+    background: var(--escalate-bg); color: var(--escalate-text); margin: 0 4px 4px 0; white-space: nowrap;
+  }
+  .chart { padding: 14px 18px 18px; }
+  .chart svg { width: 100%; height: 190px; display: block; }
+  .legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); padding: 0 18px 14px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .legend .l-msg::before { background: var(--primary-light); }
+  .legend .l-tr::before { background: var(--escalate-border); }
+  .empty { padding: 18px; color: var(--text-muted); font-size: 14px; }
+  .error { padding: 18px; color: var(--danger); font-weight: 600; }
+  .note { color: var(--text-muted); font-size: 12px; margin-top: 18px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Liss Strike — Statistiques</h1>
+    <p>Ce que l'assistant traite seul, ce qu'il transfère, et les questions auxquelles il ne sait pas répondre</p>
+  </div>
+  <a href="/admin">← Conversations transférées</a>
+</header>
+
+<main>
+  <div class="toolbar">
+    <span id="period-label">Chargement…</span>
+    <div class="period" role="group" aria-label="Période">
+      <button type="button" data-days="7" aria-pressed="false">7 jours</button>
+      <button type="button" data-days="30" aria-pressed="true">30 jours</button>
+      <button type="button" data-days="90" aria-pressed="false">90 jours</button>
+    </div>
+  </div>
+  <div id="content"></div>
+  <p class="note">Calculé à partir de l'historique enregistré en base. Une conversation est « traitée seule » si elle n'a jamais été transférée à un conseiller. Les jours sont comptés à l'heure de Tunis.</p>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  // Mêmes libellés que static/admin.html
+  const REASONS = {
+    explicit: "Demande d'un conseiller",
+    frustration: "Client mécontent",
+    low_rag_confidence: "Réponse non trouvée",
+    repeated_rag_failure: "Échecs répétés",
+    order_tracking: "Suivi de commande",
+  };
+  const CHANNELS = { web: "Web", whatsapp: "WhatsApp", messenger: "Messenger" };
+  const LANGUAGES = { fr: "Français", en: "Anglais", ar: "Arabe", tn: "Tunisien" };
+  const REPLY_TYPES = {
+    rag: "Réponse RAG (LLM)",
+    politesse: "Politesse",
+    suivi_commande: "Suivi de commande",
+    transfert: "Transfert à un conseiller",
+  };
+  const UNANSWERED = {
+    reponse_non_trouvee: "Réponse non trouvée",
+    echecs_repetes: "Échecs répétés",
+    sans_information: "« Je n'ai pas l'information »",
+  };
+
+  const content = document.getElementById("content");
+  const periodLabel = document.getElementById("period-label");
+  const buttons = document.querySelectorAll(".period button");
+  let days = 30;
+
+  // Tout texte venant de la base (questions des clients) passe par
+  // textContent : jamais interprété comme du HTML.
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.textContent = text;
+    return node;
+  }
+  const fmt = (n) => new Intl.NumberFormat("fr-FR").format(n);
+  const pct = (x) => x === null || x === undefined ? "—" : `${Math.round(x * 100)} %`;
+  const label = (map, key) => map[key] || key;
+
+  function kpi(title, value, sub, main) {
+    const box = el("div", "kpi" + (main ? " main" : ""));
+    box.append(el("div", "label", title), el("div", "value", value));
+    if (sub) box.append(el("div", "sub", sub));
+    return box;
+  }
+
+  function card(title, hint) {
+    const box = el("section", "card");
+    box.append(el("h2", null, title));
+    if (hint) box.append(el("p", "hint", hint));
+    return box;
+  }
+
+  // Tableau « libellé · nombre · barre proportionnelle », trié par nombre
+  function countTable(title, counts, map, escalate) {
+    const box = card(title);
+    const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    if (!entries.length) { box.append(el("div", "empty", "Aucune donnée sur la période.")); return box; }
+    const max = Math.max(...entries.map(([, n]) => n));
+    const table = el("table");
+    for (const [key, n] of entries) {
+      const tr = el("tr");
+      const barCell = el("td");
+      barCell.style.width = "40%";
+      const bar = el("div", "bar" + (escalate ? " escalate" : ""));
+      bar.style.width = `${(n / max) * 100}%`;
+      barCell.append(bar);
+      tr.append(el("td", null, label(map, key)), el("td", "num", fmt(n)), barCell);
+      table.append(tr);
+    }
+    box.append(table);
+    return box;
+  }
+
+  function dailyChart(daily) {
+    const box = card("Activité par jour", "Messages des clients et transferts vers un conseiller");
+    const width = 1000, height = 190, pad = 22;
+    const max = Math.max(1, ...daily.map((d) => d.client_messages));
+    const step = (width - pad) / daily.length;
+    const barW = Math.max(2, step * 0.7);
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Messages des clients et transferts par jour");
+    daily.forEach((d, i) => {
+      const x = pad + i * step + (step - barW) / 2;
+      for (const [value, color] of [[d.client_messages, "var(--primary-light)"], [d.transfers, "var(--escalate-border)"]]) {
+        if (!value) continue;
+        const h = (value / max) * (height - pad);
+        const rect = document.createElementNS(svgNS, "rect");
+        rect.setAttribute("x", x); rect.setAttribute("y", height - pad - h);
+        rect.setAttribute("width", barW); rect.setAttribute("height", h);
+        rect.setAttribute("rx", 2); rect.setAttribute("fill", color);
+        const tip = document.createElementNS(svgNS, "title");
+        tip.textContent = `${d.date} : ${d.client_messages} message(s), ${d.transfers} transfert(s)`;
+        rect.append(tip);
+        svg.append(rect);
+      }
+    });
+    const axis = document.createElementNS(svgNS, "line");
+    axis.setAttribute("x1", pad); axis.setAttribute("x2", width);
+    axis.setAttribute("y1", height - pad); axis.setAttribute("y2", height - pad);
+    axis.setAttribute("stroke", "#d1d5db");
+    svg.append(axis);
+    const chart = el("div", "chart");
+    chart.append(svg);
+    const legend = el("div", "legend");
+    legend.append(el("span", "l-msg", `Messages des clients (max ${fmt(max)} par jour)`), el("span", "l-tr", "Transferts"));
+    box.append(chart, legend);
+    return box;
+  }
+
+  function channelTable(byChannel) {
+    const box = card("Par canal");
+    const entries = Object.entries(byChannel).sort((a, b) => b[1].client_messages - a[1].client_messages);
+    if (!entries.length) { box.append(el("div", "empty", "Aucune donnée sur la période.")); return box; }
+    const table = el("table");
+    const head = el("tr");
+    head.append(el("th", null, "Canal"), el("th", "num", "Conversations"), el("th", "num", "Messages"), el("th", "num", "Transferts"));
+    table.append(head);
+    for (const [key, s] of entries) {
+      const tr = el("tr");
+      tr.append(el("td", null, label(CHANNELS, key)), el("td", "num", fmt(s.conversations)),
+                el("td", "num", fmt(s.client_messages)), el("td", "num", fmt(s.transfers)));
+      table.append(tr);
+    }
+    box.append(table);
+    return box;
+  }
+
+  function unansweredTable(items) {
+    const box = card("Questions sans réponse",
+      "Questions transférées faute de réponse, ou auxquelles le bot a répondu ne pas avoir l'information : " +
+      "les ajouter à la base de connaissances améliore directement le taux de réponse.");
+    if (!items.length) { box.append(el("div", "empty", "Aucune question sans réponse sur la période.")); return box; }
+    const table = el("table");
+    const head = el("tr");
+    head.append(el("th", null, "Question du client"), el("th", "num", "Fois"), el("th", null, "Langue"),
+                el("th", null, "Canal"), el("th", null, "Raison"), el("th", "num", "Dernière fois"));
+    table.append(head);
+    for (const q of items) {
+      const tr = el("tr");
+      const reasons = el("td");
+      for (const r of q.reasons) reasons.append(el("span", "tag", label(UNANSWERED, r)));
+      tr.append(
+        el("td", "question", q.question),
+        el("td", "num", fmt(q.occurrences)),
+        el("td", null, label(LANGUAGES, q.language || "—")),
+        el("td", null, q.channels.map((c) => label(CHANNELS, c)).join(", ")),
+        reasons,
+        el("td", "num", new Date(q.last_asked_at).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })),
+      );
+      table.append(tr);
+    }
+    box.append(table);
+    return box;
+  }
+
+  function render(s) {
+    content.replaceChildren();
+    const c = s.conversations;
+    const latency = (l) => l ? `${fmt(l.median_ms)} ms` : "—";
+    const kpis = el("div", "kpis");
+    kpis.append(
+      kpi("Traitées sans conseiller", pct(c.automation_rate),
+          c.total ? `${fmt(c.automated)} conversation(s) sur ${fmt(c.total)}` : "Aucune conversation", true),
+      kpi("Conversations", fmt(c.total), `${fmt(c.escalated)} transférée(s), ${fmt(c.resolved_by_agents)} traitée(s)`),
+      kpi("Messages des clients", fmt(s.client_messages), `${fmt(s.agent_replies)} réponse(s) de conseillers`),
+      kpi("Temps de réponse RAG", latency(s.latency.rag),
+          s.latency.rag ? `médiane · 90 % sous ${fmt(s.latency.rag.p90_ms)} ms` : "médiane"),
+      kpi("Temps sans LLM", latency(s.latency.sans_llm), "politesse, transferts, commandes"),
+    );
+    const row1 = el("div", "grid2");
+    row1.append(countTable("Réponses du bot par type", s.replies_by_type, REPLY_TYPES),
+                countTable("Transferts par raison", s.transfers_by_reason, REASONS, true));
+    const row2 = el("div", "grid2");
+    row2.append(channelTable(s.by_channel), countTable("Messages par langue", s.by_language, LANGUAGES));
+    content.append(kpis, dailyChart(s.daily), row1, row2, unansweredTable(s.unanswered_questions));
+  }
+
+  async function load() {
+    periodLabel.textContent = "Chargement…";
+    try {
+      const response = await fetch(`/admin/stats?days=${days}`);
+      if (response.status === 429) throw new Error("Trop de tentatives de connexion : réessayez dans quelques minutes.");
+      if (!response.ok) throw new Error(`Erreur ${response.status}`);
+      const stats = await response.json();
+      render(stats);
+      const since = new Date(stats.since).toLocaleDateString("fr-FR");
+      periodLabel.textContent = `Du ${since} à aujourd'hui (${days} jours)`;
+    } catch (err) {
+      content.replaceChildren(el("div", "card error", `Statistiques indisponibles : ${err.message}`));
+      periodLabel.textContent = "";
+    }
+  }
+
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      days = Number(button.dataset.days);
+      for (const b of buttons) b.setAttribute("aria-pressed", String(b === button));
+      load();
+    });
+  }
+  load();
+})();
+</script>
+</body>
+</html>

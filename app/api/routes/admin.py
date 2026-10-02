@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,22 +31,42 @@ from app.config import settings
 from app.log_privacy import safe_error
 from app.db.database import get_db
 from app.db.repositories.conversation_repository import ConversationRepository
+from app.services import analytics
 from app.services.agent_auth import AuthenticatedAgent
 from app.services.dialogue_manager import record_agent_message
 from app.schemas.admin import (
     ConversationHistory, CurrentAgent, EscalationItem, MessageItem, ReplyRequest, ReplyResponse,
-    ResolveResponse,
+    ResolveResponse, StatsResponse,
 )
 
 router = APIRouter(tags=["Admin"], dependencies=[Depends(require_agent)])
 
 _ADMIN_PAGE = Path(__file__).resolve().parents[3] / "static" / "admin.html"
+_STATS_PAGE = Path(__file__).resolve().parents[3] / "static" / "statistiques.html"
 
 
 @router.get("/admin", include_in_schema=False)
 async def admin_page():
     """Page HTML du tableau de bord (liste + bouton « Marquer traitée »)."""
     return FileResponse(_ADMIN_PAGE)
+
+
+@router.get("/admin/statistiques", include_in_schema=False)
+async def stats_page():
+    """Page HTML des statistiques (taux d'automatisation, questions sans réponse)."""
+    return FileResponse(_STATS_PAGE)
+
+
+@router.get("/admin/stats", response_model=StatsResponse)
+async def stats(days: int = Query(30, ge=1, le=365, description="Période, en jours"),
+                db: AsyncSession = Depends(get_db)):
+    """
+    Indicateurs de la période : conversations traitées par le bot seul ou
+    transférées, volumes par canal, langue et jour, réponses par type,
+    transferts par raison, temps de réponse, et questions sans réponse
+    (à ajouter à la base de connaissances). Voir app/services/analytics.py.
+    """
+    return await analytics.compute_stats(db, days)
 
 
 @router.get("/admin/me", response_model=CurrentAgent)

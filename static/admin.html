@@ -57,6 +57,9 @@
     font-size: 14px;
     white-space: nowrap;
   }
+  .header-actions { display: flex; align-items: center; gap: 16px; }
+  .nav { color: #fff; font-weight: 600; font-size: 14px; text-decoration: none; opacity: .9; }
+  .nav:hover { opacity: 1; text-decoration: underline; }
   main { max-width: 1100px; margin: 28px auto; padding: 0 20px; }
   .toolbar {
     display: flex; justify-content: space-between; align-items: center;
@@ -154,7 +157,10 @@
     <h1>Liss Strike — Conversations transférées</h1>
     <p>Clients que l'assistant a transférés à un conseiller<span id="whoami"></span></p>
   </div>
-  <div class="counter" id="counter">…</div>
+  <div class="header-actions">
+    <a class="nav" href="/admin/statistiques">Statistiques</a>
+    <div class="counter" id="counter">…</div>
+  </div>
 </header>
 
 <main>

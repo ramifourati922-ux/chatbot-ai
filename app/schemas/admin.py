@@ -2,8 +2,8 @@
 """Schémas du tableau de bord des conseillers (routes /admin)."""
 
 import uuid
-from datetime import datetime
-from typing import List, Literal, Optional
+from datetime import date, datetime
+from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -82,3 +82,56 @@ class AgentOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ── Statistiques (/admin/stats) ─────────────────────────────────────────
+
+class ConversationStats(BaseModel):
+    total: int = Field(..., description="Conversations commencées pendant la période")
+    automated: int = Field(..., description="Traitées par le bot seul, sans transfert")
+    escalated: int = Field(..., description="Transférées à un conseiller")
+    automation_rate: Optional[float] = Field(None, description="automated / total (0 à 1) ; vide sans conversation")
+    resolved_by_agents: int = Field(..., description="Marquées traitées par un conseiller")
+
+
+class ChannelStats(BaseModel):
+    conversations: int
+    client_messages: int
+    transfers: int
+
+
+class LatencyStats(BaseModel):
+    median_ms: int
+    p90_ms: int
+    count: int
+
+
+class DailyStats(BaseModel):
+    date: date
+    client_messages: int
+    transfers: int
+
+
+class UnansweredQuestion(BaseModel):
+    question: str = Field(..., description="Formulation la plus récente")
+    occurrences: int
+    last_asked_at: datetime
+    language: Optional[str] = None
+    channels: List[str]
+    reasons: List[str] = Field(..., description="reponse_non_trouvee | echecs_repetes | sans_information")
+
+
+class StatsResponse(BaseModel):
+    since: datetime
+    until: datetime
+    conversations: ConversationStats
+    client_messages: int
+    agent_replies: int = Field(..., description="Réponses envoyées par les conseillers")
+    by_channel: Dict[str, ChannelStats]
+    by_language: Dict[str, int]
+    replies_by_type: Dict[str, int] = Field(..., description="rag | politesse | suivi_commande | transfert")
+    transfers_by_reason: Dict[str, int]
+    latency: Dict[str, Optional[LatencyStats]] = Field(..., description="rag (appel au LLM) | sans_llm")
+    daily: List[DailyStats]
+    rag_no_info_answers: int = Field(..., description="Réponses RAG « je n'ai pas l'information »")
+    unanswered_questions: List[UnansweredQuestion]
