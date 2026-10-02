@@ -7,7 +7,6 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-1.4.1-FF6F00)
-![Tests](https://img.shields.io/badge/tests-566%20au%20vert-2EA44F)
 
 [Fonctionnalités](#fonctionnalités) ·
 [Architecture](#architecture) ·
