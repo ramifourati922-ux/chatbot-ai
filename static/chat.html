@@ -256,6 +256,31 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ── Menu d'accueil : boutons qui envoient une question ── */
+  .menu-chips {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .menu-chip {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--primary);
+    background: #fff;
+    border: 1.5px solid var(--primary-light);
+    border-radius: 999px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .menu-chip:hover:not(:disabled) {
+    background: var(--primary);
+    color: #fff;
+  }
+  .menu-chip:disabled { opacity: 0.45; cursor: not-allowed; }
+
   /* ── Composer ───────────────────────────────────────── */
   #composer {
     display: flex;
@@ -417,8 +442,41 @@
     meta.appendChild(details);
 
     row.appendChild(meta);
+    if (Array.isArray(data.menu) && data.menu.length) {
+      row.appendChild(buildMenuChips(data.menu));
+    }
     messagesEl.appendChild(row);
     scrollToBottom();
+  }
+
+  // ── Menu d'accueil — chaque bouton envoie sa question au bot, comme si
+  // le client l'avait tapée (même chemin que sendMessage). Les boutons
+  // d'un menu sont retirés après un clic : le client a fait son choix.
+  function buildMenuChips(options) {
+    const container = document.createElement("div");
+    container.className = "menu-chips";
+    for (const option of options) {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "menu-chip";
+      chip.textContent = option.label;
+      chip.addEventListener("click", () => {
+        if (sendText(option.question)) container.remove();
+      });
+      container.appendChild(chip);
+    }
+    return container;
+  }
+
+  async function showWelcomeMenu() {
+    try {
+      const response = await fetch("/chat/menu?language=fr");
+      if (!response.ok) return;
+      const menu = await response.json();
+      addAssistantMessage({ response: menu.intro, menu: menu.options });
+    } catch (err) {
+      // Menu indisponible : le chat reste utilisable en tapant sa question
+    }
   }
 
   function connect() {
@@ -439,13 +497,17 @@
     };
   }
 
-  function sendMessage() {
-    const text = inputEl.value.trim();
-    if (!text || !ws || ws.readyState !== WebSocket.OPEN) return;
+  // Envoie un texte au bot ; false si la connexion n'est pas ouverte
+  function sendText(text) {
+    if (!text || !ws || ws.readyState !== WebSocket.OPEN) return false;
     addUserMessage(text);
     ws.send(text);
-    inputEl.value = "";
     showTyping();
+    return true;
+  }
+
+  function sendMessage() {
+    if (sendText(inputEl.value.trim())) inputEl.value = "";
   }
 
   sendBtn.addEventListener("click", sendMessage);
@@ -466,6 +528,7 @@
       return;
     }
     connect();
+    showWelcomeMenu();
   }
 
   start();

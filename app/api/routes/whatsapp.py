@@ -25,6 +25,7 @@ from fastapi.responses import PlainTextResponse
 
 from app.config import settings
 from app.log_privacy import mask_id, safe_error
+from app.services import welcome_menu
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(prefix="/webhook/whatsapp", tags=["WhatsApp"])
@@ -95,8 +96,8 @@ def _verify_signature(raw_body: bytes, signature_header: str) -> bool:
     return hmac.compare_digest(expected, received)
 
 
-async def _send_whatsapp_message(to: str, text: str) -> None:
-    """Envoie la réponse du bot au client via l'API Graph de Meta.
+async def _post_to_whatsapp(payload: dict) -> None:
+    """Envoie un message (texte ou interactif) via l'API Graph de Meta.
     Toute erreur ici est remontée à l'appelant (receive_message), qui
     la logue sans jamais faire échouer la réponse au webhook."""
     if not settings.WHATSAPP_ACCESS_TOKEN or not settings.WHATSAPP_PHONE_NUMBER_ID:
@@ -108,15 +109,36 @@ async def _send_whatsapp_message(to: str, text: str) -> None:
 
     url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{settings.WHATSAPP_PHONE_NUMBER_ID}/messages"
     headers = {"Authorization": f"Bearer {settings.WHATSAPP_ACCESS_TOKEN}"}
-    payload = {
-        "messaging_product": "whatsapp",
-        "to": to,
-        "type": "text",
-        "text": {"body": text},
-    }
     async with httpx.AsyncClient(timeout=10) as client:
-        response = await client.post(url, json=payload, headers=headers)
+        response = await client.post(url, json={"messaging_product": "whatsapp", **payload}, headers=headers)
         response.raise_for_status()
+
+
+async def _send_whatsapp_message(to: str, text: str) -> None:
+    """Envoie la réponse du bot au client (texte simple)."""
+    await _post_to_whatsapp({"to": to, "type": "text", "text": {"body": text}})
+
+
+async def _send_whatsapp_menu(to: str, text: str, language: str) -> None:
+    """
+    Envoie la réponse du bot avec le menu d'accueil, sous forme de message
+    interactif « liste » : un bouton ouvre la liste des sujets ; un choix
+    revient au webhook avec l'identifiant du sujet (voir receive_message).
+    Limites Meta : 10 lignes, titre de ligne de 24 caractères au plus.
+    """
+    rows = [{"id": option["id"], "title": option["label"]} for option in welcome_menu.menu(language)]
+    await _post_to_whatsapp({
+        "to": to,
+        "type": "interactive",
+        "interactive": {
+            "type": "list",
+            "body": {"text": f"{text}\n\n{welcome_menu.intro(language)}"},
+            "action": {
+                "button": welcome_menu.list_button(language),
+                "sections": [{"title": "Liss Strike", "rows": rows}],
+            },
+        },
+    })
 
 
 @router.post("")
@@ -159,6 +181,12 @@ async def receive_message(request: Request):
         message_data = messages[0]
         from_number = message_data.get("from")
         text_body = (message_data.get("text") or {}).get("body")
+        if message_data.get("type") == "interactive":
+            # Choix dans le menu d'accueil : Meta renvoie l'identifiant du
+            # sujet choisi, traduit ici en la question du bouton
+            interactive = message_data.get("interactive") or {}
+            choice = interactive.get("list_reply") or interactive.get("button_reply") or {}
+            text_body = welcome_menu.question_for(choice.get("id"))
 
         if not from_number or not text_body:
             # Message sans texte (image, audio, sticker, réaction...) —
@@ -173,7 +201,10 @@ async def receive_message(request: Request):
         if result.handled_by_agent:
             return Response(status_code=200)  # conseiller aux commandes : le bot se tait
         try:
-            await _send_whatsapp_message(from_number, result.response)
+            if welcome_menu.should_offer(result):
+                await _send_whatsapp_menu(from_number, result.response, result.language)
+            else:
+                await _send_whatsapp_message(from_number, result.response)
         except Exception as e:
             logger.error(f"❌ Échec envoi réponse WhatsApp à {mask_id(from_number)}: {safe_error(e)}")
 

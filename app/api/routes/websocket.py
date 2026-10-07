@@ -26,6 +26,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from app.api import rate_limit
 from app.api.web_session import client_id_signature_valid, web_session_id
 from app.config import settings
+from app.services import welcome_menu
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(tags=["WebSocket"])
@@ -155,6 +156,9 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str, signature: st
                 "escalation_reason": result.escalation_reason,
                 # Conseiller aux commandes : réponse vide, rien à afficher
                 "handled_by_agent": result.handled_by_agent,
+                # Menu d'accueil après une salutation, dans la langue du
+                # client ; null sinon (voir welcome_menu.should_offer)
+                "menu": welcome_menu.menu(result.language) if welcome_menu.should_offer(result) else None,
             })
     except WebSocketDisconnect:
         manager.disconnect(client_id)

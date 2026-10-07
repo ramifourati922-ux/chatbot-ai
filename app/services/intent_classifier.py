@@ -120,6 +120,12 @@ _ORDER_TRACKING_PATTERNS = [
     r"\b(status|tracking)\s+of\s+my\s+orders?\b",
     r"\bmy\s+orders?\s+(status|has\s+not|hasn'?t|did\s+not|didn'?t|is\s+late|is\s+delayed)",
     r"^\s*(order\s+(status|tracking)|track\s+(an\s+)?order)\s*[.!?]*\s*$",
+    # ─── Arabe littéraire ─── ("أين وصلت طلبيتي", "تتبع طلبيتي")
+    r"(أين|اين)\s+(وصلت\s+)?(طلبيتي|طلبي|طلباتي)",
+    r"(تتبع|تتبّع|حالة)\s+(طلبيتي|طلبي|طلباتي)",
+    # ─── Tunisien ─── (arabizi : "win wselt el commande mte3i", lettres arabes : "وين الكوموند متاعي")
+    r"\b(win|wein|fin)\s+(wselt\s+)?(el\s+|l\s*)?(commande|cmd)\s+(mte3i|mta3i|mte3ti)\b",
+    r"(وين|فين)\s+(وصلت\s+)?(ال)?(كوموند|طلبية)\s+(متاعي|متاعيا)",
 ]
 
 
