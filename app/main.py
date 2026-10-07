@@ -34,6 +34,9 @@ def _preload_rag():
         hybrid_retriever._get_index()
     if settings.RAG_RETRIEVAL_MODE == "advanced":
         reranker.warmup()
+    if settings.INTENT_MODEL_ENABLED:
+        from app.services import semantic_intent
+        semantic_intent.warmup()  # vecteurs des phrases d'exemple
     logger.info(f"✅ RAG préchargé (mode={settings.RAG_RETRIEVAL_MODE}) en {time.time() - t0:.1f}s")
 
 

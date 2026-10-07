@@ -63,8 +63,8 @@ from app.db.repositories.conversation_repository import ConversationRepository
 from app.db.repositories.user_repository import UserRepository
 from app.log_privacy import mask_id
 from app.services.language_detector import detect_language
-from app.services import order_tracking
-from app.services.intent_classifier import ORDER_NUMBER_PATTERN, Category, IntentClassifier
+from app.services import order_tracking, semantic_intent
+from app.services.intent_classifier import ORDER_NUMBER_PATTERN, Category, IntentClassifier, IntentResult
 from app.services.session_manager import SessionManager
 from app.services.rag import retriever
 from app.services.rag.llm_factory import ask
@@ -133,6 +133,28 @@ SMALL_TALK_MESSAGES = {
         "tn": "Beslema, nchoufouk 9rib fi Liss Strike!",
     },
 }
+
+
+# Réponse à une demande d'aide vague (catégorie HELP, reconnue par les
+# intentions apprises) : ce que le bot sait faire. Sur le site, WhatsApp et
+# Messenger, le menu d'accueil est envoyé avec (welcome_menu.should_offer).
+HELP_MESSAGES = {
+    "fr": "Bien sûr, je suis là pour vous aider ! Je peux vous renseigner sur nos produits (prix, disponibilité), "
+          "la livraison, les retours, la garantie, le paiement, et le suivi de votre commande. "
+          "Dites-moi ce que vous cherchez, ou demandez à parler à un conseiller.",
+    "en": "Of course, I'm here to help! I can tell you about our products (prices, availability), delivery, "
+          "returns, warranty, payment, and track your order. Tell me what you're looking for, "
+          "or ask to talk to an agent.",
+    "ar": "بالتأكيد، أنا هنا لمساعدتك! يمكنني إفادتك حول منتجاتنا (الأسعار والتوفر)، والتوصيل، والإرجاع، "
+          "والضمان، والدفع، وتتبع طلبيتك. أخبرني بما تبحث عنه، أو اطلب التحدث مع أحد الموظفين.",
+    "tn": "Akid, ena houni bch n3awnek! Najjem nfidek 3al produits (soum w disponibilité), el livraison, "
+          "el retour, el garantie, el khlass, w win wselt commande mte3ek. 9olli chnowa t7eb, "
+          "walla otlob ta7ki m3a conseiller.",
+}
+
+
+def _get_help_message(language: str) -> str:
+    return HELP_MESSAGES.get(language, HELP_MESSAGES["fr"])
 
 
 def _get_small_talk_message(kind: str, language: str) -> str:
@@ -259,6 +281,9 @@ class DialogueResult:
     # Conseiller aux commandes : aucune réponse du bot (response vide),
     # les canaux n'envoient rien au client.
     handled_by_agent: bool = False
+    # Qui a décidé de l'intention : "regle" (intent_classifier), "modele"
+    # (intentions apprises, semantic_intent) ou None (aucune : question RAG)
+    intent_source: Optional[str] = None
 
 
 # ── Persistance PostgreSQL ─────────────────────────────────────────────
@@ -317,6 +342,7 @@ async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, c
                 conv.id, "assistant", result.response,
                 {
                     "intent": result.intent,
+                    "intent_source": result.intent_source,
                     "confidence": result.confidence,
                     "sources": [s for s in result.sources if s],
                     "escalated": result.escalated,
@@ -513,14 +539,57 @@ async def _handle_order_tracking(message: str, intent_result, session_id: str, l
     )
 
 
+async def _learned_intent(message: str) -> Optional[IntentResult]:
+    """
+    Intention apprise sur des phrases d'exemple (semantic_intent), traduite
+    dans le format du classifieur à règles : la suite du traitement est la
+    même (transfert, suivi de commande, aide). None si aucune intention ne
+    ressemble assez, ou si le modèle est indisponible : le message reste
+    alors une question pour le RAG, comme sans le modèle.
+    """
+    try:
+        match = await asyncio.to_thread(semantic_intent.classify, message)
+    except Exception as e:
+        logger.warning(f"⚠️ Intentions apprises indisponibles, règles seules : {e}")
+        return None
+    if match is None:
+        return None
+    logger.info(f"🧭 Intention apprise : {match.intent} ({match.score:.2f})")
+    if match.intent in semantic_intent.ESCALATION_INTENTS:
+        return IntentResult(
+            intent=match.intent, category=Category.ESCALATE, confidence=match.score,
+            requires_escalation=True,
+            escalation_reason="explicit" if match.intent == "human_agent" else "frustration",
+        )
+    if match.intent == "order_tracking":
+        return IntentResult(intent="order_tracking", category=Category.ORDER_TRACKING, confidence=match.score)
+    return IntentResult(intent="help", category=Category.HELP, confidence=match.score)
+
+
 async def _handle_message(message: str, session_id: str, channel: str) -> DialogueResult:
     start = time.time()
 
     # 1. Langue — détection rapide, pas de blocage nécessaire (pas d'I/O)
     language = detect_language(message)
 
-    # 2. Intent (règles, rapide/gratuit)
+    # 2. Intent (règles, rapide/gratuit) ; si aucune règle ne tranche et que
+    # l'interrupteur INTENT_MODEL_ENABLED est actif, intentions apprises sur
+    # des phrases d'exemple (reformulations, demandes d'aide vagues)
     intent_result = _intent_classifier.classify(message)
+    intent_source = "regle" if intent_result.category != Category.GENERAL else None
+    if intent_source is None and settings.INTENT_MODEL_ENABLED:
+        learned = await _learned_intent(message)
+        if learned is not None:
+            intent_result, intent_source = learned, "modele"
+
+    result = await _answer(message, session_id, channel, start, language, intent_result)
+    result.intent_source = intent_source
+    return result
+
+
+async def _answer(message: str, session_id: str, channel: str, start: float, language: str,
+                  intent_result: IntentResult) -> DialogueResult:
+    """Réponse au message, la langue et l'intention étant connues."""
 
     # 3. Session Redis (historique + contexte)
     await _session_manager.get_or_create(session_id, channel)
@@ -571,6 +640,22 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
         return DialogueResult(
             response=response_text, session_id=session_id, language=language,
             intent=intent_result.intent, confidence=intent_result.confidence,
+            escalated=False, processing_time_ms=processing_time, sources=[],
+        )
+
+    # 4 quater. Demande d'aide vague (« i need your help ») reconnue par les
+    # intentions apprises → ce que le bot sait faire, sans RAG ni LLM (le
+    # RAG n'a rien de précis à chercher). Les canaux y joignent le menu
+    # d'accueil (welcome_menu.should_offer).
+    if intent_result.category == Category.HELP:
+        response_text = _get_help_message(language)
+        await _session_manager.reset_rag_attempts(session_id)
+        await _session_manager.add_message(session_id, "assistant", response_text, {"intent": "help"})
+        processing_time = int((time.time() - start) * 1000)
+        logger.info(f"🧭 Demande d'aide | session={mask_id(session_id)} | langue={language}")
+        return DialogueResult(
+            response=response_text, session_id=session_id, language=language,
+            intent="help", confidence=intent_result.confidence,
             escalated=False, processing_time_ms=processing_time, sources=[],
         )
 

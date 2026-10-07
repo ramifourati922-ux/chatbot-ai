@@ -1,0 +1,249 @@
+{
+  "_description": "Phrases d'exemple des intentions apprises (app/services/semantic_intent.py). Un message que les règles ne reconnaissent pas est comparé à ces phrases avec le modèle d'embeddings du RAG. 'general' contient des contre-exemples : questions normales, critiques de produit, phrases proches en mots mais pas en sens. Si l'exemple le plus proche est 'general', le message reste une question pour le RAG. Ne pas copier ici les phrases de dev.json et test.json (jeux de calibration et de mesure).",
+  "human_agent": {
+    "fr": [
+      "je voudrais avoir quelqu'un au téléphone",
+      "est-ce qu'une vraie personne peut me répondre ?",
+      "je préfère discuter avec un employé",
+      "y a-t-il quelqu'un du service client disponible ?",
+      "mettez-moi en contact avec votre équipe",
+      "je veux qu'une personne s'occupe de mon dossier",
+      "pouvez-vous m'appeler ?",
+      "je ne veux pas parler à un robot",
+      "un membre de l'équipe peut me contacter ?",
+      "je souhaite joindre le support"
+    ],
+    "en": [
+      "can I get someone on the phone?",
+      "is there a real person I can chat with?",
+      "I don't want to talk to a bot",
+      "please have someone from your team contact me",
+      "can a staff member help me?",
+      "I'd like to reach your support team",
+      "get me someone who can actually help",
+      "can somebody call me back?",
+      "is anyone from customer care available?",
+      "I need to talk to someone from the shop"
+    ],
+    "ar": [
+      "هل يمكنني التحدث مع شخص حقيقي؟",
+      "أريد أن يتصل بي أحد من فريقكم",
+      "لا أريد التحدث مع روبوت",
+      "هل يوجد أحد من خدمة العملاء؟",
+      "أرجو أن يتواصل معي أحد الموظفين",
+      "أحتاج إلى شخص من المتجر",
+      "هل يمكنكم الاتصال بي هاتفيا؟",
+      "أريد التواصل مع فريق الدعم"
+    ],
+    "tn": [
+      "nheb wa7ed men 3andkom yekalemni",
+      "fama 7ad men el service client ?",
+      "ma nhebech nahki m3a robot",
+      "3aytouli 3al telephone 3afek",
+      "nheb nahki m3a 3abd mouch machine",
+      "fama chkoun ynajjem y3awenni men el equipe ?",
+      "khalli wa7ed yetsal biya",
+      "nheb n7el m3a wa7ed men el magasin",
+      "نحب نحكي مع عبد موش روبو",
+      "فما حد من الخدمة ينجم يكلمني ؟"
+    ]
+  },
+  "frustration": {
+    "fr": [
+      "vous êtes vraiment nuls",
+      "c'est une arnaque votre boutique",
+      "je suis très déçu de votre service",
+      "personne ne répond, c'est honteux",
+      "ça fait une semaine que j'attends une réponse",
+      "plus jamais je ne commande chez vous",
+      "vous vous moquez de vos clients",
+      "votre bot ne comprend rien",
+      "je vais laisser un avis négatif partout",
+      "c'est la dernière fois que j'achète ici"
+    ],
+    "en": [
+      "you guys are useless",
+      "this shop is a scam",
+      "I'm really disappointed with your service",
+      "nobody answers, this is ridiculous",
+      "I've been waiting for days with no reply",
+      "never ordering from you again",
+      "your bot doesn't understand anything",
+      "I'm going to leave a bad review everywhere",
+      "this is unacceptable customer care",
+      "worst experience I've ever had"
+    ],
+    "ar": [
+      "خدمتكم لا تحترم الزبائن",
+      "هذا المتجر احتيال",
+      "أنا غاضب جدا من طريقة التعامل",
+      "لا أحد يرد على رسائلي",
+      "لن أشتري منكم مرة أخرى",
+      "أنتظر منذ أسبوع دون أي رد",
+      "هذا غير مقبول إطلاقا",
+      "سأكتب تقييما سيئا عنكم"
+    ],
+    "tn": [
+      "9ra9tni el khedma mte3kom",
+      "ennas hedhom ma yjewbouch 5ir",
+      "service mte3kom zero",
+      "jem3a w ana nestanna w 7atta 7ad ma jewebni",
+      "ma3adech nechri men 3andkom",
+      "intouma tetmes5rou bel clients",
+      "el bot hedha ma yefhem chay",
+      "arnaque hedhi, rja3tli flousi",
+      "خدمتكم صفر",
+      "قرقتوني ، حد ما يجاوب"
+    ]
+  },
+  "order_tracking": {
+    "fr": [
+      "mon colis n'est toujours pas arrivé",
+      "quand est-ce que je reçois mon achat ?",
+      "j'attends toujours ma livraison",
+      "mon paquet est où ?",
+      "je n'ai rien reçu depuis ma commande de la semaine dernière",
+      "pouvez-vous vérifier l'avancement de mon achat ?",
+      "mon achat a-t-il été expédié ?",
+      "je veux savoir où en est mon colis"
+    ],
+    "en": [
+      "my package hasn't arrived yet",
+      "when will I receive my purchase?",
+      "I'm still waiting for my delivery",
+      "has my parcel been shipped?",
+      "can you check where my package is?",
+      "I ordered last week and got nothing",
+      "what's the status of my purchase?",
+      "where is my parcel?"
+    ],
+    "ar": [
+      "لم يصلني الطرد بعد",
+      "متى سأستلم مشترياتي؟",
+      "ما زلت أنتظر التوصيل",
+      "هل تم شحن مشترياتي؟",
+      "أريد معرفة مكان الطرد",
+      "طلبت منذ أسبوع ولم يصلني شيء"
+    ],
+    "tn": [
+      "el colis mte3i mazel ma wselch",
+      "wa9tech twosel el commande mte3i ?",
+      "mazelt nestanna fel livraison",
+      "el commande mte3i tba3thet walla le ?",
+      "chrit jem3a lfetet w mazel ma jani chay",
+      "chouf3li win wsel el colis",
+      "الكوليس متاعي مازال ما وصلش",
+      "وقتاش توصل الكوموند متاعي ؟"
+    ]
+  },
+  "help": {
+    "fr": [
+      "j'ai besoin d'aide",
+      "pouvez-vous m'aider ?",
+      "je veux plus d'informations",
+      "qu'est-ce que vous vendez ?",
+      "quels produits proposez-vous ?",
+      "vous pouvez faire quoi ?",
+      "je ne sais pas par où commencer",
+      "j'ai une question",
+      "renseignez-moi svp",
+      "présentez-moi votre boutique"
+    ],
+    "en": [
+      "I really need some assistance",
+      "can you help me?",
+      "I want more information",
+      "what do you sell?",
+      "what products do you have?",
+      "what can you do?",
+      "I have a question",
+      "tell me about your shop",
+      "how does this work?",
+      "help please"
+    ],
+    "ar": [
+      "أحتاج مساعدة",
+      "هل يمكنك مساعدتي؟",
+      "أريد معلومات أكثر",
+      "ماذا تبيعون؟",
+      "ما هي المنتجات المتوفرة لديكم؟",
+      "عندي سؤال",
+      "عرفني بمتجركم",
+      "ماذا يمكنك أن تفعل؟"
+    ],
+    "tn": [
+      "nhebek t3awenni",
+      "3awenni 3afek",
+      "nheb na3ref chnouma les produits mte3kom",
+      "chnia tbi3ou ?",
+      "3andi sou2el",
+      "nheb akther ma3loumet",
+      "chnowa tnajjem ta3mel ?",
+      "3arrafni bel magasin mte3kom",
+      "نحبك تعاوني",
+      "شنوة تبيعو ؟"
+    ]
+  },
+  "general": {
+    "fr": [
+      "ce produit est nul",
+      "la carte Arduino que j'ai reçue est de mauvaise qualité",
+      "avez-vous un capteur de présence humaine ?",
+      "comment passer une commande ?",
+      "quelle est la durée de garantie d'un Raspberry Pi ?",
+      "livrez-vous à Sfax ?",
+      "combien coûte un ESP32 ?",
+      "je veux un module bluetooth",
+      "quels sont les frais de livraison ?",
+      "acceptez-vous le paiement à la livraison ?",
+      "comment retourner un produit défectueux ?",
+      "le capteur ultrason est-il disponible ?",
+      "je veux acheter une imprimante 3D",
+      "avez-vous des promotions ?",
+      "le fer à souder chauffe mal",
+      "le capteur que j'ai reçu ne fonctionne pas",
+      "l'écran est arrivé cassé, que faire ?"
+    ],
+    "en": [
+      "this product is bad",
+      "do you have a human presence sensor?",
+      "how do I place an order?",
+      "how long is the warranty on a Raspberry Pi?",
+      "do you deliver to Sousse?",
+      "how much is an ESP32?",
+      "I want a bluetooth module",
+      "what are the shipping costs?",
+      "can I pay cash on delivery?",
+      "how do I return a defective item?",
+      "is the ultrasonic sensor in stock?",
+      "the soldering iron doesn't heat well",
+      "the module I received doesn't work"
+    ],
+    "ar": [
+      "هذا المنتج سيء",
+      "هل لديكم حساس حركة؟",
+      "كيف أطلب منتجا؟",
+      "ما هي مدة ضمان راسبيري باي؟",
+      "هل توصلون إلى صفاقس؟",
+      "كم سعر ESP32؟",
+      "ما هي طرق الدفع؟",
+      "كيف أرجع منتجا معيبا؟",
+      "هل يوجد تخفيضات؟"
+    ],
+    "tn": [
+      "el produit hedha khayeb",
+      "9adeh soum el arduino ?",
+      "famma capteur ultrason ?",
+      "kifech nkoumandi ?",
+      "twaslou l sfax ?",
+      "9adech el garantie mta3 raspberry ?",
+      "nheb nechri imprimante 3D",
+      "famma promotions tawa ?",
+      "najjem nkhallas ki tousel el commande ?",
+      "el carte arduino ma t5demch",
+      "el ecran wsel mkasser chnowa na3mel ?",
+      "قداش سوم الأردوينو ؟",
+      "فما بروموسيون ؟"
+    ]
+  }
+}

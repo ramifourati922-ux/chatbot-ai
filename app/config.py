@@ -123,6 +123,24 @@ class Settings(BaseSettings):
     RAG_CONFIDENCE_SIGNAL: str = "cosine"
     RAG_RERANK_CONFIDENCE_THRESHOLD: float = 0.045
 
+    # Intentions apprises sur des phrases d'exemple (app/services/semantic_intent.py),
+    # consultées seulement quand aucune règle n'a tranché. Interrupteur :
+    # False = comportement d'origine (règles seules).
+    INTENT_MODEL_ENABLED: bool = False
+    # Similarité cosinus minimale avec l'exemple le plus proche ; plus
+    # stricte pour un transfert vers un conseiller. Calibrées sur
+    # data/intents/dev.json (scripts/evaluate_intents.py --calibrate) :
+    # - aide / commande : contre-exemples ≤ 0.56, bonnes réponses ≥ 0.67
+    #   → 0.62, au milieu ;
+    # - transfert : le cas dangereux est une panne de produit en arabizi
+    #   (« el capteur hedha ma ye5demch mli », proche d'une phrase de
+    #   frustration à 0.796), les vraies demandes d'humain sont ≥ 0.83
+    #   → 0.82. Plusieurs vraies frustrations restent sous ce seuil : on
+    #   préfère en rater une (le client peut toujours demander un
+    #   conseiller) que transférer une simple question.
+    INTENT_SIMILARITY_THRESHOLD: float = 0.62
+    INTENT_ESCALATION_THRESHOLD: float = 0.82
+
     # WhatsApp (Phase 5)
     WHATSAPP_PHONE_NUMBER_ID: Optional[str] = None
     WHATSAPP_ACCESS_TOKEN: Optional[str] = None
