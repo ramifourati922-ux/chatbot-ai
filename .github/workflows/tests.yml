@@ -1,0 +1,30 @@
+# Tests unitaires à chaque push et pull request : sans PostgreSQL, Redis,
+# ChromaDB ni clé Groq (marqueur "integration" exclu, voir tests/conftest.py).
+# Les tests d'intégration restent à lancer en local avec Docker.
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    env:
+      # Exigée par app/config.py ; jamais contactée par les tests unitaires
+      DATABASE_URL: postgresql+asyncpg://ci:ci@localhost:5432/ci
+      GROQ_API_KEY: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      # PyTorch version CPU (sentence-transformers) : évite de télécharger
+      # les bibliothèques CUDA, inutiles ici
+      - name: Dépendances
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+      - name: Tests unitaires
+        run: python -m pytest tests/ -m "not integration" -q
