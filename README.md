@@ -107,6 +107,10 @@
 - **Webhooks Meta signés** (HMAC-SHA256), **sessions web attribuées et
   signées par le serveur**, CORS, limitation de débit par IP, journaux
   sans données personnelles ni secrets.
+- **Repli en cas de panne** : si la recherche (ChromaDB) ou le LLM (Groq,
+  modèle principal et secours) ne répondent pas, le client reçoit un
+  message d'excuse dans sa langue et la conversation passe aux
+  conseillers, au lieu d'une erreur.
 
 ## Architecture
 
@@ -210,6 +214,26 @@ reranker (Context Recall 0,92 → 0,55). Échantillon réduit (3 à 4
 questions en arabe et en tunisien) : ce sont des tendances, pas des
 mesures statistiquement solides.
 
+**Recherche par langue, sans LLM** (68 questions : 17 thèmes posés dans
+les 4 langues, [`scripts/evaluate_retrieval.py`](scripts/evaluate_retrieval.py)) :
+part des questions dont une bonne source figure dans les 4 passages
+envoyés au LLM.
+
+| Langue | Advanced | Advanced + expansion de l'arabizi |
+| --- | --- | --- |
+| Français | 100 % | 100 % |
+| Anglais | 100 % | 100 % |
+| Arabe | 94 % | 94 % |
+| Tunisien | 59 % | 94 % |
+
+Le point faible est le **tunisien écrit en arabizi** : la base est rédigée
+en français. L'expansion (`app/services/arabizi.py`) ajoute à la question
+la traduction des mots du SAV reconnus ; le lexique a été écrit après
+avoir vu ces échecs, donc le 94 % est optimiste. Sur 18 questions
+tunisiennes **nouvelles**, écrites ensuite, le gain réel est de **50 % à
+61 %**. En arabe, le reranker ne perd qu'une question sur 17 (100 % sans).
+Détail : [`docs/evaluation/`](docs/evaluation/).
+
 **Latences** (CPU, sans GPU) :
 
 | Mesure | Valeur |
@@ -218,6 +242,10 @@ mesures statistiquement solides.
 | dont reranking des 20 candidats | 883 ms (médiane) |
 | Réponse RAG de bout en bout, scénario de démo vérifié | 1,2 à 1,9 s |
 | Politesse et transfert explicite (sans LLM), même scénario | 7 à 22 ms |
+
+Chaque réponse RAG enregistre désormais le temps de la recherche et celui
+du LLM, affichés dans `/admin/statistiques`. Exemple mesuré : réponse de
+2,66 s, dont 0,47 s de recherche et 1,90 s d'appel à Groq.
 
 ## Démarrage rapide
 
@@ -459,9 +487,9 @@ Limites actuelles :
 ## Tests
 
 ```bash
-pytest tests/                        # suite complète : 566 tests, ~2 min 30
-pytest tests/ -m "not integration"   # 441 tests unitaires, ~15 s, sans aucun service
-pytest tests/ -m integration         # 125 tests d'intégration
+pytest tests/                        # suite complète : 579 tests, ~2 min 30
+pytest tests/ -m "not integration"   # 453 tests unitaires, ~15 s, sans aucun service
+pytest tests/ -m integration         # 126 tests d'intégration
 ```
 
 Les tests couvrent la détection de langue, la classification (escalade,
@@ -475,7 +503,8 @@ limitation de débit, les journaux et la structure de la base de
 connaissances.
 
 - **Tests unitaires** : ni Docker, ni clé Groq, ni modèle téléchargé.
-  C'est la partie à lancer en intégration continue.
+  GitHub Actions les lance à chaque push et pull request
+  ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)).
 - **Tests d'intégration** (marqueur `integration`) : ils ont besoin des
   services (`docker compose up -d`), d'une base de connaissances indexée
   et d'une clé Groq, ou chargent les modèles d'embeddings et de
@@ -509,7 +538,7 @@ alembic/                       # migrations de la base
 data/knowledge_base/           # politiques SAV (.txt) et catalogue produits (.csv)
 scripts/                       # ingestion, données de démo, nettoyage, calibration, évaluation RAGas
 static/                        # chat.html (démo client), admin.html et statistiques.html (conseillers)
-tests/                         # suite pytest (566 tests)
+tests/                         # suite pytest (579 tests)
 docs/                          # démo, évaluation RAGas, webhooks, captures d'écran
 ```
 
@@ -520,7 +549,7 @@ docs/                          # démo, évaluation RAGas, webhooks, captures d'
 | [`CHANGELOG_ADVANCED_RAG.md`](CHANGELOG_ADVANCED_RAG.md) | Passage au RAG avancé (recherche hybride, reranking, calibration, évaluation RAGas), correctifs après revue, anomalies documentées (symptôme, diagnostic, cause, correction) |
 | [`data/knowledge_base/README.md`](data/knowledge_base/README.md) | Contenu et format de la base de connaissances, ré-indexation |
 | [`docs/demo/`](docs/demo/) | Scénario de démonstration, checklist du jour J, transcription vérifiée |
-| [`docs/evaluation/`](docs/evaluation/) | Résultats RAGas détaillés (JSON et Markdown) |
+| [`docs/evaluation/`](docs/evaluation/) | Résultats RAGas détaillés (JSON et Markdown), recherche par langue (`recherche_par_langue.md`, `recherche_tunisien_nouvelles.md`) |
 | [`docs/webhooks_ngrok_setup.md`](docs/webhooks_ngrok_setup.md) | Exposer le serveur local en HTTPS et configurer les webhooks WhatsApp et Messenger |
 | [`docs/screenshots/`](docs/screenshots/) | Captures d'écran (voir la note ci-dessous) |
 
@@ -532,22 +561,24 @@ antérieures aux derniers correctifs : elles montrent par exemple
 
 | Domaine | Limite |
 | --- | --- |
-| Mise en production | Pas de `Dockerfile` pour l'API ni d'intégration continue ; offre gratuite de Groq |
+| Mise en production | Pas de `Dockerfile` pour l'API ni de HTTPS ; offre gratuite de Groq ; un seul processus |
 | Sécurité | Pas d'authentification des clients ; HTTP Basic pour les conseillers |
-| Qualité des réponses | Reranker moins bon en arabe |
+| Qualité des réponses | Tunisien en arabizi moins bien compris (61 % de bonnes sources sur des questions nouvelles, contre 94 à 100 % ailleurs) |
 | Suivi de commande | Données fictives ; le numéro de commande est la seule clé d'accès |
 
 ## Feuille de route
 
 - [x] Séparation des tests unitaires et d'intégration (marqueur `integration`)
-- [ ] `Dockerfile` et intégration continue (tests unitaires à chaque push,
-      tests d'intégration avec PostgreSQL et Redis en services)
+- [x] Intégration continue : tests unitaires à chaque push (GitHub Actions)
+- [ ] `Dockerfile` pour l'API ; tests d'intégration en intégration continue,
+      avec PostgreSQL et Redis en services
 - [x] Limitation des tentatives de connexion sur `/admin` et `/users/`
 - [ ] Connexion par session plutôt que HTTP Basic ; écran de gestion des
       comptes
 - [ ] Authentification des clients sur l'API
-- [ ] Reranking réservé au français et à l'anglais (régression mesurée en
-      arabe) ; normalisation de l'arabizi avant la recherche
+- [x] Repli quand la recherche ou le LLM sont indisponibles (transfert au conseiller)
+- [x] Expansion de l'arabizi avant la recherche (lexique, gain mesuré sur des questions nouvelles)
+- [ ] Lexique arabizi plus large, construit à partir de vrais messages de clients
 - [ ] Notifications hors navigateur (e-mail, push) pour les conseillers
 - [ ] Suivi de commande relié à un back-office
 
