@@ -146,6 +146,7 @@
     low_rag_confidence: "Réponse non trouvée",
     repeated_rag_failure: "Échecs répétés",
     order_tracking: "Suivi de commande",
+    service_unavailable: "Service indisponible",
   };
   const CHANNELS = { web: "Web", whatsapp: "WhatsApp", messenger: "Messenger" };
   const LANGUAGES = { fr: "Français", en: "Anglais", ar: "Arabe", tn: "Tunisien" };
@@ -344,7 +345,10 @@
       kpi("Conversations", fmt(c.total), `${fmt(c.escalated)} transférée(s), ${fmt(c.resolved_by_agents)} traitée(s)`),
       kpi("Messages des clients", fmt(s.client_messages), `${fmt(s.agent_replies)} réponse(s) de conseillers`),
       kpi("Temps de réponse RAG", latency(s.latency.rag),
-          s.latency.rag ? `médiane · 90 % sous ${fmt(s.latency.rag.p90_ms)} ms` : "médiane"),
+          (s.latency.rag ? `médiane · 90 % sous ${fmt(s.latency.rag.p90_ms)} ms` : "médiane")
+          + (s.latency.recherche && s.latency.llm
+             ? ` · dont recherche ${fmt(s.latency.recherche.median_ms)} ms, LLM ${fmt(s.latency.llm.median_ms)} ms`
+             : "")),
       kpi("Temps sans LLM", latency(s.latency.sans_llm), "politesse, transferts, commandes"),
       kpi("Prospects", fmt(s.leads.total),
           `${fmt(s.leads.purchase_intent)} avec intention d'achat · ${fmt(s.leads.recontactable)} joignable(s)`),

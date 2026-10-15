@@ -63,7 +63,7 @@ from app.db.repositories.conversation_repository import ConversationRepository
 from app.db.repositories.user_repository import UserRepository
 from app.log_privacy import mask_id
 from app.services.language_detector import detect_language
-from app.services import order_tracking
+from app.services import arabizi, order_tracking
 from app.services.intent_classifier import ORDER_NUMBER_PATTERN, Category, IntentClassifier
 from app.services.session_manager import SessionManager
 from app.services.rag import retriever
@@ -101,6 +101,14 @@ ESCALATION_MESSAGES = {
         "en": "I can't find your order. I'm connecting you with an agent who can check its status.",
         "ar": "لم أتمكن من العثور على طلبيتك. سأقوم بتحويلك إلى أحد ممثلي خدمة العملاء للتحقق من حالتها.",
         "tn": "Ma l9itech commande mte3ek. Bch na3addik l wa7ed conseiller ychouflek l'etat mte3ha.",
+    },
+    # Recherche (ChromaDB) ou LLM (Groq, modèle principal ET secours)
+    # indisponible : le client est transféré au lieu de recevoir une erreur
+    "service_unavailable": {
+        "fr": "Notre assistant rencontre un problème technique momentané. Je transmets votre message à un conseiller, qui vous répondra dès que possible.",
+        "en": "Our assistant is having a temporary technical issue. I'm passing your message to an agent, who will get back to you as soon as possible.",
+        "ar": "يواجه المساعد مشكلة تقنية مؤقتة. سأحول رسالتك إلى أحد ممثلي خدمة العملاء، وسيرد عليك في أقرب وقت ممكن.",
+        "tn": "L'assistant 3andou mochkla technique chwaya. Bch nba3eth message mte3ek l wa7ed conseiller, yjewbek fi a9rab wa9t.",
     },
     "low_rag_confidence": {
         "fr": "Je ne dispose pas d'informations suffisamment fiables sur ce sujet précis. Je préfère vous mettre en relation avec un conseiller humain plutôt que de vous donner une réponse imprécise.",
@@ -259,6 +267,9 @@ class DialogueResult:
     # Conseiller aux commandes : aucune réponse du bot (response vide),
     # les canaux n'envoient rien au client.
     handled_by_agent: bool = False
+    # Réponse RAG : temps de la recherche et du LLM, en ms ("retrieval_ms",
+    # "llm_ms"), enregistrés avec le message (statistiques de latence)
+    timings: dict = field(default_factory=dict)
 
 
 # ── Persistance PostgreSQL ─────────────────────────────────────────────
@@ -321,6 +332,7 @@ async def _persist_exchange(previous: Optional[asyncio.Task], session_id: str, c
                     "sources": [s for s in result.sources if s],
                     "escalated": result.escalated,
                     "escalation_reason": result.escalation_reason,
+                    **result.timings,
                 },
                 processing_time_ms=result.processing_time_ms,
                 created_at=answered_at,
@@ -593,9 +605,18 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
     # l'historique récent est transmis au LLM (étape 9).
     previous_messages = (await _session_manager.get_history(session_id))[:-1]
     rag_query = _build_retrieval_query(message, previous_messages)
+    if language == "tn" and settings.RAG_ARABIZI_EXPANSION:
+        # Base rédigée en français : mots arabizi du SAV traduits pour la
+        # recherche seulement (le LLM reçoit la question d'origine)
+        rag_query = arabizi.expand(rag_query)
     if rag_query != message:
         logger.info("🧠 Question de suivi : requête RAG enrichie avec la question précédente")
-    hits = await asyncio.to_thread(retriever.search, rag_query, 4)
+    t_search = time.perf_counter()
+    try:
+        hits = await asyncio.to_thread(retriever.search, rag_query, 4)
+    except Exception as e:
+        return await _service_unavailable(session_id, language, start, "recherche", e)
+    timings = {"retrieval_ms": int((time.perf_counter() - t_search) * 1000)}
     context = retriever.format_context(hits)
     sources = [hit["metadata"].get("source") or hit["metadata"].get("sku") for hit in hits]
 
@@ -648,10 +669,16 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
             escalation_reason="low_rag_confidence",
         )
 
-    # 9. Appel LLM (bloquant → thread)
-    response_text = await asyncio.to_thread(
-        ask, message, language, context, previous_messages[-HISTORY_MESSAGES_FOR_LLM:],
-    )
+    # 9. Appel LLM (bloquant → thread). Panne totale (modèle principal et
+    # secours) : transfert au lieu d'une erreur, comme pour la recherche
+    t_llm = time.perf_counter()
+    try:
+        response_text = await asyncio.to_thread(
+            ask, message, language, context, previous_messages[-HISTORY_MESSAGES_FOR_LLM:],
+        )
+    except Exception as e:
+        return await _service_unavailable(session_id, language, start, "LLM", e)
+    timings["llm_ms"] = int((time.perf_counter() - t_llm) * 1000)
 
     # 9 bis. Compteur de boucle RAG : ne compte que les échecs RÉELS, où
     # le LLM dit ne pas avoir l'information (l'autre échec, la confiance
@@ -678,7 +705,7 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
                 response=response_text, session_id=session_id, language=language,
                 intent="repeated_rag_failure", confidence=1.0,
                 escalated=True, processing_time_ms=processing_time, sources=[],
-                escalation_reason="repeated_rag_failure",
+                escalation_reason="repeated_rag_failure", timings=timings,
             )
     else:
         await _session_manager.reset_rag_attempts(session_id)
@@ -692,7 +719,8 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
     processing_time = int((time.time() - start) * 1000)
     logger.info(
         f"💬 intent={intent_result.intent} | langue={language} | "
-        f"sources={len(sources)} | {processing_time}ms | session={mask_id(session_id)}"
+        f"sources={len(sources)} | {processing_time}ms (recherche {timings['retrieval_ms']}ms, "
+        f"LLM {timings['llm_ms']}ms) | session={mask_id(session_id)}"
     )
 
     # confidence = confiance du RAG (celle comparée au seuil d'escalade à
@@ -701,5 +729,29 @@ async def _handle_message(message: str, session_id: str, channel: str) -> Dialog
     return DialogueResult(
         response=response_text, session_id=session_id, language=language,
         intent=intent_result.intent, confidence=rag_confidence,
-        escalated=False, processing_time_ms=processing_time, sources=sources,
+        escalated=False, processing_time_ms=processing_time, sources=sources, timings=timings,
+    )
+
+
+async def _service_unavailable(session_id: str, language: str, start: float, stage: str,
+                               error: Exception) -> DialogueResult:
+    """
+    Recherche (ChromaDB) ou LLM (Groq, modèle principal et secours)
+    indisponible : au lieu d'une erreur (500 sur le site, silence sur
+    WhatsApp), le client reçoit un message d'excuse dans sa langue et la
+    conversation passe aux conseillers (raison "service_unavailable").
+    """
+    logger.error(f"❌ {stage} indisponible, transfert à un conseiller | session={mask_id(session_id)} : "
+                 f"{type(error).__name__}: {error}")
+    response_text = _get_escalation_message("service_unavailable", language)
+    await _session_manager.reset_rag_attempts(session_id)
+    await _session_manager.add_message(
+        session_id, "assistant", response_text,
+        {"escalated": True, "escalation_reason": "service_unavailable"},
+    )
+    return DialogueResult(
+        response=response_text, session_id=session_id, language=language,
+        intent="service_unavailable", confidence=0.0, escalated=True,
+        processing_time_ms=int((time.time() - start) * 1000), sources=[],
+        escalation_reason="service_unavailable",
     )

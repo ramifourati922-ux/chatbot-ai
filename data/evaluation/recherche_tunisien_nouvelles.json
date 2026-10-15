@@ -1,0 +1,23 @@
+{
+  "_description": "Questions en tunisien (arabizi) écrites APRÈS le lexique app/services/arabizi.py, sur des thèmes absents de recherche.json, pour vérifier que l'expansion de l'arabizi généralise. Ne pas ajuster le lexique sur ces questions.",
+  "questions": [
+    {"theme": "retour-etat", "sources": ["sav/retours.txt"], "tn": "lazem el produit ykoun msakker fi carton mte3ou bech nraja3ou ?"},
+    {"theme": "echange", "sources": ["sav/retours.txt"], "tn": "najjem nbadel el produit b produit ekher ?"},
+    {"theme": "remboursement-delai", "sources": ["sav/retours.txt"], "tn": "ba3d ma nraja3 el produit, wa9tech ywalliw flousi ?"},
+    {"theme": "livraison-express", "sources": ["sav/livraison.txt"], "tn": "famma livraison express ?"},
+    {"theme": "retrait-boutique", "sources": ["sav/livraison.txt", "general/faq.txt"], "tn": "najjem nji nechri el commande men 3and el magasin ?"},
+    {"theme": "garantie-capteurs", "sources": ["sav/garantie.txt"], "tn": "el capteurat 3andhom garantie 9adech ?"},
+    {"theme": "garantie-demarche", "sources": ["sav/garantie.txt"], "tn": "kifech nesta3mel el garantie ki yetkasser el module ?"},
+    {"theme": "article-manquant", "sources": ["sav/reclamations.txt"], "tn": "el colis wsel w na9es fih article, chnouwa na3mel ?"},
+    {"theme": "mauvais-produit", "sources": ["sav/reclamations.txt"], "tn": "jani produit ghalet mouch eli commandit"},
+    {"theme": "facture", "sources": ["ecommerce/paiement.txt"], "tn": "kifech nekhou facture ?"},
+    {"theme": "paiement-securise", "sources": ["ecommerce/paiement.txt"], "tn": "el khlass bel carta 3al site mdhamoun ?"},
+    {"theme": "soldes", "sources": ["ecommerce/promotions.txt"], "tn": "wa9tech el soldes 3andkom ?"},
+    {"theme": "parrainage", "sources": ["ecommerce/promotions.txt"], "tn": "ki njib sa7bi yechri, nerba7 chay ?"},
+    {"theme": "adresse", "sources": ["general/faq.txt"], "tn": "win jey el magasin mte3kom ?"},
+    {"theme": "contact", "sources": ["general/faq.txt", "sav/reclamations.txt"], "tn": "kifech nkalmekom ?"},
+    {"theme": "produit-dht22", "produit": "DHT22", "tn": "famma capteur DHT22 ?"},
+    {"theme": "produit-raspberry", "produit": "Raspberry Pi 4", "tn": "9adeh soum raspberry pi 4 ?"},
+    {"theme": "produit-fer-souder", "produit": "Fer à souder", "tn": "nlawej 3la fer à souder mli7"}
+  ]
+}

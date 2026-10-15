@@ -123,6 +123,13 @@ class Settings(BaseSettings):
     RAG_CONFIDENCE_SIGNAL: str = "cosine"
     RAG_RERANK_CONFIDENCE_THRESHOLD: float = 0.045
 
+    # Question en tunisien (arabizi) complétée par la traduction française
+    # des mots du SAV reconnus avant la recherche (app/services/arabizi.py).
+    # Mesuré (scripts/evaluate_retrieval.py, mode advanced) sur des questions
+    # tunisiennes écrites après le lexique : bonne source dans les 4 passages
+    # 50 % → 61 % ; autres langues inchangées. False = recherche d'origine.
+    RAG_ARABIZI_EXPANSION: bool = True
+
     # WhatsApp (Phase 5)
     WHATSAPP_PHONE_NUMBER_ID: Optional[str] = None
     WHATSAPP_ACCESS_TOKEN: Optional[str] = None

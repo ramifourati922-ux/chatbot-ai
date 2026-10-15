@@ -157,7 +157,7 @@ class StatsResponse(BaseModel):
     by_language: Dict[str, int]
     replies_by_type: Dict[str, int] = Field(..., description="rag | politesse | suivi_commande | transfert")
     transfers_by_reason: Dict[str, int]
-    latency: Dict[str, Optional[LatencyStats]] = Field(..., description="rag (appel au LLM) | sans_llm")
+    latency: Dict[str, Optional[LatencyStats]] = Field(..., description="rag (appel au LLM) | sans_llm | recherche et llm (détail d'une réponse RAG)")
     daily: List[DailyStats]
     rag_no_info_answers: int = Field(..., description="Réponses RAG « je n'ai pas l'information »")
     unanswered_questions: List[UnansweredQuestion]

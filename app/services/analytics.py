@@ -165,12 +165,19 @@ def build_stats(conversations: list, messages: list, since: datetime, until: dat
 
     # ── Temps de réponse : RAG (appel au LLM) ou sans LLM ──
     rag_times, fast_times = [], []
+    # Détail d'une réponse RAG : recherche (embeddings, BM25, reranker) et
+    # appel au LLM, enregistrés avec chaque réponse depuis leur mesure
+    retrieval_times, llm_times = [], []
     for m in replies:
         if m.processing_time_ms is None:
             continue
         kind = reply_type(m.metadata)
         uses_llm = kind == "rag" or m.metadata.get("escalation_reason") == "repeated_rag_failure"
         (rag_times if uses_llm else fast_times).append(m.processing_time_ms)
+        if uses_llm and isinstance(m.metadata.get("retrieval_ms"), int):
+            retrieval_times.append(m.metadata["retrieval_ms"])
+        if uses_llm and isinstance(m.metadata.get("llm_ms"), int):
+            llm_times.append(m.metadata["llm_ms"])
 
     # ── Activité par jour (heure de Tunis), jours sans message compris ──
     daily = defaultdict(lambda: {"client_messages": 0, "transfers": 0})
@@ -227,7 +234,8 @@ def build_stats(conversations: list, messages: list, since: datetime, until: dat
         "by_language": dict(by_language),
         "replies_by_type": dict(replies_by_type),
         "transfers_by_reason": dict(transfers_by_reason),
-        "latency": {"rag": _latency(rag_times), "sans_llm": _latency(fast_times)},
+        "latency": {"rag": _latency(rag_times), "sans_llm": _latency(fast_times),
+                    "recherche": _latency(retrieval_times), "llm": _latency(llm_times)},
         "daily": [{"date": d, **daily[d]} for d in days],
         "rag_no_info_answers": no_info_answers,
         "unanswered_questions": [
