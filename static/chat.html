@@ -387,13 +387,30 @@
 
   const ESCALATE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8l4 4-4 4"/><path d="M3 12h18"/><circle cx="6" cy="12" r="2.4"/></svg>`;
 
+  // Le LLM met en gras avec **texte** (Markdown) : affiché en gras au lieu
+  // des astérisques. Uniquement des nœuds texte et <strong>, jamais
+  // innerHTML : une réponse ne peut pas injecter de HTML dans la page.
+  function appendRichText(target, text) {
+    const parts = String(text ?? "").split(/\*\*(.+?)\*\*/g);
+    parts.forEach((part, i) => {
+      if (!part) return;
+      if (i % 2 === 1) {
+        const strong = document.createElement("strong");
+        strong.textContent = part;
+        target.appendChild(strong);
+      } else {
+        target.appendChild(document.createTextNode(part));
+      }
+    });
+  }
+
   function addAssistantMessage(data) {
     const row = document.createElement("div");
     row.className = "row assistant";
 
     const bubble = document.createElement("div");
     bubble.className = "bubble" + (data.escalated ? " escalated" : "") + (data.from_agent ? " agent" : "");
-    bubble.textContent = data.response;
+    appendRichText(bubble, data.response);
     row.appendChild(bubble);
 
     const meta = document.createElement("div");
