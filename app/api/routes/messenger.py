@@ -26,6 +26,7 @@ from fastapi.responses import PlainTextResponse
 
 from app.config import settings
 from app.log_privacy import mask_id, safe_error
+from app.services import welcome_menu
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(prefix="/webhook/messenger", tags=["Messenger"])
@@ -78,11 +79,12 @@ def _verify_signature(raw_body: bytes, signature_header: str) -> bool:
     return hmac.compare_digest(expected, received)
 
 
-async def _send_messenger_message(psid: str, text: str) -> None:
+async def _send_messenger_message(psid: str, text: str, quick_replies: list | None = None) -> None:
     """Envoie la réponse du bot via la Messenger Send API. Contrairement
     à l'API Graph WhatsApp (token en header Authorization), la Send API
     Messenger attend le token en query param access_token — c'est le
-    format documenté par Meta, pas un choix arbitraire."""
+    format documenté par Meta, pas un choix arbitraire.
+    quick_replies : boutons affichés sous le message (menu d'accueil)."""
     if not settings.MESSENGER_PAGE_ACCESS_TOKEN:
         logger.warning(
             "⚠️ MESSENGER_PAGE_ACCESS_TOKEN non configuré — envoi simulé "
@@ -91,9 +93,12 @@ async def _send_messenger_message(psid: str, text: str) -> None:
         return
 
     url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/me/messages"
+    message = {"text": text}
+    if quick_replies:
+        message["quick_replies"] = quick_replies
     payload = {
         "recipient": {"id": psid},
-        "message": {"text": text},
+        "message": message,
     }
     async with httpx.AsyncClient(timeout=10) as client:
         response = await client.post(
@@ -137,6 +142,12 @@ async def receive_message(request: Request):
         psid = (event.get("sender") or {}).get("id")
         message_data = event.get("message") or {}
         text_body = message_data.get("text")
+        # Clic sur un bouton du menu d'accueil : Messenger envoie le titre
+        # du bouton (text) et son identifiant (quick_reply.payload). On
+        # envoie au bot la question du bouton, pas son titre.
+        menu_question = welcome_menu.question_for((message_data.get("quick_reply") or {}).get("payload"))
+        if menu_question:
+            text_body = menu_question
 
         if message_data.get("is_echo"):
             # Écho d'un message envoyé PAR la page (ex: notre propre
@@ -157,7 +168,15 @@ async def receive_message(request: Request):
         if result.handled_by_agent:
             return Response(status_code=200)  # conseiller aux commandes : le bot se tait
         try:
-            await _send_messenger_message(psid, result.response)
+            if welcome_menu.should_offer(result):
+                # Limites Meta : 13 boutons, titres de 20 caractères au plus
+                quick_replies = [
+                    {"content_type": "text", "title": option["label"], "payload": option["id"]}
+                    for option in welcome_menu.menu(result.language)
+                ]
+                await _send_messenger_message(psid, result.response, quick_replies)
+            else:
+                await _send_messenger_message(psid, result.response)
         except Exception as e:
             logger.error(f"❌ Échec envoi réponse Messenger à {mask_id(psid)}: {safe_error(e)}")
 

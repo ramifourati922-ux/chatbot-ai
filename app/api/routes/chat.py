@@ -6,10 +6,21 @@ import logging
 from app.api.rate_limit import chat_limit, limiter
 from app.api.web_session import client_id_signature_valid, new_signed_client_id, web_session_id
 from app.schemas.chat import ChatMessage, ChatResponse, WebSessionResponse
+from app.services import welcome_menu
 from app.services.dialogue_manager import handle_message
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 logger = logging.getLogger(__name__)
+
+
+@router.get("/menu")
+async def get_welcome_menu(language: str = "fr"):
+    """
+    Menu d'accueil du chat du site : chaque bouton envoie sa question au
+    bot, comme si le client l'avait tapée (voir app/services/welcome_menu.py).
+    Langue inconnue : français.
+    """
+    return {"intro": welcome_menu.intro(language), "options": welcome_menu.menu(language)}
 
 
 @router.get("/session", response_model=WebSessionResponse)
