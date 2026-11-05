@@ -111,13 +111,14 @@ def test_each_rag_question_finds_its_policy_above_the_threshold(language):
 
 @pytest.mark.parametrize("result, expected", [
     (SimpleNamespace(intent="greeting", escalated=False, handled_by_agent=False), True),
+    (SimpleNamespace(intent="help", escalated=False, handled_by_agent=False), True),
     (SimpleNamespace(intent="thanks", escalated=False, handled_by_agent=False), False),
     (SimpleNamespace(intent="general", escalated=False, handled_by_agent=False), False),
     (SimpleNamespace(intent="greeting", escalated=True, handled_by_agent=False), False),
     (SimpleNamespace(intent="greeting", escalated=False, handled_by_agent=True), False),
     (SimpleNamespace(response="écho"), False),  # résultat incomplet : pas de menu
 ])
-def test_menu_is_offered_only_after_a_greeting(result, expected):
+def test_menu_is_offered_only_after_a_greeting_or_a_help_request(result, expected):
     assert welcome_menu.should_offer(result) is expected
 
 

@@ -89,12 +89,14 @@ def real_channel(channel: str, external_id: Optional[str]) -> str:
 
 
 def reply_type(metadata: dict) -> str:
-    """Type de réponse du bot : transfert, politesse, suivi de commande ou RAG."""
+    """Type de réponse du bot : transfert, politesse, aide, suivi de commande ou RAG."""
     if metadata.get("escalated"):
         return "transfert"
     intent = metadata.get("intent")
     if intent in SMALL_TALK_INTENTS:
         return "politesse"
+    if intent == "help":
+        return "aide"
     if intent == "order_tracking":
         return "suivi_commande"
     return "rag"

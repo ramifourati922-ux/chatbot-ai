@@ -40,6 +40,10 @@ class Category(str, Enum):
     ESCALATE = "escalate"
     SMALL_TALK = "small_talk"  # salutation / remerciement / au revoir seuls
     ORDER_TRACKING = "order_tracking"  # statut d'une commande, lu en base (sans LLM)
+    # Demande d'aide vague (« i need your help », « je veux plus
+    # d'informations ») : reconnue seulement par les intentions apprises
+    # (semantic_intent.py), réponse toute prête + menu d'accueil
+    HELP = "help"
 
 
 @dataclass

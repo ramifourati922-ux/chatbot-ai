@@ -155,7 +155,7 @@ class StatsResponse(BaseModel):
     agent_replies: int = Field(..., description="Réponses envoyées par les conseillers")
     by_channel: Dict[str, ChannelStats]
     by_language: Dict[str, int]
-    replies_by_type: Dict[str, int] = Field(..., description="rag | politesse | suivi_commande | transfert")
+    replies_by_type: Dict[str, int] = Field(..., description="rag | politesse | aide | suivi_commande | transfert")
     transfers_by_reason: Dict[str, int]
     latency: Dict[str, Optional[LatencyStats]] = Field(..., description="rag (appel au LLM) | sans_llm | recherche et llm (détail d'une réponse RAG)")
     daily: List[DailyStats]

@@ -126,11 +126,12 @@ def question_for(option_id: Optional[str]) -> Optional[str]:
 
 def should_offer(result) -> bool:
     """Proposer le menu avec cette réponse ? Oui après une salutation du
-    client (« bonjour », « aslema »...) : début de conversation, le client
-    n'a pas encore dit ce qu'il cherche. Jamais pendant un transfert ni
-    quand un conseiller a la main."""
+    client (« bonjour », « aslema »...) ou une demande d'aide vague
+    (« i need your help », intention apprise "help") : le client n'a pas
+    encore dit ce qu'il cherche. Jamais pendant un transfert ni quand un
+    conseiller a la main."""
     return (
-        getattr(result, "intent", None) == "greeting"
+        getattr(result, "intent", None) in ("greeting", "help")
         and not getattr(result, "escalated", False)
         and not getattr(result, "handled_by_agent", False)
     )
