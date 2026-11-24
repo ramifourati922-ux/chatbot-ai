@@ -113,6 +113,20 @@ def not_found(number: str, language: str) -> str:
     return _texts(language)["not_found"].format(number=number)
 
 
+async def find_order_for(order_number: str, session_id: str, channel: str) -> Optional[Order]:
+    """La commande seulement si elle appartient au client de cette session
+    (users.external_id + canal) ; sinon None, traité comme « introuvable » :
+    on ne confirme même pas qu'elle existe. Une commande sans client
+    rattaché (user_id NULL) n'est pas affichée par le bot."""
+    from app.db.repositories.user_repository import UserRepository
+    async with AsyncSessionLocal() as db:
+        user = await UserRepository(db).get_by_external_id(session_id, channel)
+        if user is None:
+            return None
+        return (await db.execute(select(Order).where(
+            Order.order_number == order_number, Order.user_id == user.id))).scalar_one_or_none()
+
+
 async def find_order(order_number: str) -> Optional[Order]:
     """La commande (numéro déjà normalisé), ou None. Les erreurs de base
     remontent à l'appelant (dialogue_manager transfère alors le client)."""

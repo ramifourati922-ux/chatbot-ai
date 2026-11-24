@@ -498,7 +498,7 @@ async def _conversation_language(message: str, session_id: str, detected: str) -
     return detected
 
 
-async def _handle_order_tracking(message: str, intent_result, session_id: str, language: str,
+async def _handle_order_tracking(message: str, intent_result, session_id: str, channel: str, language: str,
                                  start: float) -> DialogueResult:
     """
     Numéro trouvé → statut de la commande. Sinon, une seule relance
@@ -515,7 +515,7 @@ async def _handle_order_tracking(message: str, intent_result, session_id: str, l
     order, lookup_failed = None, False
     if number:
         try:
-            order = await order_tracking.find_order(number)
+            order = await order_tracking.find_order_for(number, session_id, channel)
         except Exception as e:
             lookup_failed = True
             logger.warning(f"⚠️ Suivi de commande : base indisponible, transfert | session={mask_id(session_id)} : {e}")
@@ -634,7 +634,7 @@ async def _answer(message: str, session_id: str, channel: str, start: float, lan
     # d'hallucination possible sur un statut ou une date). Tout autre
     # message efface une relance restée sans suite.
     if intent_result.category == Category.ORDER_TRACKING:
-        return await _handle_order_tracking(message, intent_result, session_id, language, start)
+        return await _handle_order_tracking(message, intent_result, session_id, channel, language, start)
     await _session_manager.clear_context_key(session_id, order_tracking.PROMPTED_CONTEXT_KEY)
 
     # 4 bis. Échange de politesse seul ("bonjour", "merci", "au revoir"...)

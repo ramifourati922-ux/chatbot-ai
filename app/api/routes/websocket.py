@@ -65,6 +65,10 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
+# Même limite que POST /chat/ (ChatMessage.message, max_length=5000)
+MAX_MESSAGE_CHARS = 5000
+_TOO_LONG = "Message vide ou trop long (5000 caractères au plus). Raccourcissez-le puis réessayez."
+
 # Dépassement de limite : message d'erreur au format des réponses (champ
 # "response", affiché tel quel par chat.html) puis fermeture propre.
 _TOO_MANY_CONNECTIONS = "Trop de connexions simultanées depuis votre adresse. Fermez un onglet puis réessayez."
@@ -132,6 +136,9 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str, signature: st
         await manager.connect(client_id, websocket)
         while True:
             message = await websocket.receive_text()
+            if not message.strip() or len(message) > MAX_MESSAGE_CHARS:
+                await websocket.send_json({"response": _TOO_LONG, "error": "message_too_long", "escalated": False})
+                continue
 
             if not rate_limit.ws_message_allowed(ip):
                 await _reject(websocket, _TOO_MANY_MESSAGES)
