@@ -1,0 +1,544 @@
+{
+ "source": "docs\\evaluation\\ragas_results.json",
+ "meta": {
+  "date": "2026-09-27T19:26:16",
+  "n_scored": 22,
+  "n_offtopic": 3,
+  "generator_model": "openai/gpt-oss-120b",
+  "judge_model": "openai/gpt-oss-20b",
+  "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+  "reranker_model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+  "rerank_candidates": 20,
+  "confidence_signal": "cosine",
+  "judge_requests": 802,
+  "judge_429": 403,
+  "judge_tokens": 678697,
+  "gen_requests": 62,
+  "gen_429": 1,
+  "gen_tokens": 58797,
+  "duration_min": 71.6
+ },
+ "n_questions_notees": 22,
+ "n_hors_sujet": 3,
+ "validite": {
+  "basic": {
+   "context_precision": {
+    "valides": 22,
+    "manquants": 0,
+    "liste_manquants": [],
+    "mis_a_0_sans_contexte": []
+   },
+   "context_recall": {
+    "valides": 22,
+    "manquants": 0,
+    "liste_manquants": [],
+    "mis_a_0_sans_contexte": []
+   },
+   "faithfulness": {
+    "valides": 21,
+    "manquants": 1,
+    "liste_manquants": [
+     {
+      "id": "p-arduino-due",
+      "langue": "fr",
+      "erreur": "BadRequestError: Error code: 400 - {'error': {'message': \"Failed to validate JSON. Please adjust your prompt. See 'failed_generation' for more details.\", 'type'"
+     }
+    ],
+    "mis_a_0_sans_contexte": []
+   },
+   "answer_relevancy": {
+    "valides": 22,
+    "manquants": 0,
+    "liste_manquants": [],
+    "mis_a_0_sans_contexte": []
+   }
+  },
+  "advanced": {
+   "context_precision": {
+    "valides": 22,
+    "manquants": 0,
+    "liste_manquants": [],
+    "mis_a_0_sans_contexte": []
+   },
+   "context_recall": {
+    "valides": 22,
+    "manquants": 0,
+    "liste_manquants": [],
+    "mis_a_0_sans_contexte": []
+   },
+   "faithfulness": {
+    "valides": 22,
+    "manquants": 0,
+    "liste_manquants": [],
+    "mis_a_0_sans_contexte": []
+   },
+   "answer_relevancy": {
+    "valides": 22,
+    "manquants": 0,
+    "liste_manquants": [],
+    "mis_a_0_sans_contexte": []
+   }
+  }
+ },
+ "erreurs_metriques_agregees": {
+  "basic": 1,
+  "advanced": 0
+ },
+ "moyennes": {
+  "context_precision": {
+   "a_publiees_json": {
+    "basic": 0.6452,
+    "advanced": 0.9129
+   },
+   "a_recalculees": {
+    "basic": 0.6452,
+    "advanced": 0.9129
+   },
+   "n_par_mode": {
+    "basic": 22,
+    "advanced": 22
+   },
+   "rapport": {
+    "basic": 0.645,
+    "advanced": 0.913
+   },
+   "ecart_json_vs_rapport": {
+    "basic": 0.0002,
+    "advanced": -0.0001
+   },
+   "b_appariees": {
+    "basic": 0.6452,
+    "advanced": 0.9129
+   },
+   "n_apparie": 22,
+   "gain_publie": 0.2677,
+   "gain_apparie": 0.2677,
+   "bootstrap_ic95": [
+    0.095,
+    0.451
+   ],
+   "advanced_sup": 10,
+   "egal": 10,
+   "advanced_inf": 2
+  },
+  "context_recall": {
+   "a_publiees_json": {
+    "basic": 0.5985,
+    "advanced": 0.8
+   },
+   "a_recalculees": {
+    "basic": 0.5985,
+    "advanced": 0.8
+   },
+   "n_par_mode": {
+    "basic": 22,
+    "advanced": 22
+   },
+   "rapport": {
+    "basic": 0.599,
+    "advanced": 0.8
+   },
+   "ecart_json_vs_rapport": {
+    "basic": -0.0005,
+    "advanced": 0.0
+   },
+   "b_appariees": {
+    "basic": 0.5985,
+    "advanced": 0.8
+   },
+   "n_apparie": 22,
+   "gain_publie": 0.2015,
+   "gain_apparie": 0.2015,
+   "bootstrap_ic95": [
+    -0.003,
+    0.405
+   ],
+   "advanced_sup": 8,
+   "egal": 12,
+   "advanced_inf": 2
+  },
+  "faithfulness": {
+   "a_publiees_json": {
+    "basic": 0.5325,
+    "advanced": 0.6885
+   },
+   "a_recalculees": {
+    "basic": 0.5325,
+    "advanced": 0.6885
+   },
+   "n_par_mode": {
+    "basic": 21,
+    "advanced": 22
+   },
+   "rapport": {
+    "basic": 0.532,
+    "advanced": 0.689
+   },
+   "ecart_json_vs_rapport": {
+    "basic": 0.0005,
+    "advanced": -0.0005
+   },
+   "b_appariees": {
+    "basic": 0.5325,
+    "advanced": 0.6896
+   },
+   "n_apparie": 21,
+   "gain_publie": 0.156,
+   "gain_apparie": 0.1571,
+   "bootstrap_ic95": [
+    -0.009,
+    0.338
+   ],
+   "advanced_sup": 8,
+   "egal": 7,
+   "advanced_inf": 6
+  },
+  "answer_relevancy": {
+   "a_publiees_json": {
+    "basic": 0.4848,
+    "advanced": 0.5997
+   },
+   "a_recalculees": {
+    "basic": 0.4848,
+    "advanced": 0.5997
+   },
+   "n_par_mode": {
+    "basic": 22,
+    "advanced": 22
+   },
+   "rapport": {
+    "basic": 0.485,
+    "advanced": 0.6
+   },
+   "ecart_json_vs_rapport": {
+    "basic": -0.0002,
+    "advanced": -0.0003
+   },
+   "b_appariees": {
+    "basic": 0.4848,
+    "advanced": 0.5997
+   },
+   "n_apparie": 22,
+   "gain_publie": 0.1149,
+   "gain_apparie": 0.1149,
+   "bootstrap_ic95": [
+    -0.006,
+    0.252
+   ],
+   "advanced_sup": 9,
+   "egal": 5,
+   "advanced_inf": 8
+  }
+ },
+ "par_langue": {
+  "fr": {
+   "n_questions": 11,
+   "context_precision": {
+    "basic": {
+     "n": 11,
+     "moyenne": 0.7424,
+     "publiee": 0.7424
+    },
+    "advanced": {
+     "n": 11,
+     "moyenne": 1.0,
+     "publiee": 1.0
+    },
+    "apparie": {
+     "n": 11,
+     "basic": 0.7424,
+     "advanced": 1.0
+    }
+   },
+   "context_recall": {
+    "basic": {
+     "n": 11,
+     "moyenne": 0.7273,
+     "publiee": 0.7273
+    },
+    "advanced": {
+     "n": 11,
+     "moyenne": 0.9545,
+     "publiee": 0.9545
+    },
+    "apparie": {
+     "n": 11,
+     "basic": 0.7273,
+     "advanced": 0.9545
+    }
+   },
+   "faithfulness": {
+    "basic": {
+     "n": 10,
+     "moyenne": 0.5471,
+     "publiee": 0.5471
+    },
+    "advanced": {
+     "n": 11,
+     "moyenne": 0.8022,
+     "publiee": 0.8022
+    },
+    "apparie": {
+     "n": 10,
+     "basic": 0.5471,
+     "advanced": 0.8157
+    }
+   },
+   "answer_relevancy": {
+    "basic": {
+     "n": 11,
+     "moyenne": 0.5725,
+     "publiee": 0.5725
+    },
+    "advanced": {
+     "n": 11,
+     "moyenne": 0.6629,
+     "publiee": 0.6629
+    },
+    "apparie": {
+     "n": 11,
+     "basic": 0.5725,
+     "advanced": 0.6629
+    }
+   }
+  },
+  "en": {
+   "n_questions": 4,
+   "context_precision": {
+    "basic": {
+     "n": 4,
+     "moyenne": 0.6458,
+     "publiee": 0.6458
+    },
+    "advanced": {
+     "n": 4,
+     "moyenne": 1.0,
+     "publiee": 1.0
+    },
+    "apparie": {
+     "n": 4,
+     "basic": 0.6458,
+     "advanced": 1.0
+    }
+   },
+   "context_recall": {
+    "basic": {
+     "n": 4,
+     "moyenne": 0.375,
+     "publiee": 0.375
+    },
+    "advanced": {
+     "n": 4,
+     "moyenne": 0.85,
+     "publiee": 0.85
+    },
+    "apparie": {
+     "n": 4,
+     "basic": 0.375,
+     "advanced": 0.85
+    }
+   },
+   "faithfulness": {
+    "basic": {
+     "n": 4,
+     "moyenne": 0.7083,
+     "publiee": 0.7083
+    },
+    "advanced": {
+     "n": 4,
+     "moyenne": 0.9226,
+     "publiee": 0.9226
+    },
+    "apparie": {
+     "n": 4,
+     "basic": 0.7083,
+     "advanced": 0.9226
+    }
+   },
+   "answer_relevancy": {
+    "basic": {
+     "n": 4,
+     "moyenne": 0.4973,
+     "publiee": 0.4973
+    },
+    "advanced": {
+     "n": 4,
+     "moyenne": 0.6788,
+     "publiee": 0.6788
+    },
+    "apparie": {
+     "n": 4,
+     "basic": 0.4973,
+     "advanced": 0.6788
+    }
+   }
+  },
+  "ar": {
+   "n_questions": 4,
+   "context_precision": {
+    "basic": {
+     "n": 4,
+     "moyenne": 0.8611,
+     "publiee": 0.8611
+    },
+    "advanced": {
+     "n": 4,
+     "moyenne": 0.8125,
+     "publiee": 0.8125
+    },
+    "apparie": {
+     "n": 4,
+     "basic": 0.8611,
+     "advanced": 0.8125
+    }
+   },
+   "context_recall": {
+    "basic": {
+     "n": 4,
+     "moyenne": 0.9167,
+     "publiee": 0.9167
+    },
+    "advanced": {
+     "n": 4,
+     "moyenne": 0.55,
+     "publiee": 0.55
+    },
+    "apparie": {
+     "n": 4,
+     "basic": 0.9167,
+     "advanced": 0.55
+    }
+   },
+   "faithfulness": {
+    "basic": {
+     "n": 4,
+     "moyenne": 0.7192,
+     "publiee": 0.7192
+    },
+    "advanced": {
+     "n": 4,
+     "moyenne": 0.5333,
+     "publiee": 0.5333
+    },
+    "apparie": {
+     "n": 4,
+     "basic": 0.7192,
+     "advanced": 0.5333
+    }
+   },
+   "answer_relevancy": {
+    "basic": {
+     "n": 4,
+     "moyenne": 0.5946,
+     "publiee": 0.5946
+    },
+    "advanced": {
+     "n": 4,
+     "moyenne": 0.5746,
+     "publiee": 0.5746
+    },
+    "apparie": {
+     "n": 4,
+     "basic": 0.5946,
+     "advanced": 0.5746
+    }
+   }
+  },
+  "tn": {
+   "n_questions": 3,
+   "context_precision": {
+    "basic": {
+     "n": 3,
+     "moyenne": 0.0,
+     "publiee": 0.0
+    },
+    "advanced": {
+     "n": 3,
+     "moyenne": 0.6111,
+     "publiee": 0.6111
+    },
+    "apparie": {
+     "n": 3,
+     "basic": 0.0,
+     "advanced": 0.6111
+    }
+   },
+   "context_recall": {
+    "basic": {
+     "n": 3,
+     "moyenne": 0.0,
+     "publiee": 0.0
+    },
+    "advanced": {
+     "n": 3,
+     "moyenne": 0.5,
+     "publiee": 0.5
+    },
+    "apparie": {
+     "n": 3,
+     "basic": 0.0,
+     "advanced": 0.5
+    }
+   },
+   "faithfulness": {
+    "basic": {
+     "n": 3,
+     "moyenne": 0.0,
+     "publiee": 0.0
+    },
+    "advanced": {
+     "n": 3,
+     "moyenne": 0.1667,
+     "publiee": 0.1667
+    },
+    "apparie": {
+     "n": 3,
+     "basic": 0.0,
+     "advanced": 0.1667
+    }
+   },
+   "answer_relevancy": {
+    "basic": {
+     "n": 3,
+     "moyenne": 0.0,
+     "publiee": 0.0
+    },
+    "advanced": {
+     "n": 3,
+     "moyenne": 0.296,
+     "publiee": 0.296
+    },
+    "apparie": {
+     "n": 3,
+     "basic": 0.0,
+     "advanced": 0.296
+    }
+   }
+  }
+ },
+ "manquants_caracteristiques": [
+  {
+   "id": "p-arduino-due",
+   "mode": "basic",
+   "langue": "fr",
+   "categorie": "produit",
+   "contexte_car": 1022,
+   "reponse_car": 248,
+   "n_contextes": 4,
+   "confiance": 0.599
+  }
+ ],
+ "autres_reference": {
+  "n": 43,
+  "contexte_car_mediane": 799,
+  "reponse_car_mediane": 323,
+  "reponse_car_min_max": [
+   61,
+   823
+  ],
+  "contexte_car_min_max": [
+   206,
+   1108
+  ]
+ }
+}

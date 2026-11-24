@@ -1,0 +1,2885 @@
+{
+ "sha256_avant": "ead140586ddc71706f294b81b5d456ab568a86ddce308d32a36ff8bee36a2b63",
+ "coherence_jeu": {
+  "golden_set": 25,
+  "notees": 22,
+  "identiques_au_json": 22
+ },
+ "A_tests": {
+  "context_precision": {
+   "n_apparie": 22,
+   "progressent": 10,
+   "egales": 10,
+   "reculent": 2,
+   "test_signes_p": 0.0386,
+   "wilcoxon": {
+    "n_sans_egalites": 12,
+    "statistique": 7.5,
+    "p": 0.0107,
+    "methode": "scipy.stats.wilcoxon, égalités exclues (zero_method='wilcox')"
+   }
+  },
+  "context_recall": {
+   "n_apparie": 22,
+   "progressent": 8,
+   "egales": 12,
+   "reculent": 2,
+   "test_signes_p": 0.1094,
+   "wilcoxon": {
+    "n_sans_egalites": 10,
+    "statistique": 10.0,
+    "p": 0.0781,
+    "methode": "scipy.stats.wilcoxon, égalités exclues (zero_method='wilcox')"
+   }
+  },
+  "faithfulness": {
+   "n_apparie": 21,
+   "progressent": 8,
+   "egales": 7,
+   "reculent": 6,
+   "test_signes_p": 0.7905,
+   "wilcoxon": {
+    "n_sans_egalites": 14,
+    "statistique": 31.0,
+    "p": 0.177,
+    "methode": "scipy.stats.wilcoxon, égalités exclues (zero_method='wilcox')"
+   }
+  },
+  "answer_relevancy": {
+   "n_apparie": 22,
+   "progressent": 9,
+   "egales": 5,
+   "reculent": 8,
+   "test_signes_p": 1.0,
+   "wilcoxon": {
+    "n_sans_egalites": 17,
+    "statistique": 58.0,
+    "p": 0.4038,
+    "methode": "scipy.stats.wilcoxon, égalités exclues (zero_method='wilcox')"
+   }
+  }
+ },
+ "B_par_question": {
+  "basic|sans_arabizi": [
+   {
+    "id": "p-vl53l0x",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CA-000035",
+     "LS-CA-000034",
+     "LS-CA-000036",
+     "LS-MO-000066"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.75,
+    "borne_precision": 0.75,
+    "rr": 1.0
+   },
+   {
+    "id": "p-18650",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000049",
+     "LS-AL-000064",
+     "LS-AL-000050",
+     "LS-AL-000065"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.75,
+    "rr": 0.0
+   },
+   {
+    "id": "p-nema17",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-MR-000024",
+     "LS-MO-000084",
+     "LS-MR-000026",
+     "LS-MR-000020"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 1.0,
+    "rr": 0.0
+   },
+   {
+    "id": "p-analyseur",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-IM-000031",
+     "LS-IM-000032",
+     "ecommerce/promotions.txt",
+     "LS-MO-000011"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-arduino-due",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000014",
+     "LS-KP-000020",
+     "LS-CP-000013",
+     "LS-KP-000015"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.5,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   },
+   {
+    "id": "p-esp32",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-MO-000062",
+     "LS-CP-000020",
+     "LS-MO-000059",
+     "LS-CP-000028"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.25,
+    "precision_sources": 0.5,
+    "borne_precision": 1.0,
+    "rr": 0.5
+   },
+   {
+    "id": "p-12v5a",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000060",
+     "LS-AL-000057",
+     "LS-AL-000046",
+     "LS-CN-001057"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-rpi4",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000039",
+     "LS-CP-000037",
+     "LS-KP-000022",
+     "LS-CP-000041"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-retour",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-frais",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-cash",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-warranty",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CO-000648",
+     "sav/garantie.txt",
+     "LS-CO-006640",
+     "LS-CO-005008"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "en-shipping",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-return",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/reclamations.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "en-esp32",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000027",
+     "LS-CP-000019",
+     "LS-CP-000028",
+     "LS-CP-000017"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 1.0,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-frais",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-retour",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-garantie",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/reclamations.txt",
+     "sav/garantie.txt",
+     "sav/garantie.txt",
+     "sav/garantie.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "ar-paiement",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-garantie",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CO-008314",
+     "LS-CO-008298",
+     "LS-EL-000493",
+     "LS-EL-000492"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.25,
+    "rr": 0.0
+   },
+   {
+    "id": "tn-sfax",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/reclamations.txt",
+     "LS-CO-008460"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-probleme",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-OU-000027",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "LS-OU-000028"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 0.25,
+    "borne_precision": 0.5,
+    "rr": 0.5
+   }
+  ],
+  "hybrid|sans_arabizi": [
+   {
+    "id": "p-vl53l0x",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CA-000035",
+     "LS-CA-000034",
+     "LS-CA-000036",
+     "LS-CA-000032"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.75,
+    "borne_precision": 0.75,
+    "rr": 1.0
+   },
+   {
+    "id": "p-18650",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000049",
+     "LS-AL-000064",
+     "LS-AL-000065",
+     "LS-AL-000001"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.75,
+    "rr": 0.0
+   },
+   {
+    "id": "p-nema17",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-MO-000084",
+     "LS-MO-000096",
+     "LS-MR-000018",
+     "LS-MR-000016"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.25,
+    "precision_sources": 0.5,
+    "borne_precision": 1.0,
+    "rr": 0.3333333333333333
+   },
+   {
+    "id": "p-analyseur",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-IM-000031",
+     "LS-IM-000032",
+     "ecommerce/promotions.txt",
+     "LS-MO-000011"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-arduino-due",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000014",
+     "LS-CP-000013",
+     "LS-CP-000001",
+     "LS-CP-000009"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.5,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   },
+   {
+    "id": "p-esp32",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000028",
+     "LS-CP-000021",
+     "LS-CP-000020",
+     "LS-CP-000022"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 1.0,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "p-12v5a",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000060",
+     "LS-AL-000046",
+     "LS-AL-000059",
+     "LS-AL-000047"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-rpi4",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-KP-000022",
+     "LS-CP-000039",
+     "LS-CP-000037",
+     "LS-CP-000038"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "s-retour",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/reclamations.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-frais",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "sav/retours.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-cash",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-warranty",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CO-000648",
+     "sav/garantie.txt",
+     "LS-CO-006640",
+     "LS-CO-005008"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "en-shipping",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-return",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/reclamations.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "en-esp32",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000027",
+     "LS-CP-000028",
+     "LS-KP-000021",
+     "LS-KP-000016"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.25,
+    "precision_sources": 0.5,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-frais",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-retour",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-garantie",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/reclamations.txt",
+     "sav/garantie.txt",
+     "sav/garantie.txt",
+     "sav/garantie.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "ar-paiement",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-garantie",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CO-008314",
+     "LS-OU-000034",
+     "LS-CO-008298",
+     "LS-IM-000005"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.25,
+    "rr": 0.0
+   },
+   {
+    "id": "tn-sfax",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-probleme",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 0.25,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   }
+  ],
+  "advanced|sans_arabizi": [
+   {
+    "id": "p-vl53l0x",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CA-000035",
+     "LS-CA-000036",
+     "LS-CA-000034",
+     "LS-CA-000039"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.75,
+    "borne_precision": 0.75,
+    "rr": 1.0
+   },
+   {
+    "id": "p-18650",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000032",
+     "LS-AL-000031",
+     "LS-AL-000033",
+     "LS-AL-000004"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.75,
+    "borne_precision": 0.75,
+    "rr": 1.0
+   },
+   {
+    "id": "p-nema17",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-MR-000016",
+     "LS-MR-000012",
+     "LS-MR-000018",
+     "LS-MR-000014"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 1.0,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "p-analyseur",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-IM-000031",
+     "LS-IM-000032",
+     "LS-MO-000011",
+     "LS-MO-000012"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-arduino-due",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000013",
+     "LS-CP-000014",
+     "LS-CP-000007",
+     "LS-CP-000003"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.5,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   },
+   {
+    "id": "p-esp32",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000018",
+     "LS-CP-000020",
+     "LS-CP-000017",
+     "LS-CP-000019"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 1.0,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "p-12v5a",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000060",
+     "LS-EL-000468",
+     "LS-MO-000057",
+     "LS-AL-000046"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-rpi4",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000039",
+     "LS-CP-000038",
+     "LS-CP-000037",
+     "LS-CP-000041"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-retour",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/retours.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-frais",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/retours.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-cash",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "sav/retours.txt",
+     "ecommerce/paiement.txt",
+     "sav/retours.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-warranty",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/garantie.txt",
+     "LS-CO-006024",
+     "LS-CO-006016",
+     "LS-CO-004996"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-shipping",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-return",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt",
+     "sav/retours.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-esp32",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-KP-000021",
+     "LS-KP-000016",
+     "LS-CP-000027",
+     "LS-CP-000028"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.25,
+    "precision_sources": 0.5,
+    "borne_precision": 1.0,
+    "rr": 0.3333333333333333
+   },
+   {
+    "id": "ar-frais",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "LS-CN-001004",
+     "LS-CN-000992"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-retour",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/garantie.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "ar-garantie",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/garantie.txt",
+     "sav/livraison.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-paiement",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-garantie",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/garantie.txt",
+     "LS-IM-000003",
+     "LS-IM-000001",
+     "LS-IM-000004"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-sfax",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "LS-CN-000341"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-probleme",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CN-000266",
+     "LS-OU-000016",
+     "LS-OU-000021",
+     "LS-OU-000026"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.5,
+    "rr": 0.0
+   }
+  ],
+  "basic|arabizi": [
+   {
+    "id": "p-vl53l0x",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CA-000035",
+     "LS-CA-000034",
+     "LS-CA-000036",
+     "LS-MO-000066"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.75,
+    "borne_precision": 0.75,
+    "rr": 1.0
+   },
+   {
+    "id": "p-18650",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000049",
+     "LS-AL-000064",
+     "LS-AL-000050",
+     "LS-AL-000065"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.75,
+    "rr": 0.0
+   },
+   {
+    "id": "p-nema17",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-MR-000024",
+     "LS-MO-000084",
+     "LS-MR-000026",
+     "LS-MR-000020"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 1.0,
+    "rr": 0.0
+   },
+   {
+    "id": "p-analyseur",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-IM-000031",
+     "LS-IM-000032",
+     "ecommerce/promotions.txt",
+     "LS-MO-000011"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-arduino-due",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000014",
+     "LS-KP-000020",
+     "LS-CP-000013",
+     "LS-KP-000015"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.5,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   },
+   {
+    "id": "p-esp32",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-MO-000062",
+     "LS-CP-000020",
+     "LS-MO-000059",
+     "LS-CP-000028"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.25,
+    "precision_sources": 0.5,
+    "borne_precision": 1.0,
+    "rr": 0.5
+   },
+   {
+    "id": "p-12v5a",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000060",
+     "LS-AL-000057",
+     "LS-AL-000046",
+     "LS-CN-001057"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-rpi4",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000039",
+     "LS-CP-000037",
+     "LS-KP-000022",
+     "LS-CP-000041"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-retour",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-frais",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-cash",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-warranty",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CO-000648",
+     "sav/garantie.txt",
+     "LS-CO-006640",
+     "LS-CO-005008"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "en-shipping",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-return",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/reclamations.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "en-esp32",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000027",
+     "LS-CP-000019",
+     "LS-CP-000028",
+     "LS-CP-000017"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 1.0,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-frais",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-retour",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-garantie",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/reclamations.txt",
+     "sav/garantie.txt",
+     "sav/garantie.txt",
+     "sav/garantie.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "ar-paiement",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-garantie",
+    "langue": "tn",
+    "requete_modifiee": true,
+    "sources": [
+     "LS-CO-008314",
+     "LS-CO-008298",
+     "LS-EL-000493",
+     "LS-EL-000492"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.25,
+    "rr": 0.0
+   },
+   {
+    "id": "tn-sfax",
+    "langue": "tn",
+    "requete_modifiee": true,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-probleme",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-OU-000027",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "LS-OU-000028"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 0.25,
+    "borne_precision": 0.5,
+    "rr": 0.5
+   }
+  ],
+  "hybrid|arabizi": [
+   {
+    "id": "p-vl53l0x",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CA-000035",
+     "LS-CA-000034",
+     "LS-CA-000036",
+     "LS-CA-000032"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.75,
+    "borne_precision": 0.75,
+    "rr": 1.0
+   },
+   {
+    "id": "p-18650",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000049",
+     "LS-AL-000064",
+     "LS-AL-000065",
+     "LS-AL-000001"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.75,
+    "rr": 0.0
+   },
+   {
+    "id": "p-nema17",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-MO-000084",
+     "LS-MO-000096",
+     "LS-MR-000018",
+     "LS-MR-000016"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.25,
+    "precision_sources": 0.5,
+    "borne_precision": 1.0,
+    "rr": 0.3333333333333333
+   },
+   {
+    "id": "p-analyseur",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-IM-000031",
+     "LS-IM-000032",
+     "ecommerce/promotions.txt",
+     "LS-MO-000011"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-arduino-due",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000014",
+     "LS-CP-000013",
+     "LS-CP-000001",
+     "LS-CP-000009"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.5,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   },
+   {
+    "id": "p-esp32",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000028",
+     "LS-CP-000021",
+     "LS-CP-000020",
+     "LS-CP-000022"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 1.0,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "p-12v5a",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000060",
+     "LS-AL-000046",
+     "LS-AL-000059",
+     "LS-AL-000047"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-rpi4",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-KP-000022",
+     "LS-CP-000039",
+     "LS-CP-000037",
+     "LS-CP-000038"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "s-retour",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/reclamations.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-frais",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "sav/retours.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-cash",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-warranty",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CO-000648",
+     "sav/garantie.txt",
+     "LS-CO-006640",
+     "LS-CO-005008"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "en-shipping",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-return",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/reclamations.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "en-esp32",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000027",
+     "LS-CP-000028",
+     "LS-KP-000021",
+     "LS-KP-000016"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.25,
+    "precision_sources": 0.5,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-frais",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-retour",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-garantie",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/reclamations.txt",
+     "sav/garantie.txt",
+     "sav/garantie.txt",
+     "sav/garantie.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "ar-paiement",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-garantie",
+    "langue": "tn",
+    "requete_modifiee": true,
+    "sources": [
+     "LS-CO-008314",
+     "LS-OU-000034",
+     "LS-CO-008298",
+     "LS-IM-000005"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.25,
+    "rr": 0.0
+   },
+   {
+    "id": "tn-sfax",
+    "langue": "tn",
+    "requete_modifiee": true,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-probleme",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 0.25,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   }
+  ],
+  "advanced|arabizi": [
+   {
+    "id": "p-vl53l0x",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CA-000035",
+     "LS-CA-000036",
+     "LS-CA-000034",
+     "LS-CA-000039"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.75,
+    "borne_precision": 0.75,
+    "rr": 1.0
+   },
+   {
+    "id": "p-18650",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000032",
+     "LS-AL-000031",
+     "LS-AL-000033",
+     "LS-AL-000004"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.75,
+    "borne_precision": 0.75,
+    "rr": 1.0
+   },
+   {
+    "id": "p-nema17",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-MR-000016",
+     "LS-MR-000012",
+     "LS-MR-000018",
+     "LS-MR-000014"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 1.0,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "p-analyseur",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-IM-000031",
+     "LS-IM-000032",
+     "LS-MO-000011",
+     "LS-MO-000012"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-arduino-due",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000013",
+     "LS-CP-000014",
+     "LS-CP-000007",
+     "LS-CP-000003"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.5,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   },
+   {
+    "id": "p-esp32",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000018",
+     "LS-CP-000020",
+     "LS-CP-000017",
+     "LS-CP-000019"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.5,
+    "precision_sources": 1.0,
+    "borne_precision": 1.0,
+    "rr": 1.0
+   },
+   {
+    "id": "p-12v5a",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-AL-000060",
+     "LS-EL-000468",
+     "LS-MO-000057",
+     "LS-AL-000046"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "p-rpi4",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CP-000039",
+     "LS-CP-000038",
+     "LS-CP-000037",
+     "LS-CP-000041"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-retour",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/retours.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-frais",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/retours.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "s-cash",
+    "langue": "fr",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "sav/retours.txt",
+     "ecommerce/paiement.txt",
+     "sav/retours.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-warranty",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/garantie.txt",
+     "LS-CO-006024",
+     "LS-CO-006016",
+     "LS-CO-004996"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-shipping",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-return",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt",
+     "sav/retours.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "en-esp32",
+    "langue": "en",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-KP-000021",
+     "LS-KP-000016",
+     "LS-CP-000027",
+     "LS-CP-000028"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 0.25,
+    "precision_sources": 0.5,
+    "borne_precision": 1.0,
+    "rr": 0.3333333333333333
+   },
+   {
+    "id": "ar-frais",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "LS-CN-001004",
+     "LS-CN-000992"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-retour",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/garantie.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.5
+   },
+   {
+    "id": "ar-garantie",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "sav/garantie.txt",
+     "sav/livraison.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "ar-paiement",
+    "langue": "ar",
+    "requete_modifiee": false,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-garantie",
+    "langue": "tn",
+    "requete_modifiee": true,
+    "sources": [
+     "sav/garantie.txt",
+     "LS-IM-000003",
+     "LS-IM-000001",
+     "LS-CN-000899"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-sfax",
+    "langue": "tn",
+    "requete_modifiee": true,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt"
+    ],
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 1.0
+   },
+   {
+    "id": "tn-probleme",
+    "langue": "tn",
+    "requete_modifiee": false,
+    "sources": [
+     "LS-CN-000266",
+     "LS-OU-000016",
+     "LS-OU-000021",
+     "LS-OU-000026"
+    ],
+    "hit4": 0.0,
+    "rappel_sources": 0.0,
+    "precision_sources": 0.0,
+    "borne_precision": 0.5,
+    "rr": 0.0
+   }
+  ]
+ },
+ "B_resume": {
+  "basic|sans_arabizi": {
+   "total": {
+    "n": 22,
+    "hit4": 0.864,
+    "rappel_sources": 0.784,
+    "precision_sources": 0.295,
+    "borne_precision": 0.42,
+    "rr": 0.75
+   },
+   "fr": {
+    "n": 11,
+    "hit4": 0.818,
+    "rappel_sources": 0.75,
+    "precision_sources": 0.295,
+    "borne_precision": 0.5,
+    "rr": 0.773
+   },
+   "en": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 0.875,
+    "precision_sources": 0.438,
+    "borne_precision": 0.438,
+    "rr": 0.75
+   },
+   "ar": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.875
+   },
+   "tn": {
+    "n": 3,
+    "hit4": 0.667,
+    "rappel_sources": 0.5,
+    "precision_sources": 0.167,
+    "borne_precision": 0.333,
+    "rr": 0.5
+   }
+  },
+  "hybrid|sans_arabizi": {
+   "total": {
+    "n": 22,
+    "hit4": 0.909,
+    "rappel_sources": 0.795,
+    "precision_sources": 0.318,
+    "borne_precision": 0.42,
+    "rr": 0.788
+   },
+   "fr": {
+    "n": 11,
+    "hit4": 0.909,
+    "rappel_sources": 0.795,
+    "precision_sources": 0.386,
+    "borne_precision": 0.5,
+    "rr": 0.803
+   },
+   "en": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 0.812,
+    "precision_sources": 0.312,
+    "borne_precision": 0.438,
+    "rr": 0.75
+   },
+   "ar": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.875
+   },
+   "tn": {
+    "n": 3,
+    "hit4": 0.667,
+    "rappel_sources": 0.5,
+    "precision_sources": 0.167,
+    "borne_precision": 0.333,
+    "rr": 0.667
+   }
+  },
+  "advanced|sans_arabizi": {
+   "total": {
+    "n": 22,
+    "hit4": 0.955,
+    "rappel_sources": 0.875,
+    "precision_sources": 0.375,
+    "borne_precision": 0.42,
+    "rr": 0.902
+   },
+   "fr": {
+    "n": 11,
+    "hit4": 1.0,
+    "rappel_sources": 0.909,
+    "precision_sources": 0.5,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   },
+   "en": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 0.812,
+    "precision_sources": 0.312,
+    "borne_precision": 0.438,
+    "rr": 0.833
+   },
+   "ar": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.875
+   },
+   "tn": {
+    "n": 3,
+    "hit4": 0.667,
+    "rappel_sources": 0.667,
+    "precision_sources": 0.167,
+    "borne_precision": 0.333,
+    "rr": 0.667
+   }
+  },
+  "basic|arabizi": {
+   "total": {
+    "n": 22,
+    "hit4": 0.864,
+    "rappel_sources": 0.784,
+    "precision_sources": 0.295,
+    "borne_precision": 0.42,
+    "rr": 0.75
+   },
+   "fr": {
+    "n": 11,
+    "hit4": 0.818,
+    "rappel_sources": 0.75,
+    "precision_sources": 0.295,
+    "borne_precision": 0.5,
+    "rr": 0.773
+   },
+   "en": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 0.875,
+    "precision_sources": 0.438,
+    "borne_precision": 0.438,
+    "rr": 0.75
+   },
+   "ar": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.875
+   },
+   "tn": {
+    "n": 3,
+    "hit4": 0.667,
+    "rappel_sources": 0.5,
+    "precision_sources": 0.167,
+    "borne_precision": 0.333,
+    "rr": 0.5
+   }
+  },
+  "hybrid|arabizi": {
+   "total": {
+    "n": 22,
+    "hit4": 0.909,
+    "rappel_sources": 0.795,
+    "precision_sources": 0.318,
+    "borne_precision": 0.42,
+    "rr": 0.788
+   },
+   "fr": {
+    "n": 11,
+    "hit4": 0.909,
+    "rappel_sources": 0.795,
+    "precision_sources": 0.386,
+    "borne_precision": 0.5,
+    "rr": 0.803
+   },
+   "en": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 0.812,
+    "precision_sources": 0.312,
+    "borne_precision": 0.438,
+    "rr": 0.75
+   },
+   "ar": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.875
+   },
+   "tn": {
+    "n": 3,
+    "hit4": 0.667,
+    "rappel_sources": 0.5,
+    "precision_sources": 0.167,
+    "borne_precision": 0.333,
+    "rr": 0.667
+   }
+  },
+  "advanced|arabizi": {
+   "total": {
+    "n": 22,
+    "hit4": 0.955,
+    "rappel_sources": 0.875,
+    "precision_sources": 0.375,
+    "borne_precision": 0.42,
+    "rr": 0.902
+   },
+   "fr": {
+    "n": 11,
+    "hit4": 1.0,
+    "rappel_sources": 0.909,
+    "precision_sources": 0.5,
+    "borne_precision": 0.5,
+    "rr": 1.0
+   },
+   "en": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 0.812,
+    "precision_sources": 0.312,
+    "borne_precision": 0.438,
+    "rr": 0.833
+   },
+   "ar": {
+    "n": 4,
+    "hit4": 1.0,
+    "rappel_sources": 1.0,
+    "precision_sources": 0.25,
+    "borne_precision": 0.25,
+    "rr": 0.875
+   },
+   "tn": {
+    "n": 3,
+    "hit4": 0.667,
+    "rappel_sources": 0.667,
+    "precision_sources": 0.167,
+    "borne_precision": 0.333,
+    "rr": 0.667
+   }
+  }
+ },
+ "B_apparie": {
+  "sans_arabizi": {
+   "basic->hybrid": {
+    "hit4": {
+     "moyenne": 0.045,
+     "ic95": [
+      0.0,
+      0.136
+     ],
+     "progressent": 1,
+     "egales": 21,
+     "reculent": 0
+    },
+    "rappel_sources": {
+     "moyenne": 0.011,
+     "ic95": [
+      -0.023,
+      0.045
+     ],
+     "progressent": 2,
+     "egales": 19,
+     "reculent": 1
+    },
+    "precision_sources": {
+     "moyenne": 0.023,
+     "ic95": [
+      -0.045,
+      0.091
+     ],
+     "progressent": 2,
+     "egales": 19,
+     "reculent": 1
+    },
+    "rr": {
+     "moyenne": 0.038,
+     "ic95": [
+      -0.045,
+      0.121
+     ],
+     "progressent": 3,
+     "egales": 18,
+     "reculent": 1
+    }
+   },
+   "hybrid->advanced": {
+    "hit4": {
+     "moyenne": 0.045,
+     "ic95": [
+      -0.091,
+      0.182
+     ],
+     "progressent": 2,
+     "egales": 19,
+     "reculent": 1
+    },
+    "rappel_sources": {
+     "moyenne": 0.08,
+     "ic95": [
+      -0.034,
+      0.216
+     ],
+     "progressent": 3,
+     "egales": 18,
+     "reculent": 1
+    },
+    "precision_sources": {
+     "moyenne": 0.057,
+     "ic95": [
+      -0.011,
+      0.148
+     ],
+     "progressent": 3,
+     "egales": 18,
+     "reculent": 1
+    },
+    "rr": {
+     "moyenne": 0.114,
+     "ic95": [
+      -0.083,
+      0.311
+     ],
+     "progressent": 7,
+     "egales": 12,
+     "reculent": 3
+    }
+   },
+   "basic->advanced": {
+    "hit4": {
+     "moyenne": 0.091,
+     "ic95": [
+      -0.091,
+      0.273
+     ],
+     "progressent": 3,
+     "egales": 18,
+     "reculent": 1
+    },
+    "rappel_sources": {
+     "moyenne": 0.091,
+     "ic95": [
+      -0.034,
+      0.239
+     ],
+     "progressent": 4,
+     "egales": 16,
+     "reculent": 2
+    },
+    "precision_sources": {
+     "moyenne": 0.08,
+     "ic95": [
+      -0.034,
+      0.216
+     ],
+     "progressent": 4,
+     "egales": 16,
+     "reculent": 2
+    },
+    "rr": {
+     "moyenne": 0.152,
+     "ic95": [
+      -0.03,
+      0.341
+     ],
+     "progressent": 7,
+     "egales": 12,
+     "reculent": 3
+    }
+   },
+   "decomposition": {
+    "hit4": {
+     "gain_total": 0.091,
+     "dont_hybride": 0.045,
+     "dont_reclassement": 0.046,
+     "part_hybride": 0.49
+    },
+    "rappel_sources": {
+     "gain_total": 0.091,
+     "dont_hybride": 0.011,
+     "dont_reclassement": 0.08,
+     "part_hybride": 0.12
+    },
+    "precision_sources": {
+     "gain_total": 0.08,
+     "dont_hybride": 0.023,
+     "dont_reclassement": 0.057,
+     "part_hybride": 0.29
+    },
+    "rr": {
+     "gain_total": 0.152,
+     "dont_hybride": 0.038,
+     "dont_reclassement": 0.114,
+     "part_hybride": 0.25
+    }
+   }
+  },
+  "arabizi": {
+   "basic->hybrid": {
+    "hit4": {
+     "moyenne": 0.045,
+     "ic95": [
+      0.0,
+      0.136
+     ],
+     "progressent": 1,
+     "egales": 21,
+     "reculent": 0
+    },
+    "rappel_sources": {
+     "moyenne": 0.011,
+     "ic95": [
+      -0.023,
+      0.045
+     ],
+     "progressent": 2,
+     "egales": 19,
+     "reculent": 1
+    },
+    "precision_sources": {
+     "moyenne": 0.023,
+     "ic95": [
+      -0.045,
+      0.091
+     ],
+     "progressent": 2,
+     "egales": 19,
+     "reculent": 1
+    },
+    "rr": {
+     "moyenne": 0.038,
+     "ic95": [
+      -0.045,
+      0.121
+     ],
+     "progressent": 3,
+     "egales": 18,
+     "reculent": 1
+    }
+   },
+   "hybrid->advanced": {
+    "hit4": {
+     "moyenne": 0.045,
+     "ic95": [
+      -0.091,
+      0.182
+     ],
+     "progressent": 2,
+     "egales": 19,
+     "reculent": 1
+    },
+    "rappel_sources": {
+     "moyenne": 0.08,
+     "ic95": [
+      -0.034,
+      0.216
+     ],
+     "progressent": 3,
+     "egales": 18,
+     "reculent": 1
+    },
+    "precision_sources": {
+     "moyenne": 0.057,
+     "ic95": [
+      -0.011,
+      0.148
+     ],
+     "progressent": 3,
+     "egales": 18,
+     "reculent": 1
+    },
+    "rr": {
+     "moyenne": 0.114,
+     "ic95": [
+      -0.083,
+      0.311
+     ],
+     "progressent": 7,
+     "egales": 12,
+     "reculent": 3
+    }
+   },
+   "basic->advanced": {
+    "hit4": {
+     "moyenne": 0.091,
+     "ic95": [
+      -0.091,
+      0.273
+     ],
+     "progressent": 3,
+     "egales": 18,
+     "reculent": 1
+    },
+    "rappel_sources": {
+     "moyenne": 0.091,
+     "ic95": [
+      -0.034,
+      0.239
+     ],
+     "progressent": 4,
+     "egales": 16,
+     "reculent": 2
+    },
+    "precision_sources": {
+     "moyenne": 0.08,
+     "ic95": [
+      -0.034,
+      0.216
+     ],
+     "progressent": 4,
+     "egales": 16,
+     "reculent": 2
+    },
+    "rr": {
+     "moyenne": 0.152,
+     "ic95": [
+      -0.03,
+      0.341
+     ],
+     "progressent": 7,
+     "egales": 12,
+     "reculent": 3
+    }
+   },
+   "decomposition": {
+    "hit4": {
+     "gain_total": 0.091,
+     "dont_hybride": 0.045,
+     "dont_reclassement": 0.046,
+     "part_hybride": 0.49
+    },
+    "rappel_sources": {
+     "gain_total": 0.091,
+     "dont_hybride": 0.011,
+     "dont_reclassement": 0.08,
+     "part_hybride": 0.12
+    },
+    "precision_sources": {
+     "gain_total": 0.08,
+     "dont_hybride": 0.023,
+     "dont_reclassement": 0.057,
+     "part_hybride": 0.29
+    },
+    "rr": {
+     "gain_total": 0.152,
+     "dont_hybride": 0.038,
+     "dont_reclassement": 0.114,
+     "part_hybride": 0.25
+    }
+   }
+  }
+ },
+ "B_derive": {
+  "basic": {
+   "identiques_ordre_compris": 19,
+   "identiques_en_ensemble": 19,
+   "n": 22,
+   "differentes": [
+    {
+     "id": "p-esp32",
+     "stockees": [
+      "ecommerce/paiement.txt"
+     ],
+     "maintenant": [
+      "LS-MO-000062",
+      "LS-CP-000020",
+      "LS-MO-000059",
+      "LS-CP-000028"
+     ]
+    },
+    {
+     "id": "en-warranty",
+     "stockees": [
+      "LS-IM-000006",
+      "LS-IM-000004",
+      "LS-IM-000003",
+      "LS-IM-000002"
+     ],
+     "maintenant": [
+      "LS-CO-000648",
+      "sav/garantie.txt",
+      "LS-CO-006640",
+      "LS-CO-005008"
+     ]
+    },
+    {
+     "id": "tn-garantie",
+     "stockees": [
+      "LS-CO-008314",
+      "LS-CO-008298",
+      "LS-EL-000089",
+      "LS-EL-000083"
+     ],
+     "maintenant": [
+      "LS-CO-008314",
+      "LS-CO-008298",
+      "LS-EL-000493",
+      "LS-EL-000492"
+     ]
+    }
+   ],
+   "hit4_stocke": 0.773
+  },
+  "advanced": {
+   "identiques_ordre_compris": 20,
+   "identiques_en_ensemble": 20,
+   "n": 22,
+   "differentes": [
+    {
+     "id": "en-warranty",
+     "stockees": [
+      "sav/garantie.txt",
+      "LS-IM-000004",
+      "LS-IM-000002",
+      "LS-CO-006024"
+     ],
+     "maintenant": [
+      "sav/garantie.txt",
+      "LS-CO-006024",
+      "LS-CO-006016",
+      "LS-CO-004996"
+     ]
+    },
+    {
+     "id": "tn-garantie",
+     "stockees": [
+      "sav/garantie.txt",
+      "LS-CN-000899",
+      "LS-IM-000003",
+      "LS-IM-000001"
+     ],
+     "maintenant": [
+      "sav/garantie.txt",
+      "LS-IM-000003",
+      "LS-IM-000001",
+      "LS-IM-000004"
+     ]
+    }
+   ],
+   "hit4_stocke": 0.955
+  }
+ },
+ "C_chiffrage": {
+  "hypotheses": "coût d'un mode = moitié du coût mesuré pour basic + advanced (mêmes 25 questions, même juge) ; les tokens comptés sont ceux des réponses 200 (relances 429 sans tokens) ; ils incluent les appels de questions abandonnées sur quota puis refaites (non séparables)",
+  "un_mode_hybrid": {
+   "tokens_juge": 339348,
+   "tokens_generation": 29398,
+   "requetes_juge": 401,
+   "requetes_generation": 31,
+   "jours_quota_juge_200k": 1.7,
+   "jours_quota_generation_200k": 0.15,
+   "duree_calcul_min": 35.8
+  },
+  "trois_repetitions_basic_advanced": {
+   "tokens_juge": 2036091,
+   "tokens_generation": 176391,
+   "jours_quota_juge_200k": 10.18,
+   "jours_quota_generation_200k": 0.88,
+   "duree_calcul_min": 214.8
+  }
+ },
+ "config": {
+  "RERANK_CANDIDATES": 20,
+  "reranker": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+  "embedding": "paraphrase-multilingual-MiniLM-L12-v2",
+  "meta_ragas": {
+   "date": "2026-09-27T19:26:16",
+   "n_scored": 22,
+   "n_offtopic": 3,
+   "generator_model": "openai/gpt-oss-120b",
+   "judge_model": "openai/gpt-oss-20b",
+   "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2",
+   "reranker_model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+   "rerank_candidates": 20,
+   "confidence_signal": "cosine",
+   "judge_requests": 802,
+   "judge_429": 403,
+   "judge_tokens": 678697,
+   "gen_requests": 62,
+   "gen_429": 1,
+   "gen_tokens": 58797,
+   "duration_min": 71.6
+  }
+ },
+ "sha256_apres": "ead140586ddc71706f294b81b5d456ab568a86ddce308d32a36ff8bee36a2b63"
+}

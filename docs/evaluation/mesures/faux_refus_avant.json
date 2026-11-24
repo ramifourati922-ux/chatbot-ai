@@ -1,0 +1,293 @@
+{
+ "etiquette": "avant",
+ "debut": "2026-11-24 23:07:06",
+ "fin": "2026-11-24 23:10:52",
+ "code": "c:\\Users\\ramif\\chatbot-ai",
+ "contre_mesures_presentes": false,
+ "mode_recherche": "advanced",
+ "modele": "openai/gpt-oss-120b",
+ "appels_llm": 22,
+ "classes": {
+  "reponse": 22
+ },
+ "nettoyage": {
+  "supprimes": {
+   "messages": 44,
+   "conversations": 22,
+   "users": 22,
+   "sessions_redis": 22
+  },
+  "restants": {
+   "users": 0,
+   "conversations": 0,
+   "messages": 0,
+   "sessions_redis": 0
+  }
+ },
+ "questions": [
+  {
+   "id": "p-vl53l0x",
+   "langue": "fr",
+   "categorie": "produit",
+   "question": "Avez-vous un capteur de distance VL53L0X ?",
+   "reponse": "Bonjour,\n\nOui, nous proposons le capteur de distance VL53L0X sous trois déclinaisons, toutes en stock :\n\n| Variante | Prix | Disponibilité |\n|----------|------|----------------|\n| Capteur VL53L0X (nu) | 32,98 DT | En stock |\n| Capteur VL53L0X (breakout board) | 50,93 DT | En stock |\n| Capteur VL53L0X (module complet) | 54,04 DT | En stock |\n\nN’hésitez pas à me dire laquelle vous intéresse ou si vous avez besoin de précisions supplémentaires (caractéristiques, mode de paiement, délai de livraison, etc.).  \n\nCordialement,  \nService client Liss Strike.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.626
+  },
+  {
+   "id": "p-18650",
+   "langue": "fr",
+   "categorie": "produit",
+   "question": "Vous avez des piles 18650 en stock ?",
+   "reponse": "Bonjour,\n\nOui, nous avons des piles 18650 en stock. Voici les références disponibles :\n\n| Référence | Conditionnement | Prix (DT) | Disponibilité |\n|-----------|----------------|-----------|----------------|\n| Pile/Batterie 18650 | Pack de 10 | 23,43 DT | En stock |\n| Pile/Batterie 18650 | Pack de 4 | 9,44 DT | En stock |\n| Pile/Batterie 18650 | Pack de 20 | 6,32 DT | En stock |\n| Batterie 18650 2200 mAh (générique) | Unité | 11,92 DT | En stock |\n\nN’hésitez pas à nous indiquer la quantité souhaitée ou à poser d’autres questions concernant nos produits ou la commande.  \n\nCordialement,  \nService client Liss Strike.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.597
+  },
+  {
+   "id": "p-nema17",
+   "langue": "fr",
+   "categorie": "produit",
+   "question": "Combien coute un moteur pas-a-pas NEMA17 ?",
+   "reponse": "Bonjour,\n\nVoici les prix des différents moteurs pas‑à‑pas NEMA 17 que nous proposons :\n\n| Modèle | Courant nominal | Prix (DT) | Disponibilité |\n|--------|----------------|-----------|----------------|\n| NEMA 17 1.8° | 1,5 A | **44,00 DT** | sur commande |\n| NEMA 17 0.9° | 1,5 A | **29,93 DT** | sur commande |\n| NEMA 17 1.8° | 2,5 A | **21,59 DT** | stock faible |\n| NEMA 17 0.9° | 2,5 A | **26,33 DT** | sur commande |\n\nSi vous avez besoin d’un modèle en particulier (angle de pas ou courant), n’hésitez pas à me le préciser afin que je puisse vous donner les informations les plus pertinentes.  \n\nCordialement,  \nService client Liss Strike.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.507
+  },
+  {
+   "id": "p-analyseur",
+   "langue": "fr",
+   "categorie": "produit",
+   "question": "Vous vendez des analyseurs logiques 8 canaux ?",
+   "reponse": "Oui, nous proposons un **analyseur logique 8 canaux**.  \n- **Catégorie** : Instruments de mesure  \n- **Prix** : 39,76 DT  \n- **Disponibilité** : en stock  \n- **Caractéristiques** : voir la fiche technique disponible sur notre site.  \n\nN’hésitez pas si vous avez besoin de plus d’informations ou si vous souhaitez passer commande.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.702
+  },
+  {
+   "id": "p-arduino-due",
+   "langue": "fr",
+   "categorie": "produit",
+   "question": "Est-ce que la carte Arduino Due est disponible ?",
+   "reponse": "Bonjour,\n\n- **Arduino Due (original)** : elle est **sur commande** (pas de stock immédiat).  \n- **Arduino Due (compatible / clone)** : elle est **en stock** et peut être expédiée rapidement.\n\nN’hésitez pas si vous avez besoin de plus d’informations ou si vous souhaitez passer commande.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.599
+  },
+  {
+   "id": "p-esp32",
+   "langue": "fr",
+   "categorie": "produit",
+   "question": "ESP32 wifi bluetooth",
+   "reponse": "Sure! All of the ESP32 modules we carry include both Wi‑Fi (802.11 b/g/n) and Bluetooth (the exact Bluetooth version depends on the specific model).\n\n**Available options**\n\n| Model | Flash | Price (DT) | Availability | Key specs |\n|-------|-------|------------|--------------|-----------|\n| ESP32 DevKitC | 8 MB | 40.57 DT | In stock | Wi‑Fi 802.11 b/g/n, Bluetooth, 8 MB Flash |\n| ESP32 DevKitC | 4 MB | 41.91 DT | In stock | Wi‑Fi 802.11 b/g/n, Bluetooth, 4 MB Flash |\n| ESP32‑S3 | 8 MB | 45.73 DT | Low stock | Wi‑Fi 802.11 b/g/n, Bluetooth, 8 MB Flash |\n| ESP32‑S3 | 4 MB | 45.88 DT | Low stock | Wi‑Fi 802.11 b/g/n, Bluetooth, 4 MB Flash |\n\nIf you need more details about a specific model or would like assistance placing an order, just let me know!",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.563
+  },
+  {
+   "id": "p-12v5a",
+   "langue": "fr",
+   "categorie": "produit",
+   "question": "alimentation 12V 5A",
+   "reponse": "Bonjour,\n\nVoici les alimentations 12 V 5 A disponibles chez Liss Strike :\n\n| Produit | Catégorie | Prix | Disponibilité |\n|---|---|---|---|\n| Bloc secteur 12V 5A | Alimentation | 24,73 DT | En stock |\n| Alimentation dédiée ruban LED 12V 5A | Éclairage LED | 20,35 DT | En stock |\n\nVous pouvez consulter la fiche technique de chaque article sur notre site pour plus de détails techniques.  \nSi vous avez besoin d’aide pour passer la commande ou pour toute autre question, n’hésitez pas à me le faire savoir.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.671
+  },
+  {
+   "id": "p-rpi4",
+   "langue": "fr",
+   "categorie": "produit",
+   "question": "Raspberry Pi 4 8GB prix",
+   "reponse": "The Raspberry Pi 4 Model B (8 GB) is priced at **246.64 DT**. (Please note that this model is currently out of stock.)",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.69
+  },
+  {
+   "id": "s-retour",
+   "langue": "fr",
+   "categorie": "sav",
+   "question": "Quel est le délai pour retourner un produit ?",
+   "reponse": "Vous disposez de **7 jours calendaires** à compter de la date de réception pour retourner un produit non ouvert et non utilisé.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.908
+  },
+  {
+   "id": "s-frais",
+   "langue": "fr",
+   "categorie": "sav",
+   "question": "Quels sont les frais de livraison ?",
+   "reponse": "Bonjour,\n\nLes frais de livraison sont les suivants :\n\n- Livraison gratuite dès 150 DT d’achat.  \n- En dessous de ce montant : 8 DT pour le Grand Tunis et 12 DT pour le reste du pays.\n\nN’hésitez pas si vous avez d’autres questions.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.667
+  },
+  {
+   "id": "s-cash",
+   "langue": "fr",
+   "categorie": "sav",
+   "question": "Le paiement à la livraison est-il possible ?",
+   "reponse": "Oui, le paiement à la livraison (cash) est disponible dans toute la Tunisie, sans frais supplémentaire, avec un plafond de 500 DT par commande.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.728
+  },
+  {
+   "id": "en-warranty",
+   "langue": "en",
+   "categorie": "sav",
+   "question": "What is the warranty on a multimeter?",
+   "reponse": "The warranty for a multimeter is **12 months** against any manufacturing defect.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.464
+  },
+  {
+   "id": "en-shipping",
+   "langue": "en",
+   "categorie": "sav",
+   "question": "How much is shipping?",
+   "reponse": "Shipping is free for orders of 150 DT or more.  \nFor orders below that amount the fee is 8 DT within Grand Tunis and 12 DT for the rest of Tunisia.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.532
+  },
+  {
+   "id": "en-return",
+   "langue": "en",
+   "categorie": "sav",
+   "question": "Can I return a product?",
+   "reponse": "Sure! You can return a product provided it meets our return conditions:\n\n- **Condition:** The item must be brand‑new, unused, and still in its original, unopened packaging, with all accessories and the purchase invoice included.  \n- **Time frame:** You have **7 calendar days** from the date you receive the order to initiate the return.  \n- **Exceptions:** Opened electronic components (e.g., resistors, sensors, modules) cannot be returned unless they are defective. Software or licences are non‑refundable after activation.  \n\nFor low‑value items (under 20 DT), we may issue a refund based on a photo of the product at our discretion, without requiring a physical return.\n\nIf your product meets these criteria, please let us know and we’ll guide you through the next steps. If you need further assistance, I’m happy to help!",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.685
+  },
+  {
+   "id": "en-esp32",
+   "langue": "en",
+   "categorie": "produit",
+   "question": "Do you sell ESP32 boards?",
+   "reponse": "Yes, we do. We currently have the following ESP32‑based products in stock:\n\n| Product | Flash | Price (DT) | Availability |\n|---|---|---|---|\n| ESP32‑CAM module | 4 MB | 67.92 DT | In stock |\n| ESP32‑CAM module | 8 MB | 66.22 DT | In stock |\n| ESP32/IOT starter kit – intermediate level | – | 112.86 DT | In stock |\n| ESP32/IOT starter kit – advanced level | – | 132.12 DT | In stock |\n\nIf you need more details or would like to place an order, please let me know!",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.45
+  },
+  {
+   "id": "ar-frais",
+   "langue": "ar",
+   "categorie": "sav",
+   "question": "كم تكلفة التوصيل",
+   "reponse": "تكلفة التوصيل تعتمد على قيمة طلبك وموقعك:\n\n- **الطلبات التي قيمتها 150 د.ت أو أكثر**: توصيل مجاني في جميع أنحاء تونس.  \n- **الطلبات التي قيمتها أقل من 150 د.ت**:  \n  - **في منطقة جراند تونس**: 8 د.ت.  \n  - **في باقي أنحاء البلاد**: 12 د.ت.  \n\nإذا كنت تريد معرفة التكلفة الدقيقة لطلبك، يرجى تزويدي بقيمة الشراء المتوقعة وموقعك.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.621
+  },
+  {
+   "id": "ar-retour",
+   "langue": "ar",
+   "categorie": "sav",
+   "question": "هل يمكنني إرجاع المنتج",
+   "reponse": "نعم، يمكن إرجاع المنتج شريطة استيفائه لشروط الإرجاع العامة لدينا. إليك ما يلزم مراعاته:\n\n- **المنتجات القابلة للإرجاع**: يجب أن تكون غير مفتوحة أو غير مستعملة، وأن تُعيد في حالتها الأصلية مع جميع الملحقات والعبوة الأصلية.  \n- **المنتجات غير القابلة للإرجاع**: لا يمكن إرجاع المكوّنات الإلكترونية التي تم فتح عبوتها (مثل المقاومات، الحساسات، الوحدات) إلا إذا كان هناك عيب تصنيعي. كما أن البرمجيات أو التراخيص غير قابلة للاسترداد بعد التفعيل.  \n- **الإجراءات**: يرجى التواصل مع قسم خدمة ما بعد البيع وتزويدنا برقم الطلب لتأكيد حالة المنتج وإرشادك إلى خطوات الإرجاع أو الاستبدال إذا رغبت بذلك.  \n\nإذا كان لديك أي سؤال إضافي أو تحتاج إلى مساعدة في بدء عملية الإرجاع، فأخبرنا برقم الطلب أو تفاصيل المنتج وسنساعدك بسرور.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.598
+  },
+  {
+   "id": "ar-garantie",
+   "langue": "ar",
+   "categorie": "sav",
+   "question": "ما هي مدة الضمان",
+   "reponse": "مدة الضمان التي نُحددها في قاعدة معرفتنا هي **ستة أشهر** على الأدوات (مثل مكواة اللحام والملقط)، وتُستثنى فيها الأعطال الناتجة عن الاستهلاك الطبيعي.  \n\nفي حال كان سؤالك يخص منتجًا آخر، لا تتوفر لدينا معلومات محددة في الوقت الحالي. يُمكننا التحقق من ذلك لك أو تحويلك إلى أحد المستشارين لتزويدك بالتفاصيل الدقيقة. هل تود المتابعة؟",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.646
+  },
+  {
+   "id": "ar-paiement",
+   "langue": "ar",
+   "categorie": "sav",
+   "question": "ما هي طرق الدفع المتاحة",
+   "reponse": "تحيّة طيبة،  \nطرق الدفع المتاحة في متجر Liss Strike هي:\n\n- بطاقة بنكية (Visa أو Mastercard) عبر الدفع الإلكتروني.  \n- الدفع نقدًا عند التسليم (Cash) في جميع أنحاء تونس.  \n- بطاقة D17.  \n- بطاقة Flouci.  \n\nنحن في خدمتك لأي استفسار آخر.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.684
+  },
+  {
+   "id": "tn-garantie",
+   "langue": "tn",
+   "categorie": "sav",
+   "question": "chnowa el garantie mta3 el multimetre",
+   "reponse": "el garantie 3la el multimetre hiya 12 chahr contre ay 3ib fi tasn3a. إذا عندك سؤال آخر ولا تحب تعرف أكثر، مرحبا بيك!",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.429
+  },
+  {
+   "id": "tn-sfax",
+   "langue": "tn",
+   "categorie": "sav",
+   "question": "9adeh el livraison l sfax",
+   "reponse": "الـlivraison لـSfax تاخذ عادةً ما بين 3 و 6 أيام عمل. إذا كان عندك أي سؤال آخر ولا تحتاج تتبع الطلب، راسلنا برقم الطلب متاعك. شكراً!",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.477
+  },
+  {
+   "id": "tn-probleme",
+   "langue": "tn",
+   "categorie": "sav",
+   "question": "3andi mochkla fil livraison",
+   "reponse": "عسلامة، نحب نعاونك في مشكل التوصيل. تنجم تبعثلي رقم الطلب متاعك ولا تاريخ الشراء باش نتحقق من الحالة؟ وإلا تحب نتواصل مع فريق الدعم مباشرة. شكراً.",
+   "classe": "reponse",
+   "llm": true,
+   "escalated": false,
+   "escalation_reason": null,
+   "confiance": 0.449
+  }
+ ]
+}

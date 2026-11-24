@@ -1,0 +1,35 @@
+# Secrets et environnement local
+.env
+.env.*
+!.env.example
+venv
+.venv
+
+# Dépôt, CI, éditeurs
+.git
+.github
+.vscode
+.idea
+
+# Caches et artefacts Python / tests
+__pycache__
+*.pyc
+.pytest_cache
+.coverage
+htmlcov
+
+# Hors image : tests, documentation, scripts d'évaluation, images, journaux
+tests
+docs
+scripts
+images
+*.md
+*.log
+escalade.json
+test_*_manual.py
+
+# Données volumineuses ou inutiles à l'exécution (l'image ne copie que
+# data/intents et data/knowledge_base/ecommerce/produits.csv)
+data/evaluation
+data/chroma
+data/knowledge_base/**/*.pdf

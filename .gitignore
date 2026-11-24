@@ -6,3 +6,8 @@ __pycache__/
 *.log
 .idea/
 .vscode/
+
+# Jamais dans le dépôt : clé de la notation à l'aveugle (remarque 52) et tests manuels des canaux
+data/evaluation/annotation_juge/cle_secrete.json
+test_messenger_manual.py
+test_whatsapp_manual.py

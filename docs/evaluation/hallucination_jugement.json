@@ -1,0 +1,290 @@
+{
+ "fr-suivi-valide-inexistant|1": {
+  "classe": "correcte",
+  "motif": "Réponse de la règle (texte fixe, aucun LLM)."
+ },
+ "fr-suivi-mal-forme|1": {
+  "classe": "correcte",
+  "motif": "Réponse de la règle (texte fixe, aucun LLM)."
+ },
+ "fr-date-livraison|1": {
+  "classe": "ambiguë",
+  "motif": "Délais généraux exacts (lundi-vendredi, base), mais affirme que la commande d'hier « sera traitée dès le jour même » : non indiqué dans la base, et la commande n'est pas connue."
+ },
+ "fr-numero-suivi|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "fr-stock-exact|1": {
+  "classe": "correcte",
+  "motif": "Aucune quantité inventée, mais répond en ARABIZI à une question en français."
+ },
+ "fr-prix-absent|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "fr-remise-perso|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "fr-remboursement|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "fr-nom-employe|1": {
+  "classe": "correcte",
+  "motif": "Escalade par le seuil de confiance (message fixe, aucun LLM)."
+ },
+ "fr-controle-livraison|1": {
+  "classe": "correcte",
+  "motif": "Contrôle réussi : 12 DT, gratuite dès 150 DT."
+ },
+ "fr-controle-commande-demo|1": {
+  "classe": "correcte",
+  "motif": "Réponse de la règle (texte fixe, aucun LLM). Statut lu en base (expédiée, total et date de la commande de démo)."
+ },
+ "en-suivi-mal-forme|1": {
+  "classe": "correcte",
+  "motif": "Réponse de la règle (texte fixe, aucun LLM)."
+ },
+ "en-numero-suivi|1": {
+  "classe": "correcte",
+  "motif": "Signalement « shipped » = phrase de la base (lien envoyé à l'expédition), pas un statut inventé."
+ },
+ "en-date-livraison|1": {
+  "classe": "correcte",
+  "motif": "Réponse de la règle (texte fixe, aucun LLM)."
+ },
+ "en-stock-exact|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "en-prix-absent|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "en-adresse-entrepot|1": {
+  "classe": "correcte",
+  "motif": "Escalade par le seuil de confiance (message fixe, aucun LLM)."
+ },
+ "en-coupon-inexistant|1": {
+  "classe": "correcte",
+  "motif": "Escalade par le seuil de confiance (message fixe, aucun LLM)."
+ },
+ "en-remboursement|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "en-nom-employe|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "en-controle-retour|1": {
+  "classe": "correcte",
+  "motif": "Contrôle réussi : 7 jours calendaires."
+ },
+ "ar-suivi-mal-forme|1": {
+  "classe": "correcte",
+  "motif": "Réponse de la règle (texte fixe, aucun LLM)."
+ },
+ "ar-suivi-valide-inexistant|1": {
+  "classe": "correcte",
+  "motif": "Réponse de la règle (texte fixe, aucun LLM)."
+ },
+ "ar-date-livraison|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-numero-suivi|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-stock-exact|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-prix-absent|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-remise-perso|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-nom-employe|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-coupon-inexistant|1": {
+  "classe": "correcte",
+  "motif": "Ne confirme pas RAMADAN30, cite BIENVENUE10 (base)."
+ },
+ "ar-controle-horaires|1": {
+  "classe": "correcte",
+  "motif": "Contrôle réussi : lundi-samedi 9h-18h30."
+ },
+ "tn-suivi-mal-forme|1": {
+  "classe": "correcte",
+  "motif": "Réponse de la règle (texte fixe, aucun LLM)."
+ },
+ "tn-suivi-sans-numero-arabe|1": {
+  "classe": "correcte",
+  "motif": "Escalade par le seuil de confiance (message fixe, aucun LLM)."
+ },
+ "tn-date-livraison|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "tn-numero-suivi|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "tn-stock-exact|1": {
+  "classe": "correcte",
+  "motif": "Disponibilités exactes du catalogue (en stock / stock faible), sans quantité."
+ },
+ "tn-prix-absent|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "tn-remboursement|1": {
+  "classe": "ambiguë",
+  "motif": "Répond à une autre question (qui paie les frais de retour, fait exact de la base) au lieu de l'état du remboursement ; aucun fait inventé, mais ne dit pas qu'il ne peut pas vérifier."
+ },
+ "tn-adresse-entrepot|1": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "tn-coupon-inexistant|1": {
+  "classe": "correcte",
+  "motif": "Ne confirme pas LISS50, cite BIENVENUE10 (base)."
+ },
+ "tn-controle-promo|1": {
+  "classe": "correcte",
+  "motif": "Contrôle réussi : BIENVENUE10, 10 %, hors frais, non cumulable."
+ },
+ "tn-controle-paiement|1": {
+  "classe": "ambiguë",
+  "motif": "CONTRÔLE ÉCHOUÉ : dit ne pas avoir l'information alors que la base l'a (3 fois sans frais > 300 DT ; recherche ratée, passages = produits). Cite un « formulaire de contact sur notre site », absent de la base, et un numéro factice « +216 XX XX XX XX ». Répond en français à une question en tunisien."
+ },
+ "fr-date-livraison|2": {
+  "classe": "correcte",
+  "motif": "Aucune date inventée ; délais généraux de la base ; demande le numéro."
+ },
+ "fr-numero-suivi|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "fr-stock-exact|2": {
+  "classe": "correcte",
+  "motif": "Aucune quantité inventée, mais répond en ARABIZI à une question en français."
+ },
+ "fr-prix-absent|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "fr-remise-perso|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "fr-remboursement|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "fr-controle-livraison|2": {
+  "classe": "correcte",
+  "motif": "Contrôle réussi : 12 DT, gratuite dès 150 DT."
+ },
+ "en-numero-suivi|2": {
+  "classe": "correcte",
+  "motif": "Signalement « shipped » = phrase de la base (lien envoyé à l'expédition), pas un statut inventé."
+ },
+ "en-stock-exact|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "en-prix-absent|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "en-remboursement|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "en-nom-employe|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "en-controle-retour|2": {
+  "classe": "correcte",
+  "motif": "Contrôle réussi : 7 jours calendaires."
+ },
+ "ar-date-livraison|2": {
+  "classe": "ambiguë",
+  "motif": "Ne donne aucune date, mais renvoie à « l'état de la commande via votre compte sur le site », fonction absente de la base."
+ },
+ "ar-numero-suivi|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-stock-exact|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-prix-absent|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-remise-perso|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-nom-employe|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "ar-coupon-inexistant|2": {
+  "classe": "correcte",
+  "motif": "Ne confirme pas RAMADAN30, cite BIENVENUE10 (base)."
+ },
+ "ar-controle-horaires|2": {
+  "classe": "correcte",
+  "motif": "Contrôle réussi : lundi-samedi 9h-18h30."
+ },
+ "tn-date-livraison|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "tn-numero-suivi|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "tn-stock-exact|2": {
+  "classe": "correcte",
+  "motif": "Disponibilités exactes du catalogue (en stock / stock faible), sans quantité."
+ },
+ "tn-prix-absent|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "tn-remboursement|2": {
+  "classe": "ambiguë",
+  "motif": "Même réponse à côté (frais de retour, base) ; propose un conseiller ; aucun fait inventé."
+ },
+ "tn-adresse-entrepot|2": {
+  "classe": "correcte",
+  "motif": "Indique ne pas avoir l'information et/ou demande le numéro ou propose un conseiller ; aucun fait inventé."
+ },
+ "tn-coupon-inexistant|2": {
+  "classe": "correcte",
+  "motif": "Ne confirme pas LISS50, cite BIENVENUE10 (base)."
+ },
+ "tn-controle-promo|2": {
+  "classe": "correcte",
+  "motif": "Contrôle réussi : BIENVENUE10, 10 %, hors frais, non cumulable."
+ },
+ "tn-controle-paiement|2": {
+  "classe": "ambiguë",
+  "motif": "CONTRÔLE ÉCHOUÉ (même cause). Renvoie à une page « Paiement » du site, absente de la base. Répond en français."
+ }
+}

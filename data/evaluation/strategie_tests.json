@@ -1,0 +1,697 @@
+{
+ "date": "2026-11-24",
+ "commit": "a0c0cd3",
+ "branche": "integration/menu-qualite",
+ "etat_git": "aucun fichier suivi modifié ; fichiers non suivis : livrables de mesure (docs/evaluation, scripts/measure_*), Dockerfile, .dockerignore, escalade.json, images/, test_*_manual.py",
+ "collecte": {
+  "total": 653,
+  "unitaires_hors_integration": 515,
+  "integration": 138,
+  "par_fichier": {
+   "tests/test_admin_auth.py": {
+    "tests": 27,
+    "unitaires": 12,
+    "integration": 15
+   },
+   "tests/test_admin_escalations.py": {
+    "tests": 7,
+    "unitaires": 0,
+    "integration": 7
+   },
+   "tests/test_admin_reply.py": {
+    "tests": 24,
+    "unitaires": 1,
+    "integration": 23
+   },
+   "tests/test_analytics.py": {
+    "tests": 17,
+    "unitaires": 16,
+    "integration": 1
+   },
+   "tests/test_arabizi.py": {
+    "tests": 7,
+    "unitaires": 6,
+    "integration": 1
+   },
+   "tests/test_chat_session_signature.py": {
+    "tests": 9,
+    "unitaires": 9,
+    "integration": 0
+   },
+   "tests/test_conversation_memory.py": {
+    "tests": 20,
+    "unitaires": 18,
+    "integration": 2
+   },
+   "tests/test_conversation_persistence.py": {
+    "tests": 5,
+    "unitaires": 0,
+    "integration": 5
+   },
+   "tests/test_cors.py": {
+    "tests": 9,
+    "unitaires": 9,
+    "integration": 0
+   },
+   "tests/test_dialogue_manager.py": {
+    "tests": 14,
+    "unitaires": 0,
+    "integration": 14
+   },
+   "tests/test_embedding_service.py": {
+    "tests": 3,
+    "unitaires": 0,
+    "integration": 3
+   },
+   "tests/test_hybrid_retriever.py": {
+    "tests": 10,
+    "unitaires": 6,
+    "integration": 4
+   },
+   "tests/test_intent_classifier.py": {
+    "tests": 112,
+    "unitaires": 112,
+    "integration": 0
+   },
+   "tests/test_knowledge_base_structure.py": {
+    "tests": 25,
+    "unitaires": 25,
+    "integration": 0
+   },
+   "tests/test_language_detector.py": {
+    "tests": 67,
+    "unitaires": 67,
+    "integration": 0
+   },
+   "tests/test_leads.py": {
+    "tests": 22,
+    "unitaires": 21,
+    "integration": 1
+   },
+   "tests/test_llm_factory.py": {
+    "tests": 4,
+    "unitaires": 0,
+    "integration": 4
+   },
+   "tests/test_log_privacy.py": {
+    "tests": 10,
+    "unitaires": 9,
+    "integration": 1
+   },
+   "tests/test_login_throttling.py": {
+    "tests": 6,
+    "unitaires": 6,
+    "integration": 0
+   },
+   "tests/test_messenger_signature.py": {
+    "tests": 9,
+    "unitaires": 9,
+    "integration": 0
+   },
+   "tests/test_order_tracking.py": {
+    "tests": 50,
+    "unitaires": 38,
+    "integration": 12
+   },
+   "tests/test_rag_loop.py": {
+    "tests": 17,
+    "unitaires": 14,
+    "integration": 3
+   },
+   "tests/test_rate_limit.py": {
+    "tests": 12,
+    "unitaires": 6,
+    "integration": 6
+   },
+   "tests/test_reranker.py": {
+    "tests": 5,
+    "unitaires": 3,
+    "integration": 2
+   },
+   "tests/test_retriever.py": {
+    "tests": 4,
+    "unitaires": 0,
+    "integration": 4
+   },
+   "tests/test_semantic_intent.py": {
+    "tests": 25,
+    "unitaires": 17,
+    "integration": 8
+   },
+   "tests/test_service_fallback.py": {
+    "tests": 6,
+    "unitaires": 6,
+    "integration": 0
+   },
+   "tests/test_small_talk.py": {
+    "tests": 37,
+    "unitaires": 27,
+    "integration": 10
+   },
+   "tests/test_users_auth.py": {
+    "tests": 12,
+    "unitaires": 5,
+    "integration": 7
+   },
+   "tests/test_websocket_security.py": {
+    "tests": 20,
+    "unitaires": 19,
+    "integration": 1
+   },
+   "tests/test_welcome_menu.py": {
+    "tests": 49,
+    "unitaires": 45,
+    "integration": 4
+   },
+   "tests/test_whatsapp_signature.py": {
+    "tests": 9,
+    "unitaires": 9,
+    "integration": 0
+   }
+  }
+ },
+ "execution": {
+  "commande": "pytest tests -p suiteprobe --cov=app --cov-branch --cov-report=term-missing -rsxX",
+  "passes": 653,
+  "echecs": 0,
+  "ignores": 0,
+  "xfail": 0,
+  "avertissements": 5,
+  "duree_s": 207.8,
+  "debut_utc": "2026-11-24T04:01:21.212568+00:00",
+  "appels_groq_reels": 15,
+  "appels_groq_par_test": {
+   "tests/test_conversation_memory.py::test_handle_message_follow_up_keeps_the_subject": 2,
+   "tests/test_conversation_persistence.py::test_full_exchange_is_persisted": 2,
+   "tests/test_dialogue_manager.py::test_normal_product_criticism_does_not_escalate": 1,
+   "tests/test_dialogue_manager.py::test_rag_grounded_response_in_french": 1,
+   "tests/test_dialogue_manager.py::test_rag_response_exposes_rag_confidence": 1,
+   "tests/test_dialogue_manager.py::test_rag_grounded_response_product_query": 1,
+   "tests/test_dialogue_manager.py::test_low_rag_confidence_no_regression_on_covered_question": 1,
+   "tests/test_llm_factory.py::test_ask_responds_in_correct_language[fr-Bonjour, o\\xf9 est ma commande #CMD12345 ?]": 1,
+   "tests/test_llm_factory.py::test_ask_responds_in_correct_language[en-Hello, where is my order?]": 1,
+   "tests/test_llm_factory.py::test_ask_responds_in_correct_language[ar-\\u0645\\u0631\\u062d\\u0628\\u0627\\u060c \\u0623\\u064a\\u0646 \\u0637\\u0644\\u0628\\u064a\\u062a\\u064a\\u061f]": 1,
+   "tests/test_llm_factory.py::test_ask_responds_in_correct_language[tn-wain commande mte3i, 3andi mochkla]": 1,
+   "tests/test_log_privacy.py::test_dialogue_logs_neither_the_phone_number_nor_the_message": 1,
+   "tests/test_small_talk.py::test_question_with_greeting_still_goes_to_rag": 1
+  }
+ },
+ "base": {
+  "avant": {
+   "users": 120,
+   "conversations": 124,
+   "messages": 506,
+   "agents": 2,
+   "orders": 5
+  },
+  "apres_suite": {
+   "users": 123,
+   "conversations": 128,
+   "messages": 522,
+   "agents": 2,
+   "orders": 5
+  },
+  "laisse_par_la_suite": {
+   "users": 3,
+   "conversations": 4,
+   "messages": 16,
+   "redis": 1
+  },
+  "supprime_par_id": {
+   "users": [
+    "5c460815-850c-467b-9b8c-d709cbabbc6a",
+    "167b167c-1121-4ea9-bece-3d20795875ad",
+    "345190b1-6426-453c-91a6-1dff173d6dde"
+   ],
+   "conversation_sur_numero_fictif_existant": "a16eeda2-7f62-480f-b7c0-f95e8052f688",
+   "redis": "session:test-admin-7cef6558-wa"
+  },
+  "apres_nettoyage": {
+   "users": 120,
+   "conversations": 124,
+   "messages": 506,
+   "agents": 2,
+   "orders": 5,
+   "redis": 0
+  },
+  "redis_avant": 0,
+  "redis_apres_suite": 1
+ },
+ "couverture": {
+  "lignes_pct": 90.3,
+  "branches_pct": 81.6,
+  "combine_pct": 88.8,
+  "instructions": 2417,
+  "manquees": 235,
+  "branches": 478,
+  "branches_partielles": 44,
+  "par_fichier": [
+   {
+    "fichier": "app/__init__.py",
+    "instructions": 0,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/api/__init__.py",
+    "instructions": 0,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/api/auth.py",
+    "instructions": 19,
+    "manquees": 0,
+    "branches": 6,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/api/rate_limit.py",
+    "instructions": 40,
+    "manquees": 0,
+    "branches": 6,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/api/routes/__init__.py",
+    "instructions": 0,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/api/routes/admin.py",
+    "instructions": 118,
+    "manquees": 26,
+    "branches": 22,
+    "partielles": 0,
+    "combine_pct": 74.3,
+    "lignes_pct": 78.0
+   },
+   {
+    "fichier": "app/api/routes/agents.py",
+    "instructions": 55,
+    "manquees": 6,
+    "branches": 8,
+    "partielles": 5,
+    "combine_pct": 82.5,
+    "lignes_pct": 89.1
+   },
+   {
+    "fichier": "app/api/routes/chat.py",
+    "instructions": 26,
+    "manquees": 0,
+    "branches": 4,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/api/routes/messenger.py",
+    "instructions": 87,
+    "manquees": 31,
+    "branches": 24,
+    "partielles": 3,
+    "combine_pct": 64.0,
+    "lignes_pct": 64.4
+   },
+   {
+    "fichier": "app/api/routes/users.py",
+    "instructions": 44,
+    "manquees": 2,
+    "branches": 6,
+    "partielles": 3,
+    "combine_pct": 90.0,
+    "lignes_pct": 95.5
+   },
+   {
+    "fichier": "app/api/routes/websocket.py",
+    "instructions": 69,
+    "manquees": 4,
+    "branches": 10,
+    "partielles": 0,
+    "combine_pct": 94.9,
+    "lignes_pct": 94.2
+   },
+   {
+    "fichier": "app/api/routes/whatsapp.py",
+    "instructions": 88,
+    "manquees": 22,
+    "branches": 20,
+    "partielles": 2,
+    "combine_pct": 75.9,
+    "lignes_pct": 75.0
+   },
+   {
+    "fichier": "app/api/web_session.py",
+    "instructions": 22,
+    "manquees": 0,
+    "branches": 2,
+    "partielles": 1,
+    "combine_pct": 95.8,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/config.py",
+    "instructions": 64,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/db/__init__.py",
+    "instructions": 0,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/db/database.py",
+    "instructions": 22,
+    "manquees": 4,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 81.8,
+    "lignes_pct": 81.8
+   },
+   {
+    "fichier": "app/db/repositories/__init__.py",
+    "instructions": 0,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/db/repositories/conversation_repository.py",
+    "instructions": 95,
+    "manquees": 29,
+    "branches": 16,
+    "partielles": 1,
+    "combine_pct": 62.2,
+    "lignes_pct": 69.5
+   },
+   {
+    "fichier": "app/db/repositories/user_repository.py",
+    "instructions": 53,
+    "manquees": 15,
+    "branches": 6,
+    "partielles": 0,
+    "combine_pct": 67.8,
+    "lignes_pct": 71.7
+   },
+   {
+    "fichier": "app/log_privacy.py",
+    "instructions": 38,
+    "manquees": 1,
+    "branches": 18,
+    "partielles": 3,
+    "combine_pct": 92.9,
+    "lignes_pct": 97.4
+   },
+   {
+    "fichier": "app/main.py",
+    "instructions": 74,
+    "manquees": 20,
+    "branches": 12,
+    "partielles": 1,
+    "combine_pct": 68.6,
+    "lignes_pct": 73.0
+   },
+   {
+    "fichier": "app/models/__init__.py",
+    "instructions": 4,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/models/agent.py",
+    "instructions": 18,
+    "manquees": 1,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 94.4,
+    "lignes_pct": 94.4
+   },
+   {
+    "fichier": "app/models/conversation.py",
+    "instructions": 32,
+    "manquees": 2,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 93.8,
+    "lignes_pct": 93.8
+   },
+   {
+    "fichier": "app/models/order.py",
+    "instructions": 23,
+    "manquees": 1,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 95.7,
+    "lignes_pct": 95.7
+   },
+   {
+    "fichier": "app/models/user.py",
+    "instructions": 20,
+    "manquees": 1,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 95.0,
+    "lignes_pct": 95.0
+   },
+   {
+    "fichier": "app/schemas/__init__.py",
+    "instructions": 2,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/schemas/admin.py",
+    "instructions": 112,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/schemas/chat.py",
+    "instructions": 24,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/schemas/user.py",
+    "instructions": 25,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/services/__init__.py",
+    "instructions": 0,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/services/agent_auth.py",
+    "instructions": 54,
+    "manquees": 2,
+    "branches": 12,
+    "partielles": 0,
+    "combine_pct": 97.0,
+    "lignes_pct": 96.3
+   },
+   {
+    "fichier": "app/services/analytics.py",
+    "instructions": 188,
+    "manquees": 9,
+    "branches": 62,
+    "partielles": 4,
+    "combine_pct": 94.8,
+    "lignes_pct": 95.2
+   },
+   {
+    "fichier": "app/services/arabizi.py",
+    "instructions": 14,
+    "manquees": 0,
+    "branches": 8,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/services/dialogue_manager.py",
+    "instructions": 297,
+    "manquees": 4,
+    "branches": 72,
+    "partielles": 3,
+    "combine_pct": 98.1,
+    "lignes_pct": 98.7
+   },
+   {
+    "fichier": "app/services/intent_classifier.py",
+    "instructions": 87,
+    "manquees": 0,
+    "branches": 24,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/services/language_detector.py",
+    "instructions": 71,
+    "manquees": 2,
+    "branches": 26,
+    "partielles": 0,
+    "combine_pct": 97.9,
+    "lignes_pct": 97.2
+   },
+   {
+    "fichier": "app/services/order_tracking.py",
+    "instructions": 30,
+    "manquees": 0,
+    "branches": 6,
+    "partielles": 1,
+    "combine_pct": 97.2,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/services/rag/__init__.py",
+    "instructions": 0,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/services/rag/embedding_service.py",
+    "instructions": 16,
+    "manquees": 0,
+    "branches": 0,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   },
+   {
+    "fichier": "app/services/rag/hybrid_retriever.py",
+    "instructions": 114,
+    "manquees": 9,
+    "branches": 28,
+    "partielles": 4,
+    "combine_pct": 90.8,
+    "lignes_pct": 92.1
+   },
+   {
+    "fichier": "app/services/rag/llm_factory.py",
+    "instructions": 43,
+    "manquees": 6,
+    "branches": 10,
+    "partielles": 2,
+    "combine_pct": 84.9,
+    "lignes_pct": 86.0
+   },
+   {
+    "fichier": "app/services/rag/reranker.py",
+    "instructions": 22,
+    "manquees": 1,
+    "branches": 4,
+    "partielles": 0,
+    "combine_pct": 96.2,
+    "lignes_pct": 95.5
+   },
+   {
+    "fichier": "app/services/rag/retriever.py",
+    "instructions": 58,
+    "manquees": 6,
+    "branches": 22,
+    "partielles": 3,
+    "combine_pct": 86.2,
+    "lignes_pct": 89.7
+   },
+   {
+    "fichier": "app/services/rag/vector_store.py",
+    "instructions": 35,
+    "manquees": 12,
+    "branches": 4,
+    "partielles": 1,
+    "combine_pct": 61.5,
+    "lignes_pct": 65.7
+   },
+   {
+    "fichier": "app/services/semantic_intent.py",
+    "instructions": 71,
+    "manquees": 1,
+    "branches": 12,
+    "partielles": 1,
+    "combine_pct": 97.6,
+    "lignes_pct": 98.6
+   },
+   {
+    "fichier": "app/services/session_manager.py",
+    "instructions": 116,
+    "manquees": 18,
+    "branches": 24,
+    "partielles": 6,
+    "combine_pct": 82.9,
+    "lignes_pct": 84.5
+   },
+   {
+    "fichier": "app/services/welcome_menu.py",
+    "instructions": 27,
+    "manquees": 0,
+    "branches": 4,
+    "partielles": 0,
+    "combine_pct": 100.0,
+    "lignes_pct": 100.0
+   }
+  ]
+ },
+ "ci": {
+  "fichier": ".github/workflows/tests.yml",
+  "declencheurs": [
+   "push",
+   "pull_request"
+  ],
+  "commande": "python -m pytest tests/ -m \"not integration\" -q",
+  "tests_executes": 515,
+  "lint": false,
+  "couverture": false,
+  "services": [],
+  "dernier_run": "non vérifié (gh absent localement)"
+ },
+ "tests_utilisateurs": "aucune trace"
+}

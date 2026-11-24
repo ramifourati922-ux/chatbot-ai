@@ -1,0 +1,167 @@
+{
+ "selection": {
+  "explicit": [
+   "je veux un humain",
+   "passez-moi un responsable",
+   "can I talk to a human please",
+   "nheb na7ki m3a wa7ed"
+  ],
+  "frustration": [
+   "c'est scandaleux, j'attends depuis dix jours",
+   "I'm fed up with you",
+   "your customer service is terrible and nobody cares"
+  ],
+  "order_tracking": [
+   "suivi de ma commande",
+   "my order hasn't arrived",
+   "وين الكوموند متاعي"
+  ]
+ },
+ "resultats": {
+  "explicit": {
+   "client_ms": {
+    "n": 20,
+    "mediane": 13.0,
+    "p95": 21.7,
+    "min": 9.3,
+    "max": 21.7
+   },
+   "serveur_ms": {
+    "n": 20,
+    "mediane": 6.5,
+    "p95": 9.1,
+    "min": 4,
+    "max": 10
+   },
+   "messages_distincts": 4,
+   "langues_appels": {
+    "fr": 10,
+    "en": 5,
+    "tn": 5
+   },
+   "langues_messages": {
+    "fr": 2,
+    "en": 1,
+    "tn": 1
+   },
+   "escalades_confirmees_reponse": 20,
+   "reponse_fixe_sans_llm": 20
+  },
+  "frustration": {
+   "client_ms": {
+    "n": 20,
+    "mediane": 12.5,
+    "p95": 19.5,
+    "min": 10.6,
+    "max": 21.6
+   },
+   "serveur_ms": {
+    "n": 20,
+    "mediane": 6.0,
+    "p95": 8.1,
+    "min": 5,
+    "max": 10
+   },
+   "messages_distincts": 3,
+   "langues_appels": {
+    "fr": 7,
+    "en": 13
+   },
+   "langues_messages": {
+    "fr": 1,
+    "en": 2
+   },
+   "escalades_confirmees_reponse": 20,
+   "reponse_fixe_sans_llm": 20
+  },
+  "order_tracking": {
+   "client_ms": {
+    "n": 20,
+    "mediane": 20.0,
+    "p95": 30.2,
+    "min": 13.1,
+    "max": 36.0
+   },
+   "serveur_ms": {
+    "n": 20,
+    "mediane": 12.0,
+    "p95": 20.0,
+    "min": 6,
+    "max": 20
+   },
+   "messages_distincts": 3,
+   "langues_appels": {
+    "fr": 7,
+    "en": 7,
+    "tn": 6
+   },
+   "langues_messages": {
+    "fr": 1,
+    "en": 1,
+    "tn": 1
+   },
+   "escalades_confirmees_reponse": 20,
+   "reponse_fixe_sans_llm": 20
+  }
+ },
+ "relance_suivi_ms": {
+  "n": 20,
+  "mediane": 18.7,
+  "p95": 28.6,
+  "min": 11.1,
+  "max": 31.3
+ },
+ "exemples": {
+  "explicit": {
+   "message": "je veux un humain",
+   "reponse": "Je vous mets en relation avec un conseiller humain. Quelqu'un va prendre le relais très rapidement.",
+   "intent": "human_agent",
+   "escalation_reason": "explicit"
+  },
+  "frustration": {
+   "message": "c'est scandaleux, j'attends depuis dix jours",
+   "reponse": "Je comprends votre frustration et je suis désolé pour la gêne occasionnée. Je vous mets immédiatement en relation avec un conseiller humain qui pourra mieux vous aider.",
+   "intent": "frustration",
+   "escalation_reason": "frustration"
+  },
+  "order_tracking": {
+   "message": "suivi de ma commande",
+   "reponse": "Je n'arrive pas à retrouver votre commande. Je vous mets en relation avec un conseiller qui pourra vérifier son statut.",
+   "intent": "order_tracking",
+   "escalation_reason": "order_tracking"
+  }
+ },
+ "base_avant_nettoyage": {
+  "users": 62,
+  "conversations": 62,
+  "messages": 164,
+  "statuts": {
+   "escalated": 60,
+   "active": 2
+  },
+  "motifs": {
+   "frustration": 20,
+   "order_tracking": 20,
+   "explicit": 20
+  }
+ },
+ "nettoyage": {
+  "supprimes": {
+   "messages": 164,
+   "conversations": 62,
+   "users": 62,
+   "sessions_redis": 62
+  },
+  "restants": {
+   "users": 0,
+   "conversations": 0,
+   "messages": 0,
+   "sessions_redis": 0
+  }
+ },
+ "sessions_creees": 62,
+ "versions": {
+  "python": "3.13.5",
+  "httpx": "0.27.0"
+ }
+}

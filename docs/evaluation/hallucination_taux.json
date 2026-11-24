@@ -1,0 +1,295 @@
+{
+ "global_1re_generation": {
+  "n": 42,
+  "hallucinations": 0,
+  "ambigues": 3,
+  "taux": 0.0,
+  "wilson95": [
+   0,
+   0.084
+  ],
+  "taux_strict_ambigues_comptees": 0.071,
+  "wilson95_strict": [
+   0.025,
+   0.19
+  ]
+ },
+ "arrivees_au_llm_1re_generation": {
+  "n": 30,
+  "hallucinations": 0,
+  "ambigues": 3,
+  "taux": 0.0,
+  "wilson95": [
+   0,
+   0.114
+  ],
+  "taux_strict_ambigues_comptees": 0.1,
+  "wilson95_strict": [
+   0.035,
+   0.256
+  ]
+ },
+ "interceptees_1re_generation": {
+  "n": 12,
+  "hallucinations": 0,
+  "ambigues": 0,
+  "taux": 0.0,
+  "wilson95": [
+   0,
+   0.243
+  ],
+  "taux_strict_ambigues_comptees": 0.0,
+  "wilson95_strict": [
+   0,
+   0.243
+  ]
+ },
+ "arrivees_au_llm_2e_generation": {
+  "n": 30,
+  "hallucinations": 0,
+  "ambigues": 3,
+  "taux": 0.0,
+  "wilson95": [
+   0,
+   0.114
+  ],
+  "taux_strict_ambigues_comptees": 0.1,
+  "wilson95_strict": [
+   0.035,
+   0.256
+  ]
+ },
+ "par_langue": {
+  "fr": {
+   "n": 11,
+   "hallucinations": 0,
+   "ambigues": 1,
+   "taux": 0.0,
+   "wilson95": [
+    0.0,
+    0.259
+   ],
+   "taux_strict_ambigues_comptees": 0.091,
+   "wilson95_strict": [
+    0.016,
+    0.377
+   ]
+  },
+  "en": {
+   "n": 10,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.278
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.278
+   ]
+  },
+  "ar": {
+   "n": 10,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.278
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.278
+   ]
+  },
+  "tn": {
+   "n": 11,
+   "hallucinations": 0,
+   "ambigues": 2,
+   "taux": 0.0,
+   "wilson95": [
+    0.0,
+    0.259
+   ],
+   "taux_strict_ambigues_comptees": 0.182,
+   "wilson95_strict": [
+    0.051,
+    0.477
+   ]
+  }
+ },
+ "par_type": {
+  "statut de commande": {
+   "n": 7,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.354
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.354
+   ]
+  },
+  "date de livraison d'une commande": {
+   "n": 4,
+   "hallucinations": 0,
+   "ambigues": 1,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.49
+   ],
+   "taux_strict_ambigues_comptees": 0.25,
+   "wilson95_strict": [
+    0.046,
+    0.699
+   ]
+  },
+  "numéro de suivi": {
+   "n": 4,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.49
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.49
+   ]
+  },
+  "stock exact": {
+   "n": 4,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.49
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.49
+   ]
+  },
+  "prix d'un produit absent": {
+   "n": 4,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.49
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.49
+   ]
+  },
+  "remise personnelle": {
+   "n": 2,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.658
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.658
+   ]
+  },
+  "état d'un remboursement": {
+   "n": 3,
+   "hallucinations": 0,
+   "ambigues": 1,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.562
+   ],
+   "taux_strict_ambigues_comptees": 0.333,
+   "wilson95_strict": [
+    0.061,
+    0.792
+   ]
+  },
+  "nom d'un employé": {
+   "n": 3,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.562
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.562
+   ]
+  },
+  "CONTRÔLE": {
+   "n": 6,
+   "hallucinations": 0,
+   "ambigues": 1,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.39
+   ],
+   "taux_strict_ambigues_comptees": 0.167,
+   "wilson95_strict": [
+    0.03,
+    0.564
+   ]
+  },
+  "adresse d'entrepôt": {
+   "n": 2,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.658
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.658
+   ]
+  },
+  "code promo inexistant": {
+   "n": 3,
+   "hallucinations": 0,
+   "ambigues": 0,
+   "taux": 0.0,
+   "wilson95": [
+    0,
+    0.562
+   ],
+   "taux_strict_ambigues_comptees": 0.0,
+   "wilson95_strict": [
+    0,
+    0.562
+   ]
+  }
+ },
+ "variabilite": {
+  "questions_2_generations": 30,
+  "classe_differente": 2
+ }
+}

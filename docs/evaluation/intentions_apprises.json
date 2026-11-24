@@ -1,0 +1,5549 @@
+{
+ "versions": {
+  "python": "3.13.5",
+  "numpy": "2.5.1",
+  "modele": "paraphrase-multilingual-MiniLM-L12-v2",
+  "seuils": {
+   "INTENT_SIMILARITY_THRESHOLD": 0.62,
+   "INTENT_ESCALATION_THRESHOLD": 0.82
+  },
+  "INTENT_MODEL_ENABLED_sur_disque": false
+ },
+ "B5_warmup": {
+  "s": 1.735,
+  "exemples": 196,
+  "matrice_ko": 294.0,
+  "tracemalloc_net_ko": 334.0,
+  "tracemalloc_pic_ko": 3019.0
+ },
+ "A2_repartition": {
+  "human_agent": {
+   "fr": 10,
+   "en": 10,
+   "ar": 8,
+   "tn": 10
+  },
+  "frustration": {
+   "fr": 10,
+   "en": 10,
+   "ar": 8,
+   "tn": 10
+  },
+  "order_tracking": {
+   "fr": 8,
+   "en": 8,
+   "ar": 6,
+   "tn": 8
+  },
+  "help": {
+   "fr": 10,
+   "en": 10,
+   "ar": 8,
+   "tn": 10
+  },
+  "general": {
+   "fr": 17,
+   "en": 13,
+   "ar": 9,
+   "tn": 13
+  }
+ },
+ "A2_longueur_mots": {
+  "min": 2,
+  "mediane": 5.0,
+  "max": 11
+ },
+ "A2_doublons_exacts": 0,
+ "A2_chevauchement": {
+  "dev.json": {
+   "n": 46,
+   "identiques": 0,
+   "similarite_sup_095": 1,
+   "max": 0.971,
+   "mediane_meilleure": 0.722,
+   "cas": [
+    {
+     "phrase": "que vendez-vous exactement ?",
+     "exemple": "qu'est-ce que vous vendez ?",
+     "intention_exemple": "help",
+     "similarite": 0.971
+    }
+   ]
+  },
+  "test.json": {
+   "n": 59,
+   "identiques": 0,
+   "similarite_sup_095": 2,
+   "max": 0.997,
+   "mediane_meilleure": 0.699,
+   "cas": [
+    {
+     "phrase": "je veux plus des informations",
+     "exemple": "je veux plus d'informations",
+     "intention_exemple": "help",
+     "similarite": 0.997
+    },
+    {
+     "phrase": "vous vendez quoi ?",
+     "exemple": "qu'est-ce que vous vendez ?",
+     "intention_exemple": "help",
+     "similarite": 0.971
+    }
+   ]
+  },
+  "test_appris.json": {
+   "n": 80,
+   "identiques": 0,
+   "similarite_sup_095": 0,
+   "max": 0.935,
+   "mediane_meilleure": 0.727,
+   "cas": []
+  },
+  "recherche.json": {
+   "n": 68,
+   "identiques": 0,
+   "similarite_sup_095": 1,
+   "max": 0.97,
+   "mediane_meilleure": 0.617,
+   "cas": [
+    {
+     "phrase": "كم سعر وحدة ESP32؟",
+     "exemple": "combien coûte un ESP32 ?",
+     "intention_exemple": "general",
+     "similarite": 0.97
+    }
+   ]
+  },
+  "recherche_tunisien_nouvelles.json": {
+   "n": 18,
+   "identiques": 0,
+   "similarite_sup_095": 1,
+   "max": 0.964,
+   "mediane_meilleure": 0.659,
+   "cas": [
+    {
+     "phrase": "kifech nkalmekom ?",
+     "exemple": "kifech nkoumandi ?",
+     "intention_exemple": "general",
+     "similarite": 0.964
+    }
+   ]
+  },
+  "ragas_results.json": {
+   "n": 25,
+   "identiques": 1,
+   "similarite_sup_095": 2,
+   "max": 1.0,
+   "mediane_meilleure": 0.613,
+   "cas": [
+    {
+     "phrase": "Quels sont les frais de livraison ?",
+     "exemple": "quels sont les frais de livraison ?",
+     "intention_exemple": "general",
+     "similarite": 1.0
+    },
+    {
+     "phrase": "ما هي طرق الدفع المتاحة",
+     "exemple": "ما هي طرق الدفع؟",
+     "intention_exemple": "general",
+     "similarite": 0.954
+    }
+   ]
+  }
+ },
+ "B5_classification_ms": {
+  "n": 139,
+  "mediane": 41.69,
+  "p95": 55.7,
+  "max": 69.75
+ },
+ "B2": {
+  "test.json": {
+   "regles_seules": {
+    "n": 59,
+    "exactitude": 0.4576271186440678,
+    "par_intention": {
+     "human_agent": {
+      "n": 11,
+      "precision": 1.0,
+      "rappel": 0.36363636363636365,
+      "f1": 0.5333333333333333
+     },
+     "frustration": {
+      "n": 10,
+      "precision": 1.0,
+      "rappel": 0.3,
+      "f1": 0.4615384615384615
+     },
+     "order_tracking": {
+      "n": 10,
+      "precision": 1.0,
+      "rappel": 0.3,
+      "f1": 0.4615384615384615
+     },
+     "help": {
+      "n": 11,
+      "precision": null,
+      "rappel": 0.0,
+      "f1": null
+     },
+     "general": {
+      "n": 17,
+      "precision": 0.3469387755102041,
+      "rappel": 1.0,
+      "f1": 0.5151515151515151
+     }
+    },
+    "confusion": {
+     "human_agent": {
+      "human_agent": 4,
+      "general": 7
+     },
+     "frustration": {
+      "frustration": 3,
+      "general": 7
+     },
+     "order_tracking": {
+      "order_tracking": 3,
+      "general": 7
+     },
+     "help": {
+      "general": 11
+     },
+     "general": {
+      "general": 17
+     }
+    },
+    "labels_predits": [
+     "human_agent",
+     "frustration",
+     "order_tracking",
+     "help",
+     "general"
+    ],
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.3333333333333333,
+     "vp": 7,
+     "fp": 0,
+     "fn": 14
+    },
+    "rag": {
+     "precision": 0.3469387755102041,
+     "rappel": 1.0,
+     "vp": 17,
+     "fp": 32,
+     "fn": 0
+    },
+    "faux_transferts": [],
+    "transferts_manques": [
+     "est-il possible de discuter avec quelqu'un de réel ?",
+     "une personne peut-elle prendre en charge ma demande ?",
+     "is a member of your staff around to help me?",
+     "please connect me with somebody who works there",
+     "أريد موظفا بشريا",
+     "هل يمكن لأحد من فريقكم الرد علي؟",
+     "7ad men el khedma ynajjem yetsal biya ?",
+     "votre boutique ne vaut rien, aucun suivi",
+     "je suis furieux, on m'ignore complètement",
+     "c'est du vol, vous ne répondez à personne",
+     "absolutely awful, I keep getting ignored",
+     "أنتم لا تحترمون زبائنكم أبدا",
+     "ma fama 7atta 7ad yjewebni, 3ib",
+     "khedmetkom ma3andha 7atta ma3na"
+    ],
+    "par_langue": {
+     "ar": {
+      "n": 7,
+      "exactitude": 0.14285714285714285,
+      "transfert": {
+       "precision": null,
+       "rappel": 0.0,
+       "vp": 0,
+       "fp": 0,
+       "fn": 3
+      }
+     },
+     "en": {
+      "n": 16,
+      "exactitude": 0.5,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.5,
+       "vp": 3,
+       "fp": 0,
+       "fn": 3
+      }
+     },
+     "fr": {
+      "n": 22,
+      "exactitude": 0.5,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.375,
+       "vp": 3,
+       "fp": 0,
+       "fn": 5
+      }
+     },
+     "tn": {
+      "n": 14,
+      "exactitude": 0.5,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.25,
+       "vp": 1,
+       "fp": 0,
+       "fn": 3
+      }
+     }
+    }
+   },
+   "regles_plus_modele": {
+    "n": 59,
+    "exactitude": 0.711864406779661,
+    "par_intention": {
+     "human_agent": {
+      "n": 11,
+      "precision": 1.0,
+      "rappel": 0.5454545454545454,
+      "f1": 0.7058823529411764
+     },
+     "frustration": {
+      "n": 10,
+      "precision": 1.0,
+      "rappel": 0.3,
+      "f1": 0.4615384615384615
+     },
+     "order_tracking": {
+      "n": 10,
+      "precision": 1.0,
+      "rappel": 0.7,
+      "f1": 0.8235294117647058
+     },
+     "help": {
+      "n": 11,
+      "precision": 0.7692307692307693,
+      "rappel": 0.9090909090909091,
+      "f1": 0.8333333333333333
+     },
+     "general": {
+      "n": 17,
+      "precision": 0.5333333333333333,
+      "rappel": 0.9411764705882353,
+      "f1": 0.6808510638297872
+     }
+    },
+    "confusion": {
+     "human_agent": {
+      "human_agent": 6,
+      "general": 5
+     },
+     "frustration": {
+      "frustration": 3,
+      "general": 5,
+      "help": 2
+     },
+     "order_tracking": {
+      "order_tracking": 7,
+      "general": 3
+     },
+     "help": {
+      "help": 10,
+      "general": 1
+     },
+     "general": {
+      "general": 16,
+      "help": 1
+     }
+    },
+    "labels_predits": [
+     "human_agent",
+     "frustration",
+     "order_tracking",
+     "help",
+     "general"
+    ],
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.42857142857142855,
+     "vp": 9,
+     "fp": 0,
+     "fn": 12
+    },
+    "rag": {
+     "precision": 0.5333333333333333,
+     "rappel": 0.9411764705882353,
+     "vp": 16,
+     "fp": 14,
+     "fn": 1
+    },
+    "faux_transferts": [],
+    "transferts_manques": [
+     "une personne peut-elle prendre en charge ma demande ?",
+     "please connect me with somebody who works there",
+     "أريد موظفا بشريا",
+     "هل يمكن لأحد من فريقكم الرد علي؟",
+     "7ad men el khedma ynajjem yetsal biya ?",
+     "votre boutique ne vaut rien, aucun suivi",
+     "je suis furieux, on m'ignore complètement",
+     "c'est du vol, vous ne répondez à personne",
+     "absolutely awful, I keep getting ignored",
+     "أنتم لا تحترمون زبائنكم أبدا",
+     "ma fama 7atta 7ad yjewebni, 3ib",
+     "khedmetkom ma3andha 7atta ma3na"
+    ],
+    "par_langue": {
+     "ar": {
+      "n": 7,
+      "exactitude": 0.5714285714285714,
+      "transfert": {
+       "precision": null,
+       "rappel": 0.0,
+       "vp": 0,
+       "fp": 0,
+       "fn": 3
+      }
+     },
+     "en": {
+      "n": 16,
+      "exactitude": 0.75,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.6666666666666666,
+       "vp": 4,
+       "fp": 0,
+       "fn": 2
+      }
+     },
+     "fr": {
+      "n": 22,
+      "exactitude": 0.7727272727272727,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.5,
+       "vp": 4,
+       "fp": 0,
+       "fn": 4
+      }
+     },
+     "tn": {
+      "n": 14,
+      "exactitude": 0.6428571428571429,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.25,
+       "vp": 1,
+       "fp": 0,
+       "fn": 3
+      }
+     }
+    }
+   },
+   "changements": [
+    {
+     "texte": "est-il possible de discuter avec quelqu'un de réel ?",
+     "langue": "fr",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8991,
+     "exemple": "هل يمكنني التحدث مع شخص حقيقي؟"
+    },
+    {
+     "texte": "is a member of your staff around to help me?",
+     "langue": "en",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8623,
+     "exemple": "can a staff member help me?"
+    },
+    {
+     "texte": "ma fama 7atta 7ad yjewebni, 3ib",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.7399,
+     "exemple": "nhebek t3awenni"
+    },
+    {
+     "texte": "khedmetkom ma3andha 7atta ma3na",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.8273,
+     "exemple": "nheb akther ma3loumet"
+    },
+    {
+     "texte": "ma livraison est en retard, elle arrive quand ?",
+     "langue": "fr",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.6431,
+     "exemple": "لم يصلني الطرد بعد"
+    },
+    {
+     "texte": "when is my parcel going to be delivered?",
+     "langue": "en",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.7722,
+     "exemple": "has my parcel been shipped?"
+    },
+    {
+     "texte": "لم أستلم طلبيتي حتى الآن",
+     "langue": "ar",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.861,
+     "exemple": "لم يصلني الطرد بعد"
+    },
+    {
+     "texte": "el colis mte3i wa9tech ywosel",
+     "langue": "tn",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.867,
+     "exemple": "wa9tech twosel el commande mte3i ?"
+    },
+    {
+     "texte": "je veux plus des informations",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.9969,
+     "exemple": "je veux plus d'informations"
+    },
+    {
+     "texte": "j'ai besoin d'un renseignement",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7099,
+     "exemple": "j'ai besoin d'aide"
+    },
+    {
+     "texte": "vous vendez quoi ?",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.9709,
+     "exemple": "qu'est-ce que vous vendez ?"
+    },
+    {
+     "texte": "pouvez-vous me guider ?",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7882,
+     "exemple": "هل يمكنك مساعدتي؟"
+    },
+    {
+     "texte": "i need your help",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8626,
+     "exemple": "أحتاج مساعدة"
+    },
+    {
+     "texte": "I'd like some information",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8323,
+     "exemple": "أريد معلومات أكثر"
+    },
+    {
+     "texte": "أحتاج بعض المعلومات",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8643,
+     "exemple": "je veux plus d'informations"
+    },
+    {
+     "texte": "ماذا لديكم في المتجر؟",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7999,
+     "exemple": "tell me about your shop"
+    },
+    {
+     "texte": "nhebek t3awani",
+     "langue": "tn",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.9316,
+     "exemple": "nhebek t3awenni"
+    },
+    {
+     "texte": "chnia 3andkom fel magasin ?",
+     "langue": "tn",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7934,
+     "exemple": "présentez-moi votre boutique"
+    },
+    {
+     "texte": "kifech nraja3 produit ?",
+     "langue": "tn",
+     "attendu": "general",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "dégradé",
+     "score": 0.7485,
+     "exemple": "nheb na3ref chnouma les produits mte3kom"
+    }
+   ]
+  },
+  "test_appris.json": {
+   "regles_seules": {
+    "n": 80,
+    "exactitude": 0.375,
+    "par_intention": {
+     "human_agent": {
+      "n": 16,
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "f1": 0.47619047619047616
+     },
+     "frustration": {
+      "n": 16,
+      "precision": 1.0,
+      "rappel": 0.0625,
+      "f1": 0.11764705882352941
+     },
+     "order_tracking": {
+      "n": 12,
+      "precision": null,
+      "rappel": 0.0,
+      "f1": null
+     },
+     "help": {
+      "n": 12,
+      "precision": null,
+      "rappel": 0.0,
+      "f1": null
+     },
+     "general": {
+      "n": 24,
+      "precision": 0.32432432432432434,
+      "rappel": 1.0,
+      "f1": 0.489795918367347
+     }
+    },
+    "confusion": {
+     "human_agent": {
+      "human_agent": 5,
+      "general": 11
+     },
+     "frustration": {
+      "frustration": 1,
+      "general": 15
+     },
+     "order_tracking": {
+      "general": 12
+     },
+     "help": {
+      "general": 12
+     },
+     "general": {
+      "general": 24
+     }
+    },
+    "labels_predits": [
+     "human_agent",
+     "frustration",
+     "order_tracking",
+     "help",
+     "general"
+    ],
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.1875,
+     "vp": 6,
+     "fp": 0,
+     "fn": 26
+    },
+    "rag": {
+     "precision": 0.32432432432432434,
+     "rappel": 1.0,
+     "vp": 24,
+     "fp": 50,
+     "fn": 0
+    },
+    "faux_transferts": [],
+    "transferts_manques": [
+     "Quelqu'un de votre équipe peut-il me rappeler ?",
+     "Votre service client est une honte, personne ne s'occupe de moi",
+     "J'en ai vraiment marre de vos réponses automatiques inutiles",
+     "Je suis très déçu de la façon dont vous traitez vos clients",
+     "I would like someone from your team to call me back",
+     "Please put me through to customer support staff",
+     "Is there an actual employee I can chat with?",
+     "This is the third time I ask and nobody answers, ridiculous",
+     "Your support is useless and I'm losing my patience",
+     "I'm really angry about how you treat your customers",
+     "Worst service ever, you never reply to my emails",
+     "هل يمكن لأحد من فريق الدعم أن يتصل بي؟",
+     "أريد التواصل مع شخص من خدمة العملاء",
+     "من فضلك حولني إلى مستشار بشري",
+     "هذه المرة الثالثة التي أسأل فيها ولا أحد يجيب، هذا غير مقبول",
+     "خدمة العملاء لديكم سيئة جدا ولا أحد يهتم",
+     "لقد سئمت من ردودكم الآلية التي لا تفيد",
+     "أنا غاضب جدا من طريقة تعاملكم مع الزبائن",
+     "nheb nahki m3a 3abd mouch robot",
+     "ynajem 7ad men 3andkom y3ayetli ?",
+     "7awelni l conseiller men fadhlek",
+     "famma chkoun nkalmou men el service client ?",
+     "hedhi tlatha marrat nes2el w 7atta 7ad ma jewebni, 3ib",
+     "el service mte3kom zero, 7atta 7ad ma yehtam",
+     "9ale9t men les réponses automatiques mte3kom",
+     "ena metghachech barcha men tri9tkom m3a el clients"
+    ],
+    "par_langue": {
+     "ar": {
+      "n": 20,
+      "exactitude": 0.35,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.125,
+       "vp": 1,
+       "fp": 0,
+       "fn": 7
+      }
+     },
+     "en": {
+      "n": 20,
+      "exactitude": 0.35,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.125,
+       "vp": 1,
+       "fp": 0,
+       "fn": 7
+      }
+     },
+     "fr": {
+      "n": 20,
+      "exactitude": 0.5,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.5,
+       "vp": 4,
+       "fp": 0,
+       "fn": 4
+      }
+     },
+     "tn": {
+      "n": 20,
+      "exactitude": 0.3,
+      "transfert": {
+       "precision": null,
+       "rappel": 0.0,
+       "vp": 0,
+       "fp": 0,
+       "fn": 8
+      }
+     }
+    }
+   },
+   "regles_plus_modele": {
+    "n": 80,
+    "exactitude": 0.7,
+    "par_intention": {
+     "human_agent": {
+      "n": 16,
+      "precision": 1.0,
+      "rappel": 0.5625,
+      "f1": 0.72
+     },
+     "frustration": {
+      "n": 16,
+      "precision": 1.0,
+      "rappel": 0.25,
+      "f1": 0.4
+     },
+     "order_tracking": {
+      "n": 12,
+      "precision": 1.0,
+      "rappel": 0.8333333333333334,
+      "f1": 0.9090909090909091
+     },
+     "help": {
+      "n": 12,
+      "precision": 0.6875,
+      "rappel": 0.9166666666666666,
+      "f1": 0.7857142857142857
+     },
+     "general": {
+      "n": 24,
+      "precision": 0.5365853658536586,
+      "rappel": 0.9166666666666666,
+      "f1": 0.676923076923077
+     }
+    },
+    "confusion": {
+     "human_agent": {
+      "human_agent": 9,
+      "general": 6,
+      "help": 1
+     },
+     "frustration": {
+      "frustration": 4,
+      "general": 10,
+      "help": 2
+     },
+     "order_tracking": {
+      "order_tracking": 10,
+      "general": 2
+     },
+     "help": {
+      "help": 11,
+      "general": 1
+     },
+     "general": {
+      "general": 22,
+      "help": 2
+     }
+    },
+    "labels_predits": [
+     "human_agent",
+     "frustration",
+     "order_tracking",
+     "help",
+     "general"
+    ],
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.40625,
+     "vp": 13,
+     "fp": 0,
+     "fn": 19
+    },
+    "rag": {
+     "precision": 0.5365853658536586,
+     "rappel": 0.9166666666666666,
+     "vp": 22,
+     "fp": 19,
+     "fn": 2
+    },
+    "faux_transferts": [],
+    "transferts_manques": [
+     "Quelqu'un de votre équipe peut-il me rappeler ?",
+     "Votre service client est une honte, personne ne s'occupe de moi",
+     "J'en ai vraiment marre de vos réponses automatiques inutiles",
+     "Please put me through to customer support staff",
+     "Is there an actual employee I can chat with?",
+     "This is the third time I ask and nobody answers, ridiculous",
+     "Your support is useless and I'm losing my patience",
+     "I'm really angry about how you treat your customers",
+     "Worst service ever, you never reply to my emails",
+     "من فضلك حولني إلى مستشار بشري",
+     "هذه المرة الثالثة التي أسأل فيها ولا أحد يجيب، هذا غير مقبول",
+     "خدمة العملاء لديكم سيئة جدا ولا أحد يهتم",
+     "لقد سئمت من ردودكم الآلية التي لا تفيد",
+     "أنا غاضب جدا من طريقة تعاملكم مع الزبائن",
+     "ynajem 7ad men 3andkom y3ayetli ?",
+     "7awelni l conseiller men fadhlek",
+     "famma chkoun nkalmou men el service client ?",
+     "hedhi tlatha marrat nes2el w 7atta 7ad ma jewebni, 3ib",
+     "ena metghachech barcha men tri9tkom m3a el clients"
+    ],
+    "par_langue": {
+     "ar": {
+      "n": 20,
+      "exactitude": 0.75,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.375,
+       "vp": 3,
+       "fp": 0,
+       "fn": 5
+      }
+     },
+     "en": {
+      "n": 20,
+      "exactitude": 0.7,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.25,
+       "vp": 2,
+       "fp": 0,
+       "fn": 6
+      }
+     },
+     "fr": {
+      "n": 20,
+      "exactitude": 0.85,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.625,
+       "vp": 5,
+       "fp": 0,
+       "fn": 3
+      }
+     },
+     "tn": {
+      "n": 20,
+      "exactitude": 0.5,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.375,
+       "vp": 3,
+       "fp": 0,
+       "fn": 5
+      }
+     }
+    }
+   },
+   "changements": [
+    {
+     "texte": "Je suis très déçu de la façon dont vous traitez vos clients",
+     "langue": "fr",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "frustration",
+     "effet": "corrigé",
+     "score": 0.8501,
+     "exemple": "je suis très déçu de votre service"
+    },
+    {
+     "texte": "Mon colis devait arriver lundi et je n'ai toujours rien reçu",
+     "langue": "fr",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.7426,
+     "exemple": "طلبت منذ أسبوع ولم يصلني شيء"
+    },
+    {
+     "texte": "Pouvez-vous me dire si mon achat de la semaine dernière est parti ?",
+     "langue": "fr",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.8114,
+     "exemple": "mon achat a-t-il été expédié ?"
+    },
+    {
+     "texte": "Je voudrais savoir où se trouve mon paquet en ce moment",
+     "langue": "fr",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.873,
+     "exemple": "mon paquet est où ?"
+    },
+    {
+     "texte": "Bonjour, j'ai besoin d'aide",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8442,
+     "exemple": "أحتاج مساعدة"
+    },
+    {
+     "texte": "Qu'est-ce que vous pouvez faire pour moi ?",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7417,
+     "exemple": "what can you do?"
+    },
+    {
+     "texte": "Je ne sais pas trop par où commencer, vous pouvez m'orienter ?",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8173,
+     "exemple": "je ne sais pas par où commencer"
+    },
+    {
+     "texte": "I would like someone from your team to call me back",
+     "langue": "en",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8986,
+     "exemple": "أريد أن يتصل بي أحد من فريقكم"
+    },
+    {
+     "texte": "My package was supposed to arrive on Monday and it's still not here",
+     "langue": "en",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.8446,
+     "exemple": "my package hasn't arrived yet"
+    },
+    {
+     "texte": "Has the item I bought last week been shipped yet?",
+     "langue": "en",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.7828,
+     "exemple": "has my parcel been shipped?"
+    },
+    {
+     "texte": "Where is my parcel right now?",
+     "langue": "en",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.9347,
+     "exemple": "where is my parcel?"
+    },
+    {
+     "texte": "Hi, I need some assistance",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8041,
+     "exemple": "I really need some assistance"
+    },
+    {
+     "texte": "What can you do for me?",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7241,
+     "exemple": "what can you do?"
+    },
+    {
+     "texte": "I'm not sure where to start, can you guide me?",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7966,
+     "exemple": "je ne sais pas par où commencer"
+    },
+    {
+     "texte": "هل يمكن لأحد من فريق الدعم أن يتصل بي؟",
+     "langue": "ar",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8702,
+     "exemple": "un membre de l'équipe peut me contacter ?"
+    },
+    {
+     "texte": "أريد التواصل مع شخص من خدمة العملاء",
+     "langue": "ar",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8337,
+     "exemple": "هل يوجد أحد من خدمة العملاء؟"
+    },
+    {
+     "texte": "كان من المفترض أن يصل طردي يوم الاثنين ولم يصل بعد",
+     "langue": "ar",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.6941,
+     "exemple": "لم يصلني الطرد بعد"
+    },
+    {
+     "texte": "هل تم شحن المنتج الذي اشتريته الأسبوع الماضي؟",
+     "langue": "ar",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.6902,
+     "exemple": "mon achat a-t-il été expédié ?"
+    },
+    {
+     "texte": "أين يوجد طردي الآن؟",
+     "langue": "ar",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.8081,
+     "exemple": "mon paquet est où ?"
+    },
+    {
+     "texte": "مرحبا، أحتاج إلى مساعدة",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8463,
+     "exemple": "أحتاج مساعدة"
+    },
+    {
+     "texte": "ماذا يمكنك أن تفعل لي؟",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7882,
+     "exemple": "what can you do?"
+    },
+    {
+     "texte": "لا أعرف من أين أبدأ، هل يمكنك توجيهي؟",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8243,
+     "exemple": "je ne sais pas par où commencer"
+    },
+    {
+     "texte": "nheb nahki m3a 3abd mouch robot",
+     "langue": "tn",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8994,
+     "exemple": "ma nhebech nahki m3a robot"
+    },
+    {
+     "texte": "ynajem 7ad men 3andkom y3ayetli ?",
+     "langue": "tn",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.7955,
+     "exemple": "3awenni 3afek"
+    },
+    {
+     "texte": "hedhi tlatha marrat nes2el w 7atta 7ad ma jewebni, 3ib",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.8056,
+     "exemple": "3awenni 3afek"
+    },
+    {
+     "texte": "el service mte3kom zero, 7atta 7ad ma yehtam",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "frustration",
+     "effet": "corrigé",
+     "score": 0.8425,
+     "exemple": "service mte3kom zero"
+    },
+    {
+     "texte": "9ale9t men les réponses automatiques mte3kom",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "frustration",
+     "effet": "corrigé",
+     "score": 0.8279,
+     "exemple": "9ra9tni el khedma mte3kom"
+    },
+    {
+     "texte": "ena metghachech barcha men tri9tkom m3a el clients",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.6413,
+     "exemple": "nhebek t3awenni"
+    },
+    {
+     "texte": "win wsel el colis mte3i tawa ?",
+     "langue": "tn",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.7732,
+     "exemple": "el colis mte3i mazel ma wselch"
+    },
+    {
+     "texte": "chnowa tnajjem ta3melli ?",
+     "langue": "tn",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.9055,
+     "exemple": "chnowa tnajjem ta3mel ?"
+    },
+    {
+     "texte": "ma3raftech mnin nebda, tnajjem twajahni ?",
+     "langue": "tn",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.6726,
+     "exemple": "chnowa tnajjem ta3mel ?"
+    },
+    {
+     "texte": "el produit hedha qualité mte3ou khayba, yeskhon fissa3",
+     "langue": "tn",
+     "attendu": "general",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "dégradé",
+     "score": 0.8223,
+     "exemple": "nheb na3ref chnouma les produits mte3kom"
+    },
+    {
+     "texte": "el capteur ma y3ati 7atta mesure, chnowa na3mel ?",
+     "langue": "tn",
+     "attendu": "general",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "dégradé",
+     "score": 0.7897,
+     "exemple": "nheb na3ref chnouma les produits mte3kom"
+    }
+   ]
+  },
+  "les deux": {
+   "regles_seules": {
+    "n": 139,
+    "exactitude": 0.41007194244604317,
+    "par_intention": {
+     "human_agent": {
+      "n": 27,
+      "precision": 1.0,
+      "rappel": 0.3333333333333333,
+      "f1": 0.5
+     },
+     "frustration": {
+      "n": 26,
+      "precision": 1.0,
+      "rappel": 0.15384615384615385,
+      "f1": 0.2666666666666667
+     },
+     "order_tracking": {
+      "n": 22,
+      "precision": 1.0,
+      "rappel": 0.13636363636363635,
+      "f1": 0.24000000000000002
+     },
+     "help": {
+      "n": 23,
+      "precision": null,
+      "rappel": 0.0,
+      "f1": null
+     },
+     "general": {
+      "n": 41,
+      "precision": 0.3333333333333333,
+      "rappel": 1.0,
+      "f1": 0.5
+     }
+    },
+    "confusion": {
+     "human_agent": {
+      "human_agent": 9,
+      "general": 18
+     },
+     "frustration": {
+      "frustration": 4,
+      "general": 22
+     },
+     "order_tracking": {
+      "order_tracking": 3,
+      "general": 19
+     },
+     "help": {
+      "general": 23
+     },
+     "general": {
+      "general": 41
+     }
+    },
+    "labels_predits": [
+     "human_agent",
+     "frustration",
+     "order_tracking",
+     "help",
+     "general"
+    ],
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.24528301886792453,
+     "vp": 13,
+     "fp": 0,
+     "fn": 40
+    },
+    "rag": {
+     "precision": 0.3333333333333333,
+     "rappel": 1.0,
+     "vp": 41,
+     "fp": 82,
+     "fn": 0
+    },
+    "faux_transferts": [],
+    "transferts_manques": [
+     "est-il possible de discuter avec quelqu'un de réel ?",
+     "une personne peut-elle prendre en charge ma demande ?",
+     "is a member of your staff around to help me?",
+     "please connect me with somebody who works there",
+     "أريد موظفا بشريا",
+     "هل يمكن لأحد من فريقكم الرد علي؟",
+     "7ad men el khedma ynajjem yetsal biya ?",
+     "votre boutique ne vaut rien, aucun suivi",
+     "je suis furieux, on m'ignore complètement",
+     "c'est du vol, vous ne répondez à personne",
+     "absolutely awful, I keep getting ignored",
+     "أنتم لا تحترمون زبائنكم أبدا",
+     "ma fama 7atta 7ad yjewebni, 3ib",
+     "khedmetkom ma3andha 7atta ma3na",
+     "Quelqu'un de votre équipe peut-il me rappeler ?",
+     "Votre service client est une honte, personne ne s'occupe de moi",
+     "J'en ai vraiment marre de vos réponses automatiques inutiles",
+     "Je suis très déçu de la façon dont vous traitez vos clients",
+     "I would like someone from your team to call me back",
+     "Please put me through to customer support staff",
+     "Is there an actual employee I can chat with?",
+     "This is the third time I ask and nobody answers, ridiculous",
+     "Your support is useless and I'm losing my patience",
+     "I'm really angry about how you treat your customers",
+     "Worst service ever, you never reply to my emails",
+     "هل يمكن لأحد من فريق الدعم أن يتصل بي؟",
+     "أريد التواصل مع شخص من خدمة العملاء",
+     "من فضلك حولني إلى مستشار بشري",
+     "هذه المرة الثالثة التي أسأل فيها ولا أحد يجيب، هذا غير مقبول",
+     "خدمة العملاء لديكم سيئة جدا ولا أحد يهتم",
+     "لقد سئمت من ردودكم الآلية التي لا تفيد",
+     "أنا غاضب جدا من طريقة تعاملكم مع الزبائن",
+     "nheb nahki m3a 3abd mouch robot",
+     "ynajem 7ad men 3andkom y3ayetli ?",
+     "7awelni l conseiller men fadhlek",
+     "famma chkoun nkalmou men el service client ?",
+     "hedhi tlatha marrat nes2el w 7atta 7ad ma jewebni, 3ib",
+     "el service mte3kom zero, 7atta 7ad ma yehtam",
+     "9ale9t men les réponses automatiques mte3kom",
+     "ena metghachech barcha men tri9tkom m3a el clients"
+    ],
+    "par_langue": {
+     "ar": {
+      "n": 27,
+      "exactitude": 0.2962962962962963,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.09090909090909091,
+       "vp": 1,
+       "fp": 0,
+       "fn": 10
+      }
+     },
+     "en": {
+      "n": 36,
+      "exactitude": 0.4166666666666667,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.2857142857142857,
+       "vp": 4,
+       "fp": 0,
+       "fn": 10
+      }
+     },
+     "fr": {
+      "n": 42,
+      "exactitude": 0.5,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.4375,
+       "vp": 7,
+       "fp": 0,
+       "fn": 9
+      }
+     },
+     "tn": {
+      "n": 34,
+      "exactitude": 0.38235294117647056,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.08333333333333333,
+       "vp": 1,
+       "fp": 0,
+       "fn": 11
+      }
+     }
+    }
+   },
+   "regles_plus_modele": {
+    "n": 139,
+    "exactitude": 0.7050359712230215,
+    "par_intention": {
+     "human_agent": {
+      "n": 27,
+      "precision": 1.0,
+      "rappel": 0.5555555555555556,
+      "f1": 0.7142857142857143
+     },
+     "frustration": {
+      "n": 26,
+      "precision": 1.0,
+      "rappel": 0.2692307692307692,
+      "f1": 0.42424242424242425
+     },
+     "order_tracking": {
+      "n": 22,
+      "precision": 1.0,
+      "rappel": 0.7727272727272727,
+      "f1": 0.8717948717948718
+     },
+     "help": {
+      "n": 23,
+      "precision": 0.7241379310344828,
+      "rappel": 0.9130434782608695,
+      "f1": 0.8076923076923076
+     },
+     "general": {
+      "n": 41,
+      "precision": 0.5352112676056338,
+      "rappel": 0.926829268292683,
+      "f1": 0.6785714285714285
+     }
+    },
+    "confusion": {
+     "human_agent": {
+      "human_agent": 15,
+      "general": 11,
+      "help": 1
+     },
+     "frustration": {
+      "frustration": 7,
+      "general": 15,
+      "help": 4
+     },
+     "order_tracking": {
+      "order_tracking": 17,
+      "general": 5
+     },
+     "help": {
+      "help": 21,
+      "general": 2
+     },
+     "general": {
+      "general": 38,
+      "help": 3
+     }
+    },
+    "labels_predits": [
+     "human_agent",
+     "frustration",
+     "order_tracking",
+     "help",
+     "general"
+    ],
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.41509433962264153,
+     "vp": 22,
+     "fp": 0,
+     "fn": 31
+    },
+    "rag": {
+     "precision": 0.5352112676056338,
+     "rappel": 0.926829268292683,
+     "vp": 38,
+     "fp": 33,
+     "fn": 3
+    },
+    "faux_transferts": [],
+    "transferts_manques": [
+     "une personne peut-elle prendre en charge ma demande ?",
+     "please connect me with somebody who works there",
+     "أريد موظفا بشريا",
+     "هل يمكن لأحد من فريقكم الرد علي؟",
+     "7ad men el khedma ynajjem yetsal biya ?",
+     "votre boutique ne vaut rien, aucun suivi",
+     "je suis furieux, on m'ignore complètement",
+     "c'est du vol, vous ne répondez à personne",
+     "absolutely awful, I keep getting ignored",
+     "أنتم لا تحترمون زبائنكم أبدا",
+     "ma fama 7atta 7ad yjewebni, 3ib",
+     "khedmetkom ma3andha 7atta ma3na",
+     "Quelqu'un de votre équipe peut-il me rappeler ?",
+     "Votre service client est une honte, personne ne s'occupe de moi",
+     "J'en ai vraiment marre de vos réponses automatiques inutiles",
+     "Please put me through to customer support staff",
+     "Is there an actual employee I can chat with?",
+     "This is the third time I ask and nobody answers, ridiculous",
+     "Your support is useless and I'm losing my patience",
+     "I'm really angry about how you treat your customers",
+     "Worst service ever, you never reply to my emails",
+     "من فضلك حولني إلى مستشار بشري",
+     "هذه المرة الثالثة التي أسأل فيها ولا أحد يجيب، هذا غير مقبول",
+     "خدمة العملاء لديكم سيئة جدا ولا أحد يهتم",
+     "لقد سئمت من ردودكم الآلية التي لا تفيد",
+     "أنا غاضب جدا من طريقة تعاملكم مع الزبائن",
+     "ynajem 7ad men 3andkom y3ayetli ?",
+     "7awelni l conseiller men fadhlek",
+     "famma chkoun nkalmou men el service client ?",
+     "hedhi tlatha marrat nes2el w 7atta 7ad ma jewebni, 3ib",
+     "ena metghachech barcha men tri9tkom m3a el clients"
+    ],
+    "par_langue": {
+     "ar": {
+      "n": 27,
+      "exactitude": 0.7037037037037037,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.2727272727272727,
+       "vp": 3,
+       "fp": 0,
+       "fn": 8
+      }
+     },
+     "en": {
+      "n": 36,
+      "exactitude": 0.7222222222222222,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.42857142857142855,
+       "vp": 6,
+       "fp": 0,
+       "fn": 8
+      }
+     },
+     "fr": {
+      "n": 42,
+      "exactitude": 0.8095238095238095,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.5625,
+       "vp": 9,
+       "fp": 0,
+       "fn": 7
+      }
+     },
+     "tn": {
+      "n": 34,
+      "exactitude": 0.5588235294117647,
+      "transfert": {
+       "precision": 1.0,
+       "rappel": 0.3333333333333333,
+       "vp": 4,
+       "fp": 0,
+       "fn": 8
+      }
+     }
+    }
+   },
+   "changements": [
+    {
+     "texte": "est-il possible de discuter avec quelqu'un de réel ?",
+     "langue": "fr",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8991,
+     "exemple": "هل يمكنني التحدث مع شخص حقيقي؟"
+    },
+    {
+     "texte": "is a member of your staff around to help me?",
+     "langue": "en",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8623,
+     "exemple": "can a staff member help me?"
+    },
+    {
+     "texte": "ma fama 7atta 7ad yjewebni, 3ib",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.7399,
+     "exemple": "nhebek t3awenni"
+    },
+    {
+     "texte": "khedmetkom ma3andha 7atta ma3na",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.8273,
+     "exemple": "nheb akther ma3loumet"
+    },
+    {
+     "texte": "ma livraison est en retard, elle arrive quand ?",
+     "langue": "fr",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.6431,
+     "exemple": "لم يصلني الطرد بعد"
+    },
+    {
+     "texte": "when is my parcel going to be delivered?",
+     "langue": "en",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.7722,
+     "exemple": "has my parcel been shipped?"
+    },
+    {
+     "texte": "لم أستلم طلبيتي حتى الآن",
+     "langue": "ar",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.861,
+     "exemple": "لم يصلني الطرد بعد"
+    },
+    {
+     "texte": "el colis mte3i wa9tech ywosel",
+     "langue": "tn",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.867,
+     "exemple": "wa9tech twosel el commande mte3i ?"
+    },
+    {
+     "texte": "je veux plus des informations",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.9969,
+     "exemple": "je veux plus d'informations"
+    },
+    {
+     "texte": "j'ai besoin d'un renseignement",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7099,
+     "exemple": "j'ai besoin d'aide"
+    },
+    {
+     "texte": "vous vendez quoi ?",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.9709,
+     "exemple": "qu'est-ce que vous vendez ?"
+    },
+    {
+     "texte": "pouvez-vous me guider ?",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7882,
+     "exemple": "هل يمكنك مساعدتي؟"
+    },
+    {
+     "texte": "i need your help",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8626,
+     "exemple": "أحتاج مساعدة"
+    },
+    {
+     "texte": "I'd like some information",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8323,
+     "exemple": "أريد معلومات أكثر"
+    },
+    {
+     "texte": "أحتاج بعض المعلومات",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8643,
+     "exemple": "je veux plus d'informations"
+    },
+    {
+     "texte": "ماذا لديكم في المتجر؟",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7999,
+     "exemple": "tell me about your shop"
+    },
+    {
+     "texte": "nhebek t3awani",
+     "langue": "tn",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.9316,
+     "exemple": "nhebek t3awenni"
+    },
+    {
+     "texte": "chnia 3andkom fel magasin ?",
+     "langue": "tn",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7934,
+     "exemple": "présentez-moi votre boutique"
+    },
+    {
+     "texte": "kifech nraja3 produit ?",
+     "langue": "tn",
+     "attendu": "general",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "dégradé",
+     "score": 0.7485,
+     "exemple": "nheb na3ref chnouma les produits mte3kom"
+    },
+    {
+     "texte": "Je suis très déçu de la façon dont vous traitez vos clients",
+     "langue": "fr",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "frustration",
+     "effet": "corrigé",
+     "score": 0.8501,
+     "exemple": "je suis très déçu de votre service"
+    },
+    {
+     "texte": "Mon colis devait arriver lundi et je n'ai toujours rien reçu",
+     "langue": "fr",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.7426,
+     "exemple": "طلبت منذ أسبوع ولم يصلني شيء"
+    },
+    {
+     "texte": "Pouvez-vous me dire si mon achat de la semaine dernière est parti ?",
+     "langue": "fr",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.8114,
+     "exemple": "mon achat a-t-il été expédié ?"
+    },
+    {
+     "texte": "Je voudrais savoir où se trouve mon paquet en ce moment",
+     "langue": "fr",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.873,
+     "exemple": "mon paquet est où ?"
+    },
+    {
+     "texte": "Bonjour, j'ai besoin d'aide",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8442,
+     "exemple": "أحتاج مساعدة"
+    },
+    {
+     "texte": "Qu'est-ce que vous pouvez faire pour moi ?",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7417,
+     "exemple": "what can you do?"
+    },
+    {
+     "texte": "Je ne sais pas trop par où commencer, vous pouvez m'orienter ?",
+     "langue": "fr",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8173,
+     "exemple": "je ne sais pas par où commencer"
+    },
+    {
+     "texte": "I would like someone from your team to call me back",
+     "langue": "en",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8986,
+     "exemple": "أريد أن يتصل بي أحد من فريقكم"
+    },
+    {
+     "texte": "My package was supposed to arrive on Monday and it's still not here",
+     "langue": "en",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.8446,
+     "exemple": "my package hasn't arrived yet"
+    },
+    {
+     "texte": "Has the item I bought last week been shipped yet?",
+     "langue": "en",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.7828,
+     "exemple": "has my parcel been shipped?"
+    },
+    {
+     "texte": "Where is my parcel right now?",
+     "langue": "en",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.9347,
+     "exemple": "where is my parcel?"
+    },
+    {
+     "texte": "Hi, I need some assistance",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8041,
+     "exemple": "I really need some assistance"
+    },
+    {
+     "texte": "What can you do for me?",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7241,
+     "exemple": "what can you do?"
+    },
+    {
+     "texte": "I'm not sure where to start, can you guide me?",
+     "langue": "en",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7966,
+     "exemple": "je ne sais pas par où commencer"
+    },
+    {
+     "texte": "هل يمكن لأحد من فريق الدعم أن يتصل بي؟",
+     "langue": "ar",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8702,
+     "exemple": "un membre de l'équipe peut me contacter ?"
+    },
+    {
+     "texte": "أريد التواصل مع شخص من خدمة العملاء",
+     "langue": "ar",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8337,
+     "exemple": "هل يوجد أحد من خدمة العملاء؟"
+    },
+    {
+     "texte": "كان من المفترض أن يصل طردي يوم الاثنين ولم يصل بعد",
+     "langue": "ar",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.6941,
+     "exemple": "لم يصلني الطرد بعد"
+    },
+    {
+     "texte": "هل تم شحن المنتج الذي اشتريته الأسبوع الماضي؟",
+     "langue": "ar",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.6902,
+     "exemple": "mon achat a-t-il été expédié ?"
+    },
+    {
+     "texte": "أين يوجد طردي الآن؟",
+     "langue": "ar",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.8081,
+     "exemple": "mon paquet est où ?"
+    },
+    {
+     "texte": "مرحبا، أحتاج إلى مساعدة",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8463,
+     "exemple": "أحتاج مساعدة"
+    },
+    {
+     "texte": "ماذا يمكنك أن تفعل لي؟",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.7882,
+     "exemple": "what can you do?"
+    },
+    {
+     "texte": "لا أعرف من أين أبدأ، هل يمكنك توجيهي؟",
+     "langue": "ar",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.8243,
+     "exemple": "je ne sais pas par où commencer"
+    },
+    {
+     "texte": "nheb nahki m3a 3abd mouch robot",
+     "langue": "tn",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "human_agent",
+     "effet": "corrigé",
+     "score": 0.8994,
+     "exemple": "ma nhebech nahki m3a robot"
+    },
+    {
+     "texte": "ynajem 7ad men 3andkom y3ayetli ?",
+     "langue": "tn",
+     "attendu": "human_agent",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.7955,
+     "exemple": "3awenni 3afek"
+    },
+    {
+     "texte": "hedhi tlatha marrat nes2el w 7atta 7ad ma jewebni, 3ib",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.8056,
+     "exemple": "3awenni 3afek"
+    },
+    {
+     "texte": "el service mte3kom zero, 7atta 7ad ma yehtam",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "frustration",
+     "effet": "corrigé",
+     "score": 0.8425,
+     "exemple": "service mte3kom zero"
+    },
+    {
+     "texte": "9ale9t men les réponses automatiques mte3kom",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "frustration",
+     "effet": "corrigé",
+     "score": 0.8279,
+     "exemple": "9ra9tni el khedma mte3kom"
+    },
+    {
+     "texte": "ena metghachech barcha men tri9tkom m3a el clients",
+     "langue": "tn",
+     "attendu": "frustration",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "erreur changée",
+     "score": 0.6413,
+     "exemple": "nhebek t3awenni"
+    },
+    {
+     "texte": "win wsel el colis mte3i tawa ?",
+     "langue": "tn",
+     "attendu": "order_tracking",
+     "regles": "general",
+     "avec_modele": "order_tracking",
+     "effet": "corrigé",
+     "score": 0.7732,
+     "exemple": "el colis mte3i mazel ma wselch"
+    },
+    {
+     "texte": "chnowa tnajjem ta3melli ?",
+     "langue": "tn",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.9055,
+     "exemple": "chnowa tnajjem ta3mel ?"
+    },
+    {
+     "texte": "ma3raftech mnin nebda, tnajjem twajahni ?",
+     "langue": "tn",
+     "attendu": "help",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "corrigé",
+     "score": 0.6726,
+     "exemple": "chnowa tnajjem ta3mel ?"
+    },
+    {
+     "texte": "el produit hedha qualité mte3ou khayba, yeskhon fissa3",
+     "langue": "tn",
+     "attendu": "general",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "dégradé",
+     "score": 0.8223,
+     "exemple": "nheb na3ref chnouma les produits mte3kom"
+    },
+    {
+     "texte": "el capteur ma y3ati 7atta mesure, chnowa na3mel ?",
+     "langue": "tn",
+     "attendu": "general",
+     "regles": "general",
+     "avec_modele": "help",
+     "effet": "dégradé",
+     "score": 0.7897,
+     "exemple": "nheb na3ref chnouma les produits mte3kom"
+    }
+   ]
+  }
+ },
+ "B3": {
+  "test_appris.json": {
+   "bas_varie_haut_082": {
+    "0.5": {
+     "exactitude": 0.6625,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.40625,
+      "vp": 13,
+      "fp": 0,
+      "fn": 19
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.7916666666666666,
+      "vp": 19,
+      "fp": 19,
+      "fn": 5
+     }
+    },
+    "0.55": {
+     "exactitude": 0.6625,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.40625,
+      "vp": 13,
+      "fp": 0,
+      "fn": 19
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.7916666666666666,
+      "vp": 19,
+      "fp": 19,
+      "fn": 5
+     }
+    },
+    "0.6": {
+     "exactitude": 0.6875,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.40625,
+      "vp": 13,
+      "fp": 0,
+      "fn": 19
+     },
+     "rag": {
+      "precision": 0.525,
+      "rappel": 0.875,
+      "vp": 21,
+      "fp": 19,
+      "fn": 3
+     }
+    },
+    "0.65": {
+     "exactitude": 0.7,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.40625,
+      "vp": 13,
+      "fp": 0,
+      "fn": 19
+     },
+     "rag": {
+      "precision": 0.5238095238095238,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 20,
+      "fn": 2
+     }
+    },
+    "0.7": {
+     "exactitude": 0.6625,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.40625,
+      "vp": 13,
+      "fp": 0,
+      "fn": 19
+     },
+     "rag": {
+      "precision": 0.4888888888888889,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 23,
+      "fn": 2
+     }
+    },
+    "0.75": {
+     "exactitude": 0.625,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.40625,
+      "vp": 13,
+      "fp": 0,
+      "fn": 19
+     },
+     "rag": {
+      "precision": 0.4583333333333333,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 26,
+      "fn": 2
+     }
+    }
+   },
+   "haut_varie_bas_062": {
+    "0.7": {
+     "exactitude": 0.7625,
+     "transfert": {
+      "precision": 0.9473684210526315,
+      "rappel": 0.5625,
+      "vp": 18,
+      "fp": 1,
+      "fn": 14
+     },
+     "rag": {
+      "precision": 0.6285714285714286,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 13,
+      "fn": 2
+     }
+    },
+    "0.75": {
+     "exactitude": 0.725,
+     "transfert": {
+      "precision": 0.9375,
+      "rappel": 0.46875,
+      "vp": 15,
+      "fp": 1,
+      "fn": 17
+     },
+     "rag": {
+      "precision": 0.5789473684210527,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 16,
+      "fn": 2
+     }
+    },
+    "0.8": {
+     "exactitude": 0.7,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.40625,
+      "vp": 13,
+      "fp": 0,
+      "fn": 19
+     },
+     "rag": {
+      "precision": 0.5365853658536586,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 19,
+      "fn": 2
+     }
+    },
+    "0.85": {
+     "exactitude": 0.6625,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 10,
+      "fp": 0,
+      "fn": 22
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 22,
+      "fn": 2
+     }
+    },
+    "0.9": {
+     "exactitude": 0.6125,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.1875,
+      "vp": 6,
+      "fp": 0,
+      "fn": 26
+     },
+     "rag": {
+      "precision": 0.4583333333333333,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 26,
+      "fn": 2
+     }
+    },
+    "0.95": {
+     "exactitude": 0.6125,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.1875,
+      "vp": 6,
+      "fp": 0,
+      "fn": 26
+     },
+     "rag": {
+      "precision": 0.4583333333333333,
+      "rappel": 0.9166666666666666,
+      "vp": 22,
+      "fp": 26,
+      "fn": 2
+     }
+    }
+   },
+   "actuel": {
+    "exactitude": 0.7,
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.40625,
+     "vp": 13,
+     "fp": 0,
+     "fn": 19
+    },
+    "rag": {
+     "precision": 0.5365853658536586,
+     "rappel": 0.9166666666666666,
+     "vp": 22,
+     "fp": 19,
+     "fn": 2
+    }
+   }
+  },
+  "test.json": {
+   "bas_varie_haut_082": {
+    "0.5": {
+     "exactitude": 0.7627118644067796,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.42857142857142855,
+      "vp": 9,
+      "fp": 0,
+      "fn": 12
+     },
+     "rag": {
+      "precision": 0.5925925925925926,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.55": {
+     "exactitude": 0.7627118644067796,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.42857142857142855,
+      "vp": 9,
+      "fp": 0,
+      "fn": 12
+     },
+     "rag": {
+      "precision": 0.5925925925925926,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.6": {
+     "exactitude": 0.7288135593220338,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.42857142857142855,
+      "vp": 9,
+      "fp": 0,
+      "fn": 12
+     },
+     "rag": {
+      "precision": 0.5517241379310345,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 13,
+      "fn": 1
+     }
+    },
+    "0.65": {
+     "exactitude": 0.6949152542372882,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.42857142857142855,
+      "vp": 9,
+      "fp": 0,
+      "fn": 12
+     },
+     "rag": {
+      "precision": 0.5161290322580645,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 15,
+      "fn": 1
+     }
+    },
+    "0.7": {
+     "exactitude": 0.6949152542372882,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.42857142857142855,
+      "vp": 9,
+      "fp": 0,
+      "fn": 12
+     },
+     "rag": {
+      "precision": 0.5161290322580645,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 15,
+      "fn": 1
+     }
+    },
+    "0.75": {
+     "exactitude": 0.6949152542372882,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.42857142857142855,
+      "vp": 9,
+      "fp": 0,
+      "fn": 12
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 1.0,
+      "vp": 17,
+      "fp": 17,
+      "fn": 0
+     }
+    }
+   },
+   "haut_varie_bas_062": {
+    "0.7": {
+     "exactitude": 0.7457627118644068,
+     "transfert": {
+      "precision": 0.9166666666666666,
+      "rappel": 0.5238095238095238,
+      "vp": 11,
+      "fp": 1,
+      "fn": 10
+     },
+     "rag": {
+      "precision": 0.5925925925925926,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.75": {
+     "exactitude": 0.7457627118644068,
+     "transfert": {
+      "precision": 0.9166666666666666,
+      "rappel": 0.5238095238095238,
+      "vp": 11,
+      "fp": 1,
+      "fn": 10
+     },
+     "rag": {
+      "precision": 0.5925925925925926,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.8": {
+     "exactitude": 0.7288135593220338,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.47619047619047616,
+      "vp": 10,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.5517241379310345,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 13,
+      "fn": 1
+     }
+    },
+    "0.85": {
+     "exactitude": 0.711864406779661,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.42857142857142855,
+      "vp": 9,
+      "fp": 0,
+      "fn": 12
+     },
+     "rag": {
+      "precision": 0.5333333333333333,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 14,
+      "fn": 1
+     }
+    },
+    "0.9": {
+     "exactitude": 0.6779661016949152,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3333333333333333,
+      "vp": 7,
+      "fp": 0,
+      "fn": 14
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 16,
+      "fn": 1
+     }
+    },
+    "0.95": {
+     "exactitude": 0.6779661016949152,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3333333333333333,
+      "vp": 7,
+      "fp": 0,
+      "fn": 14
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9411764705882353,
+      "vp": 16,
+      "fp": 16,
+      "fn": 1
+     }
+    }
+   },
+   "actuel": {
+    "exactitude": 0.711864406779661,
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.42857142857142855,
+     "vp": 9,
+     "fp": 0,
+     "fn": 12
+    },
+    "rag": {
+     "precision": 0.5333333333333333,
+     "rappel": 0.9411764705882353,
+     "vp": 16,
+     "fp": 14,
+     "fn": 1
+    }
+   }
+  },
+  "les deux": {
+   "bas_varie_haut_082": {
+    "0.5": {
+     "exactitude": 0.7050359712230215,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.41509433962264153,
+      "vp": 22,
+      "fp": 0,
+      "fn": 31
+     },
+     "rag": {
+      "precision": 0.5384615384615384,
+      "rappel": 0.8536585365853658,
+      "vp": 35,
+      "fp": 30,
+      "fn": 6
+     }
+    },
+    "0.55": {
+     "exactitude": 0.7050359712230215,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.41509433962264153,
+      "vp": 22,
+      "fp": 0,
+      "fn": 31
+     },
+     "rag": {
+      "precision": 0.5384615384615384,
+      "rappel": 0.8536585365853658,
+      "vp": 35,
+      "fp": 30,
+      "fn": 6
+     }
+    },
+    "0.6": {
+     "exactitude": 0.7050359712230215,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.41509433962264153,
+      "vp": 22,
+      "fp": 0,
+      "fn": 31
+     },
+     "rag": {
+      "precision": 0.5362318840579711,
+      "rappel": 0.9024390243902439,
+      "vp": 37,
+      "fp": 32,
+      "fn": 4
+     }
+    },
+    "0.65": {
+     "exactitude": 0.697841726618705,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.41509433962264153,
+      "vp": 22,
+      "fp": 0,
+      "fn": 31
+     },
+     "rag": {
+      "precision": 0.5205479452054794,
+      "rappel": 0.926829268292683,
+      "vp": 38,
+      "fp": 35,
+      "fn": 3
+     }
+    },
+    "0.7": {
+     "exactitude": 0.6762589928057554,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.41509433962264153,
+      "vp": 22,
+      "fp": 0,
+      "fn": 31
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.926829268292683,
+      "vp": 38,
+      "fp": 38,
+      "fn": 3
+     }
+    },
+    "0.75": {
+     "exactitude": 0.6546762589928058,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.41509433962264153,
+      "vp": 22,
+      "fp": 0,
+      "fn": 31
+     },
+     "rag": {
+      "precision": 0.47560975609756095,
+      "rappel": 0.9512195121951219,
+      "vp": 39,
+      "fp": 43,
+      "fn": 2
+     }
+    }
+   },
+   "haut_varie_bas_062": {
+    "0.7": {
+     "exactitude": 0.7553956834532374,
+     "transfert": {
+      "precision": 0.9354838709677419,
+      "rappel": 0.5471698113207547,
+      "vp": 29,
+      "fp": 2,
+      "fn": 24
+     },
+     "rag": {
+      "precision": 0.6129032258064516,
+      "rappel": 0.926829268292683,
+      "vp": 38,
+      "fp": 24,
+      "fn": 3
+     }
+    },
+    "0.75": {
+     "exactitude": 0.7338129496402878,
+     "transfert": {
+      "precision": 0.9285714285714286,
+      "rappel": 0.49056603773584906,
+      "vp": 26,
+      "fp": 2,
+      "fn": 27
+     },
+     "rag": {
+      "precision": 0.5846153846153846,
+      "rappel": 0.926829268292683,
+      "vp": 38,
+      "fp": 27,
+      "fn": 3
+     }
+    },
+    "0.8": {
+     "exactitude": 0.7122302158273381,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.4339622641509434,
+      "vp": 23,
+      "fp": 0,
+      "fn": 30
+     },
+     "rag": {
+      "precision": 0.5428571428571428,
+      "rappel": 0.926829268292683,
+      "vp": 38,
+      "fp": 32,
+      "fn": 3
+     }
+    },
+    "0.85": {
+     "exactitude": 0.6834532374100719,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3584905660377358,
+      "vp": 19,
+      "fp": 0,
+      "fn": 34
+     },
+     "rag": {
+      "precision": 0.5135135135135135,
+      "rappel": 0.926829268292683,
+      "vp": 38,
+      "fp": 36,
+      "fn": 3
+     }
+    },
+    "0.9": {
+     "exactitude": 0.6402877697841727,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.24528301886792453,
+      "vp": 13,
+      "fp": 0,
+      "fn": 40
+     },
+     "rag": {
+      "precision": 0.475,
+      "rappel": 0.926829268292683,
+      "vp": 38,
+      "fp": 42,
+      "fn": 3
+     }
+    },
+    "0.95": {
+     "exactitude": 0.6402877697841727,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.24528301886792453,
+      "vp": 13,
+      "fp": 0,
+      "fn": 40
+     },
+     "rag": {
+      "precision": 0.475,
+      "rappel": 0.926829268292683,
+      "vp": 38,
+      "fp": 42,
+      "fn": 3
+     }
+    }
+   },
+   "actuel": {
+    "exactitude": 0.7050359712230215,
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.41509433962264153,
+     "vp": 22,
+     "fp": 0,
+     "fn": 31
+    },
+    "rag": {
+     "precision": 0.5352112676056338,
+     "rappel": 0.926829268292683,
+     "vp": 38,
+     "fp": 33,
+     "fn": 3
+    }
+   }
+  },
+  "moitie_A": {
+   "bas_varie_haut_082": {
+    "0.5": {
+     "exactitude": 0.675,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.5,
+      "vp": 8,
+      "fp": 0,
+      "fn": 8
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.6666666666666666,
+      "vp": 8,
+      "fp": 8,
+      "fn": 4
+     }
+    },
+    "0.55": {
+     "exactitude": 0.675,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.5,
+      "vp": 8,
+      "fp": 0,
+      "fn": 8
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.6666666666666666,
+      "vp": 8,
+      "fp": 8,
+      "fn": 4
+     }
+    },
+    "0.6": {
+     "exactitude": 0.725,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.5,
+      "vp": 8,
+      "fp": 0,
+      "fn": 8
+     },
+     "rag": {
+      "precision": 0.5555555555555556,
+      "rappel": 0.8333333333333334,
+      "vp": 10,
+      "fp": 8,
+      "fn": 2
+     }
+    },
+    "0.65": {
+     "exactitude": 0.75,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.5,
+      "vp": 8,
+      "fp": 0,
+      "fn": 8
+     },
+     "rag": {
+      "precision": 0.5789473684210527,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 8,
+      "fn": 1
+     }
+    },
+    "0.7": {
+     "exactitude": 0.725,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.5,
+      "vp": 8,
+      "fp": 0,
+      "fn": 8
+     },
+     "rag": {
+      "precision": 0.55,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 9,
+      "fn": 1
+     }
+    },
+    "0.75": {
+     "exactitude": 0.65,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.5,
+      "vp": 8,
+      "fp": 0,
+      "fn": 8
+     },
+     "rag": {
+      "precision": 0.4782608695652174,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 12,
+      "fn": 1
+     }
+    }
+   },
+   "haut_varie_bas_062": {
+    "0.7": {
+     "exactitude": 0.8,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.625,
+      "vp": 10,
+      "fp": 0,
+      "fn": 6
+     },
+     "rag": {
+      "precision": 0.6470588235294118,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 6,
+      "fn": 1
+     }
+    },
+    "0.75": {
+     "exactitude": 0.775,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.5625,
+      "vp": 9,
+      "fp": 0,
+      "fn": 7
+     },
+     "rag": {
+      "precision": 0.6111111111111112,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 7,
+      "fn": 1
+     }
+    },
+    "0.8": {
+     "exactitude": 0.75,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.5,
+      "vp": 8,
+      "fp": 0,
+      "fn": 8
+     },
+     "rag": {
+      "precision": 0.5789473684210527,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 8,
+      "fn": 1
+     }
+    },
+    "0.85": {
+     "exactitude": 0.7,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.375,
+      "vp": 6,
+      "fp": 0,
+      "fn": 10
+     },
+     "rag": {
+      "precision": 0.5238095238095238,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 10,
+      "fn": 1
+     }
+    },
+    "0.9": {
+     "exactitude": 0.675,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.95": {
+     "exactitude": 0.675,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 11,
+      "fn": 1
+     }
+    }
+   },
+   "actuel": {
+    "exactitude": 0.75,
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.5,
+     "vp": 8,
+     "fp": 0,
+     "fn": 8
+    },
+    "rag": {
+     "precision": 0.5789473684210527,
+     "rappel": 0.9166666666666666,
+     "vp": 11,
+     "fp": 8,
+     "fn": 1
+    }
+   }
+  },
+  "moitie_B": {
+   "bas_varie_haut_082": {
+    "0.5": {
+     "exactitude": 0.65,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.55": {
+     "exactitude": 0.65,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.6": {
+     "exactitude": 0.65,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.65": {
+     "exactitude": 0.65,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.4782608695652174,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 12,
+      "fn": 1
+     }
+    },
+    "0.7": {
+     "exactitude": 0.6,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.44,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 14,
+      "fn": 1
+     }
+    },
+    "0.75": {
+     "exactitude": 0.6,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.44,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 14,
+      "fn": 1
+     }
+    }
+   },
+   "haut_varie_bas_062": {
+    "0.7": {
+     "exactitude": 0.725,
+     "transfert": {
+      "precision": 0.8888888888888888,
+      "rappel": 0.5,
+      "vp": 8,
+      "fp": 1,
+      "fn": 8
+     },
+     "rag": {
+      "precision": 0.6111111111111112,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 7,
+      "fn": 1
+     }
+    },
+    "0.75": {
+     "exactitude": 0.675,
+     "transfert": {
+      "precision": 0.8571428571428571,
+      "rappel": 0.375,
+      "vp": 6,
+      "fp": 1,
+      "fn": 10
+     },
+     "rag": {
+      "precision": 0.55,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 9,
+      "fn": 1
+     }
+    },
+    "0.8": {
+     "exactitude": 0.65,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.3125,
+      "vp": 5,
+      "fp": 0,
+      "fn": 11
+     },
+     "rag": {
+      "precision": 0.5,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 11,
+      "fn": 1
+     }
+    },
+    "0.85": {
+     "exactitude": 0.625,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.25,
+      "vp": 4,
+      "fp": 0,
+      "fn": 12
+     },
+     "rag": {
+      "precision": 0.4782608695652174,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 12,
+      "fn": 1
+     }
+    },
+    "0.9": {
+     "exactitude": 0.55,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.0625,
+      "vp": 1,
+      "fp": 0,
+      "fn": 15
+     },
+     "rag": {
+      "precision": 0.4230769230769231,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 15,
+      "fn": 1
+     }
+    },
+    "0.95": {
+     "exactitude": 0.55,
+     "transfert": {
+      "precision": 1.0,
+      "rappel": 0.0625,
+      "vp": 1,
+      "fp": 0,
+      "fn": 15
+     },
+     "rag": {
+      "precision": 0.4230769230769231,
+      "rappel": 0.9166666666666666,
+      "vp": 11,
+      "fp": 15,
+      "fn": 1
+     }
+    }
+   },
+   "actuel": {
+    "exactitude": 0.65,
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.3125,
+     "vp": 5,
+     "fp": 0,
+     "fn": 11
+    },
+    "rag": {
+     "precision": 0.5,
+     "rappel": 0.9166666666666666,
+     "vp": 11,
+     "fp": 11,
+     "fn": 1
+    }
+   }
+  }
+ },
+ "B3_proposition": {
+  "choisi_sur_A": {
+   "bas": 0.65,
+   "haut": 0.7,
+   "A": {
+    "exactitude": 0.8,
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.625,
+     "vp": 10,
+     "fp": 0,
+     "fn": 6
+    },
+    "rag": {
+     "precision": 0.6470588235294118,
+     "rappel": 0.9166666666666666,
+     "vp": 11,
+     "fp": 6,
+     "fn": 1
+    }
+   },
+   "A_actuel": {
+    "exactitude": 0.75,
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.5,
+     "vp": 8,
+     "fp": 0,
+     "fn": 8
+    },
+    "rag": {
+     "precision": 0.5789473684210527,
+     "rappel": 0.9166666666666666,
+     "vp": 11,
+     "fp": 8,
+     "fn": 1
+    }
+   }
+  },
+  "valide_sur_B": {
+   "propose": {
+    "exactitude": 0.725,
+    "transfert": {
+     "precision": 0.8888888888888888,
+     "rappel": 0.5,
+     "vp": 8,
+     "fp": 1,
+     "fn": 8
+    },
+    "rag": {
+     "precision": 0.5789473684210527,
+     "rappel": 0.9166666666666666,
+     "vp": 11,
+     "fp": 8,
+     "fn": 1
+    }
+   },
+   "actuel": {
+    "exactitude": 0.65,
+    "transfert": {
+     "precision": 1.0,
+     "rappel": 0.3125,
+     "vp": 5,
+     "fp": 0,
+     "fn": 11
+    },
+    "rag": {
+     "precision": 0.5,
+     "rappel": 0.9166666666666666,
+     "vp": 11,
+     "fp": 11,
+     "fn": 1
+    }
+   }
+  },
+  "regle_de_choix": "exactitude maximale sur A sans faux transfert ; à égalité, le plus proche des seuils actuels"
+ },
+ "B4": [
+  {
+   "graine": 0,
+   "exemples_gardes": 98,
+   "par_intention_gardes": {
+    "human_agent": 21,
+    "frustration": 15,
+    "order_tracking": 19,
+    "help": 21,
+    "general": 22
+   },
+   "exactitude": 0.6258992805755396,
+   "transfert": {
+    "precision": 1.0,
+    "rappel": 0.3584905660377358,
+    "vp": 19,
+    "fp": 0,
+    "fn": 34
+   },
+   "rappel": {
+    "human_agent": 0.48148148148148145,
+    "frustration": 0.23076923076923078,
+    "order_tracking": 0.7727272727272727,
+    "help": 0.6086956521739131,
+    "general": 0.9024390243902439
+   },
+   "exactitude_par_langue": {
+    "ar": 0.6296296296296297,
+    "en": 0.6111111111111112,
+    "fr": 0.7619047619047619,
+    "tn": 0.47058823529411764
+   }
+  },
+  {
+   "graine": 1,
+   "exemples_gardes": 98,
+   "par_intention_gardes": {
+    "human_agent": 16,
+    "frustration": 19,
+    "order_tracking": 15,
+    "help": 23,
+    "general": 25
+   },
+   "exactitude": 0.6402877697841727,
+   "transfert": {
+    "precision": 1.0,
+    "rappel": 0.37735849056603776,
+    "vp": 20,
+    "fp": 0,
+    "fn": 33
+   },
+   "rappel": {
+    "human_agent": 0.48148148148148145,
+    "frustration": 0.2692307692307692,
+    "order_tracking": 0.5909090909090909,
+    "help": 0.8260869565217391,
+    "general": 0.9024390243902439
+   },
+   "exactitude_par_langue": {
+    "ar": 0.5925925925925926,
+    "en": 0.6111111111111112,
+    "fr": 0.7857142857142857,
+    "tn": 0.5294117647058824
+   }
+  },
+  {
+   "graine": 2,
+   "exemples_gardes": 98,
+   "par_intention_gardes": {
+    "human_agent": 8,
+    "frustration": 21,
+    "order_tracking": 15,
+    "help": 27,
+    "general": 27
+   },
+   "exactitude": 0.6762589928057554,
+   "transfert": {
+    "precision": 1.0,
+    "rappel": 0.3584905660377358,
+    "vp": 19,
+    "fp": 0,
+    "fn": 34
+   },
+   "rappel": {
+    "human_agent": 0.4444444444444444,
+    "frustration": 0.2692307692307692,
+    "order_tracking": 0.7272727272727273,
+    "help": 0.8695652173913043,
+    "general": 0.9512195121951219
+   },
+   "exactitude_par_langue": {
+    "ar": 0.6666666666666666,
+    "en": 0.6944444444444444,
+    "fr": 0.7857142857142857,
+    "tn": 0.5294117647058824
+   }
+  },
+  {
+   "graine": 3,
+   "exemples_gardes": 98,
+   "par_intention_gardes": {
+    "human_agent": 17,
+    "frustration": 18,
+    "order_tracking": 15,
+    "help": 21,
+    "general": 27
+   },
+   "exactitude": 0.6474820143884892,
+   "transfert": {
+    "precision": 1.0,
+    "rappel": 0.33962264150943394,
+    "vp": 18,
+    "fp": 0,
+    "fn": 35
+   },
+   "rappel": {
+    "human_agent": 0.4074074074074074,
+    "frustration": 0.2692307692307692,
+    "order_tracking": 0.7272727272727273,
+    "help": 0.782608695652174,
+    "general": 0.926829268292683
+   },
+   "exactitude_par_langue": {
+    "ar": 0.5925925925925926,
+    "en": 0.5833333333333334,
+    "fr": 0.7857142857142857,
+    "tn": 0.5882352941176471
+   }
+  },
+  {
+   "graine": 4,
+   "exemples_gardes": 98,
+   "par_intention_gardes": {
+    "human_agent": 19,
+    "frustration": 21,
+    "order_tracking": 16,
+    "help": 19,
+    "general": 23
+   },
+   "exactitude": 0.6402877697841727,
+   "transfert": {
+    "precision": 1.0,
+    "rappel": 0.33962264150943394,
+    "vp": 18,
+    "fp": 0,
+    "fn": 35
+   },
+   "rappel": {
+    "human_agent": 0.48148148148148145,
+    "frustration": 0.19230769230769232,
+    "order_tracking": 0.7727272727272727,
+    "help": 0.7391304347826086,
+    "general": 0.9024390243902439
+   },
+   "exactitude_par_langue": {
+    "ar": 0.6296296296296297,
+    "en": 0.6388888888888888,
+    "fr": 0.7619047619047619,
+    "tn": 0.5
+   }
+  }
+ ],
+ "B4_reference_100": {
+  "exactitude": 0.7050359712230215,
+  "transfert": {
+   "precision": 1.0,
+   "rappel": 0.41509433962264153,
+   "vp": 22,
+   "fp": 0,
+   "fn": 31
+  },
+  "exactitude_par_langue": {
+   "ar": 0.7037037037037037,
+   "en": 0.7222222222222222,
+   "fr": 0.8095238095238095,
+   "tn": 0.5588235294117647
+  },
+  "rappel": {
+   "human_agent": 0.5555555555555556,
+   "frustration": 0.2692307692307692,
+   "order_tracking": 0.7727272727272727,
+   "help": 0.9130434782608695,
+   "general": 0.926829268292683
+  }
+ },
+ "messages": [
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "je veux un humain",
+   "intent": "human_agent",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.6177,
+    "exemple": "je veux qu'une personne s'occupe de mon dossier"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "passez-moi un responsable",
+   "intent": "human_agent",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.7006,
+    "exemple": "je veux qu'une personne s'occupe de mon dossier"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "est-il possible de discuter avec quelqu'un de réel ?",
+   "intent": "human_agent",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8991,
+    "exemple": "هل يمكنني التحدث مع شخص حقيقي؟"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "une personne peut-elle prendre en charge ma demande ?",
+   "intent": "human_agent",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.6491,
+    "exemple": "je veux qu'une personne s'occupe de mon dossier"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "can I talk to a human please",
+   "intent": "human_agent",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.6899,
+    "exemple": "هل يمكنني التحدث مع شخص حقيقي؟"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "is a member of your staff around to help me?",
+   "intent": "human_agent",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8623,
+    "exemple": "can a staff member help me?"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "please connect me with somebody who works there",
+   "intent": "human_agent",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.6464,
+    "exemple": "أرجو أن يتواصل معي أحد الموظفين"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "ar",
+   "langue_source": "détectée",
+   "text": "أريد موظفا بشريا",
+   "intent": "human_agent",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.6651,
+    "exemple": "أرجو أن يتواصل معي أحد الموظفين"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "ar",
+   "langue_source": "détectée",
+   "text": "هل يمكن لأحد من فريقكم الرد علي؟",
+   "intent": "human_agent",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8067,
+    "exemple": "un membre de l'équipe peut me contacter ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "nheb na7ki m3a wa7ed",
+   "intent": "human_agent",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8246,
+    "exemple": "nheb n7el m3a wa7ed men el magasin"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "7ad men el khedma ynajjem yetsal biya ?",
+   "intent": "human_agent",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.7404,
+    "exemple": "kifech nkoumandi ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "c'est scandaleux, j'attends depuis dix jours",
+   "intent": "frustration",
+   "regle": "frustration",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.7252,
+    "exemple": "ça fait une semaine que j'attends une réponse"
+   },
+   "avec_modele": "frustration"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "votre boutique ne vaut rien, aucun suivi",
+   "intent": "frustration",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6402,
+    "exemple": "ce produit est nul"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "je suis furieux, on m'ignore complètement",
+   "intent": "frustration",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.791,
+    "exemple": "أنا غاضب جدا من طريقة التعامل"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "c'est du vol, vous ne répondez à personne",
+   "intent": "frustration",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6554,
+    "exemple": "personne ne répond, c'est honteux"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "I'm fed up with you",
+   "intent": "frustration",
+   "regle": "frustration",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6153,
+    "exemple": "vous êtes vraiment nuls"
+   },
+   "avec_modele": "frustration"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "your customer service is terrible and nobody cares",
+   "intent": "frustration",
+   "regle": "frustration",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.5505,
+    "exemple": "this is unacceptable customer care"
+   },
+   "avec_modele": "frustration"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "absolutely awful, I keep getting ignored",
+   "intent": "frustration",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.558,
+    "exemple": "أنا غاضب جدا من طريقة التعامل"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "ar",
+   "langue_source": "détectée",
+   "text": "أنتم لا تحترمون زبائنكم أبدا",
+   "intent": "frustration",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6607,
+    "exemple": "خدمتكم لا تحترم الزبائن"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "ma fama 7atta 7ad yjewebni, 3ib",
+   "intent": "frustration",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7399,
+    "exemple": "nhebek t3awenni"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "khedmetkom ma3andha 7atta ma3na",
+   "intent": "frustration",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8273,
+    "exemple": "nheb akther ma3loumet"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "suivi de ma commande",
+   "intent": "order_tracking",
+   "regle": "order_tracking",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.7744,
+    "exemple": "comment passer une commande ?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "j'ai payé il y a 5 jours et toujours aucun colis",
+   "intent": "order_tracking",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.5978,
+    "exemple": "طلبت منذ أسبوع ولم يصلني شيء"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "ma livraison est en retard, elle arrive quand ?",
+   "intent": "order_tracking",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.6431,
+    "exemple": "لم يصلني الطرد بعد"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "my order hasn't arrived",
+   "intent": "order_tracking",
+   "regle": "order_tracking",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.7647,
+    "exemple": "je n'ai rien reçu depuis ma commande de la semaine dernière"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "when is my parcel going to be delivered?",
+   "intent": "order_tracking",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.7722,
+    "exemple": "has my parcel been shipped?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "I still haven't got the stuff I bought",
+   "intent": "order_tracking",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.5862,
+    "exemple": "mon colis n'est toujours pas arrivé"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "ar",
+   "langue_source": "détectée",
+   "text": "لم أستلم طلبيتي حتى الآن",
+   "intent": "order_tracking",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.861,
+    "exemple": "لم يصلني الطرد بعد"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "وين الكوموند متاعي",
+   "intent": "order_tracking",
+   "regle": "order_tracking",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.796,
+    "exemple": "arnaque hedhi, rja3tli flousi"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "el colis mte3i wa9tech ywosel",
+   "intent": "order_tracking",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.867,
+    "exemple": "wa9tech twosel el commande mte3i ?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "chrit men 3andkom w mazelt ma 5dhit chay",
+   "intent": "order_tracking",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.7808,
+    "exemple": "nheb wa7ed men 3andkom yekalemni"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "je veux plus des informations",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.9969,
+    "exemple": "je veux plus d'informations"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "j'ai besoin d'un renseignement",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7099,
+    "exemple": "j'ai besoin d'aide"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "vous vendez quoi ?",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.9709,
+    "exemple": "qu'est-ce que vous vendez ?"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "pouvez-vous me guider ?",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7882,
+    "exemple": "هل يمكنك مساعدتي؟"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "i need your help",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8626,
+    "exemple": "أحتاج مساعدة"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "what do you guys offer?",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.6168,
+    "exemple": "quels produits proposez-vous ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "I'd like some information",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8323,
+    "exemple": "أريد معلومات أكثر"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "ar",
+   "langue_source": "détectée",
+   "text": "أحتاج بعض المعلومات",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8643,
+    "exemple": "je veux plus d'informations"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "ar",
+   "langue_source": "détectée",
+   "text": "ماذا لديكم في المتجر؟",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7999,
+    "exemple": "tell me about your shop"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "nhebek t3awani",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.9316,
+    "exemple": "nhebek t3awenni"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "chnia 3andkom fel magasin ?",
+   "intent": "help",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7934,
+    "exemple": "présentez-moi votre boutique"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "cet écran LCD est vraiment nul",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6773,
+    "exemple": "l'écran est arrivé cassé, que faire ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "la batterie que j'ai reçue tient mal la charge",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.516,
+    "exemple": "le capteur que j'ai reçu ne fonctionne pas"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "avez-vous un capteur d'humidité ?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.5737,
+    "exemple": "avez-vous un capteur de présence humaine ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "comment puis-je payer par carte ?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6986,
+    "exemple": "ما هي طرق الدفع؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "quelle est la garantie de l'Arduino Uno ?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.4886,
+    "exemple": "ما هي مدة ضمان راسبيري باي؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "je veux un humidificateur",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.4222,
+    "exemple": "أحتاج إلى شخص من المتجر"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "fr",
+   "langue_source": "détectée",
+   "text": "livrez-vous le samedi ?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.5932,
+    "exemple": "9adeh soum el arduino ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "the screen I bought is too dim",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6686,
+    "exemple": "l'écran est arrivé cassé, que faire ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "do you have stepper motors in stock?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.4056,
+    "exemple": "c'est une arnaque votre boutique"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "what is your return policy?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.5241,
+    "exemple": "acceptez-vous le paiement à la livraison ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "en",
+   "langue_source": "détectée",
+   "text": "is there a discount for students?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.3986,
+    "exemple": "ما هي طرق الدفع؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "هل لديكم لوحة أردوينو ميغا؟",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.5523,
+    "exemple": "twaslou l sfax ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "ar",
+   "langue_source": "détectée",
+   "text": "كم تكلفة التوصيل؟",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.843,
+    "exemple": "quels sont les frais de livraison ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "famma esp32 fel stock ?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.4853,
+    "exemple": "3andi sou2el"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "el carte arduino ghalya barcha",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6782,
+    "exemple": "najjem nkhallas ki tousel el commande ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "kifech nraja3 produit ?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7485,
+    "exemple": "nheb na3ref chnouma les produits mte3kom"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test.json",
+   "langue": "tn",
+   "langue_source": "détectée",
+   "text": "9adech ta5ou el livraison l sousse ?",
+   "intent": "general",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6031,
+    "exemple": "ennas hedhom ma yjewbouch 5ir"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "human_agent",
+   "moitie": "A",
+   "text": "J'aimerais échanger avec un vrai conseiller, pas avec un robot",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.6398,
+    "exemple": "je ne veux pas parler à un robot"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "human_agent",
+   "moitie": "B",
+   "text": "Quelqu'un de votre équipe peut-il me rappeler ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.7928,
+    "exemple": "mettez-moi en contact avec votre équipe"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "human_agent",
+   "moitie": "A",
+   "text": "Je préfère parler à une personne pour ce problème",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.7303,
+    "exemple": "je préfère discuter avec un employé"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "human_agent",
+   "moitie": "B",
+   "text": "Mettez-moi en contact avec un employé du magasin s'il vous plaît",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8244,
+    "exemple": "I need to talk to someone from the shop"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "frustration",
+   "moitie": "A",
+   "text": "Ça fait trois fois que je pose la question, c'est insupportable",
+   "regle": "frustration",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.5335,
+    "exemple": "personne ne répond, c'est honteux"
+   },
+   "avec_modele": "frustration"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "frustration",
+   "moitie": "B",
+   "text": "Votre service client est une honte, personne ne s'occupe de moi",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6306,
+    "exemple": "personne ne répond, c'est honteux"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "frustration",
+   "moitie": "A",
+   "text": "J'en ai vraiment marre de vos réponses automatiques inutiles",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6129,
+    "exemple": "vous êtes vraiment nuls"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "frustration",
+   "moitie": "B",
+   "text": "Je suis très déçu de la façon dont vous traitez vos clients",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.8501,
+    "exemple": "je suis très déçu de votre service"
+   },
+   "avec_modele": "frustration"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "order_tracking",
+   "moitie": "A",
+   "text": "Mon colis devait arriver lundi et je n'ai toujours rien reçu",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.7426,
+    "exemple": "طلبت منذ أسبوع ولم يصلني شيء"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "order_tracking",
+   "moitie": "B",
+   "text": "Pouvez-vous me dire si mon achat de la semaine dernière est parti ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.8114,
+    "exemple": "mon achat a-t-il été expédié ?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "order_tracking",
+   "moitie": "A",
+   "text": "Je voudrais savoir où se trouve mon paquet en ce moment",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.873,
+    "exemple": "mon paquet est où ?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "help",
+   "moitie": "B",
+   "text": "Bonjour, j'ai besoin d'aide",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8442,
+    "exemple": "أحتاج مساعدة"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "help",
+   "moitie": "A",
+   "text": "Qu'est-ce que vous pouvez faire pour moi ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7417,
+    "exemple": "what can you do?"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "help",
+   "moitie": "B",
+   "text": "Je ne sais pas trop par où commencer, vous pouvez m'orienter ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8173,
+    "exemple": "je ne sais pas par où commencer"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "general",
+   "moitie": "A",
+   "text": "Je cherche un agent de gravure pour circuits imprimés",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6319,
+    "exemple": "je veux acheter une imprimante 3D"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "general",
+   "moitie": "B",
+   "text": "Ce produit est de mauvaise qualité, il chauffe trop vite",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6375,
+    "exemple": "this product is bad"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "general",
+   "moitie": "A",
+   "text": "Comment passer une commande sur votre site ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6618,
+    "exemple": "comment passer une commande ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "general",
+   "moitie": "B",
+   "text": "Combien de jours faut-il pour être livré à Sousse ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6884,
+    "exemple": "ما هي مدة ضمان راسبيري باي؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "general",
+   "moitie": "A",
+   "text": "Mon capteur DHT22 ne donne aucune mesure, que faire ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.569,
+    "exemple": "le capteur que j'ai reçu ne fonctionne pas"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "fr",
+   "intent": "general",
+   "moitie": "B",
+   "text": "Avez-vous des cartes Raspberry Pi en stock ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6417,
+    "exemple": "9adech el garantie mta3 raspberry ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "human_agent",
+   "moitie": "A",
+   "text": "Can I speak with a real person instead of a bot?",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.764,
+    "exemple": "is there a real person I can chat with?"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "human_agent",
+   "moitie": "B",
+   "text": "I would like someone from your team to call me back",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8986,
+    "exemple": "أريد أن يتصل بي أحد من فريقكم"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "human_agent",
+   "moitie": "A",
+   "text": "Please put me through to customer support staff",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.7945,
+    "exemple": "هل يوجد أحد من خدمة العملاء؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "human_agent",
+   "moitie": "B",
+   "text": "Is there an actual employee I can chat with?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.7349,
+    "exemple": "أرجو أن يتواصل معي أحد الموظفين"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "frustration",
+   "moitie": "A",
+   "text": "This is the third time I ask and nobody answers, ridiculous",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6522,
+    "exemple": "nobody answers, this is ridiculous"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "frustration",
+   "moitie": "B",
+   "text": "Your support is useless and I'm losing my patience",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.5841,
+    "exemple": "je suis très déçu de votre service"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "frustration",
+   "moitie": "A",
+   "text": "I'm really angry about how you treat your customers",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.7428,
+    "exemple": "أنا غاضب جدا من طريقة التعامل"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "frustration",
+   "moitie": "B",
+   "text": "Worst service ever, you never reply to my emails",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.573,
+    "exemple": "I'm really disappointed with your service"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "order_tracking",
+   "moitie": "A",
+   "text": "My package was supposed to arrive on Monday and it's still not here",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.8446,
+    "exemple": "my package hasn't arrived yet"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "order_tracking",
+   "moitie": "B",
+   "text": "Has the item I bought last week been shipped yet?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.7828,
+    "exemple": "has my parcel been shipped?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "order_tracking",
+   "moitie": "A",
+   "text": "Where is my parcel right now?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.9347,
+    "exemple": "where is my parcel?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "help",
+   "moitie": "B",
+   "text": "Hi, I need some assistance",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8041,
+    "exemple": "I really need some assistance"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "help",
+   "moitie": "A",
+   "text": "What can you do for me?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7241,
+    "exemple": "what can you do?"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "help",
+   "moitie": "B",
+   "text": "I'm not sure where to start, can you guide me?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7966,
+    "exemple": "je ne sais pas par où commencer"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "general",
+   "moitie": "A",
+   "text": "Do you sell a cleaning agent for soldering flux?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.5517,
+    "exemple": "what do you sell?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "general",
+   "moitie": "B",
+   "text": "This power supply is poor quality, it makes a buzzing noise",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.3886,
+    "exemple": "هذا المنتج سيء"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "general",
+   "moitie": "A",
+   "text": "How do I place an order on your website?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.759,
+    "exemple": "how do I place an order?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "general",
+   "moitie": "B",
+   "text": "How long does delivery to Bizerte take?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.4763,
+    "exemple": "ما هي مدة ضمان راسبيري باي؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "general",
+   "moitie": "A",
+   "text": "My servo motor does not move at all, what should I check?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.4104,
+    "exemple": "le capteur que j'ai reçu ne fonctionne pas"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "en",
+   "intent": "general",
+   "moitie": "B",
+   "text": "Do you have Arduino Nano boards available?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.4203,
+    "exemple": "le capteur ultrason est-il disponible ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "human_agent",
+   "moitie": "A",
+   "text": "أرغب في التحدث مع موظف حقيقي وليس مع روبوت",
+   "regle": "human_agent",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.7426,
+    "exemple": "je ne veux pas parler à un robot"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "human_agent",
+   "moitie": "B",
+   "text": "هل يمكن لأحد من فريق الدعم أن يتصل بي؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8702,
+    "exemple": "un membre de l'équipe peut me contacter ?"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "human_agent",
+   "moitie": "A",
+   "text": "أريد التواصل مع شخص من خدمة العملاء",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8337,
+    "exemple": "هل يوجد أحد من خدمة العملاء؟"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "human_agent",
+   "moitie": "B",
+   "text": "من فضلك حولني إلى مستشار بشري",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.6437,
+    "exemple": "أرجو أن يتواصل معي أحد الموظفين"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "frustration",
+   "moitie": "A",
+   "text": "هذه المرة الثالثة التي أسأل فيها ولا أحد يجيب، هذا غير مقبول",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6573,
+    "exemple": "personne ne répond, c'est honteux"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "frustration",
+   "moitie": "B",
+   "text": "خدمة العملاء لديكم سيئة جدا ولا أحد يهتم",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.5566,
+    "exemple": "this is unacceptable customer care"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "frustration",
+   "moitie": "A",
+   "text": "لقد سئمت من ردودكم الآلية التي لا تفيد",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.6507,
+    "exemple": "سأكتب تقييما سيئا عنكم"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "frustration",
+   "moitie": "B",
+   "text": "أنا غاضب جدا من طريقة تعاملكم مع الزبائن",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.734,
+    "exemple": "أنا غاضب جدا من طريقة التعامل"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "order_tracking",
+   "moitie": "A",
+   "text": "كان من المفترض أن يصل طردي يوم الاثنين ولم يصل بعد",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.6941,
+    "exemple": "لم يصلني الطرد بعد"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "order_tracking",
+   "moitie": "B",
+   "text": "هل تم شحن المنتج الذي اشتريته الأسبوع الماضي؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.6902,
+    "exemple": "mon achat a-t-il été expédié ?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "order_tracking",
+   "moitie": "A",
+   "text": "أين يوجد طردي الآن؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.8081,
+    "exemple": "mon paquet est où ?"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "help",
+   "moitie": "B",
+   "text": "مرحبا، أحتاج إلى مساعدة",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8463,
+    "exemple": "أحتاج مساعدة"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "help",
+   "moitie": "A",
+   "text": "ماذا يمكنك أن تفعل لي؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7882,
+    "exemple": "what can you do?"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "help",
+   "moitie": "B",
+   "text": "لا أعرف من أين أبدأ، هل يمكنك توجيهي؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8243,
+    "exemple": "je ne sais pas par où commencer"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "general",
+   "moitie": "A",
+   "text": "هل لديكم مادة لتنظيف الدوائر الإلكترونية؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.5764,
+    "exemple": "what products do you have?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "general",
+   "moitie": "B",
+   "text": "هذا المنتج جودته رديئة ويسخن بسرعة",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.5067,
+    "exemple": "this product is bad"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "general",
+   "moitie": "A",
+   "text": "كيف أقوم بطلب منتج من موقعكم؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.794,
+    "exemple": "كيف أطلب منتجا؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "general",
+   "moitie": "B",
+   "text": "كم يستغرق التوصيل إلى صفاقس؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6508,
+    "exemple": "ما هي مدة ضمان راسبيري باي؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "general",
+   "moitie": "A",
+   "text": "المستشعر لا يعطي أي قراءة، ماذا أفعل؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.5754,
+    "exemple": "le capteur que j'ai reçu ne fonctionne pas"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "ar",
+   "intent": "general",
+   "moitie": "B",
+   "text": "هل لديكم بطاقات راسبيري باي متوفرة؟",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.5046,
+    "exemple": "livrez-vous à Sfax ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "human_agent",
+   "moitie": "A",
+   "text": "nheb nahki m3a 3abd mouch robot",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.8994,
+    "exemple": "ma nhebech nahki m3a robot"
+   },
+   "avec_modele": "human_agent"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "human_agent",
+   "moitie": "B",
+   "text": "ynajem 7ad men 3andkom y3ayetli ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7955,
+    "exemple": "3awenni 3afek"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "human_agent",
+   "moitie": "A",
+   "text": "7awelni l conseiller men fadhlek",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.4777,
+    "exemple": "nheb wa7ed men 3andkom yekalemni"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "human_agent",
+   "moitie": "B",
+   "text": "famma chkoun nkalmou men el service client ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "human_agent",
+    "score": 0.6905,
+    "exemple": "هل يوجد أحد من خدمة العملاء؟"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "frustration",
+   "moitie": "A",
+   "text": "hedhi tlatha marrat nes2el w 7atta 7ad ma jewebni, 3ib",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8056,
+    "exemple": "3awenni 3afek"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "frustration",
+   "moitie": "B",
+   "text": "el service mte3kom zero, 7atta 7ad ma yehtam",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.8425,
+    "exemple": "service mte3kom zero"
+   },
+   "avec_modele": "frustration"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "frustration",
+   "moitie": "A",
+   "text": "9ale9t men les réponses automatiques mte3kom",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.8279,
+    "exemple": "9ra9tni el khedma mte3kom"
+   },
+   "avec_modele": "frustration"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "frustration",
+   "moitie": "B",
+   "text": "ena metghachech barcha men tri9tkom m3a el clients",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.6413,
+    "exemple": "nhebek t3awenni"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "order_tracking",
+   "moitie": "A",
+   "text": "el colis kan lazem yousel nhar el thnin w mazel ma jech",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6923,
+    "exemple": "najjem nkhallas ki tousel el commande ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "order_tracking",
+   "moitie": "B",
+   "text": "el 7aja eli chritha el jem3a li fatet tba3thet walla le ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.7666,
+    "exemple": "jem3a w ana nestanna w 7atta 7ad ma jewebni"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "order_tracking",
+   "moitie": "A",
+   "text": "win wsel el colis mte3i tawa ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "order_tracking",
+    "score": 0.7732,
+    "exemple": "el colis mte3i mazel ma wselch"
+   },
+   "avec_modele": "order_tracking"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "help",
+   "moitie": "B",
+   "text": "aslema, n7eb mousa3da",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "frustration",
+    "score": 0.544,
+    "exemple": "9ra9tni el khedma mte3kom"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "help",
+   "moitie": "A",
+   "text": "chnowa tnajjem ta3melli ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.9055,
+    "exemple": "chnowa tnajjem ta3mel ?"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "help",
+   "moitie": "B",
+   "text": "ma3raftech mnin nebda, tnajjem twajahni ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.6726,
+    "exemple": "chnowa tnajjem ta3mel ?"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "general",
+   "moitie": "A",
+   "text": "3andkom produit bech nnadhef el cartes électroniques ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.6409,
+    "exemple": "el ecran wsel mkasser chnowa na3mel ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "general",
+   "moitie": "B",
+   "text": "el produit hedha qualité mte3ou khayba, yeskhon fissa3",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.8223,
+    "exemple": "nheb na3ref chnouma les produits mte3kom"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "general",
+   "moitie": "A",
+   "text": "kifech n3adi commande 3al site ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.613,
+    "exemple": "nheb na3ref chnouma les produits mte3kom"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "general",
+   "moitie": "B",
+   "text": "9adech twali el livraison l Sfax ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.7017,
+    "exemple": "livrez-vous à Sfax ?"
+   },
+   "avec_modele": "general"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "general",
+   "moitie": "A",
+   "text": "el capteur ma y3ati 7atta mesure, chnowa na3mel ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "help",
+    "score": 0.7897,
+    "exemple": "nheb na3ref chnouma les produits mte3kom"
+   },
+   "avec_modele": "help"
+  },
+  {
+   "jeu": "test_appris.json",
+   "langue_source": "annotée",
+   "langue": "tn",
+   "intent": "general",
+   "moitie": "B",
+   "text": "3andkom Raspberry Pi fel stock ?",
+   "regle": "general",
+   "plus_proche": {
+    "intention": "general",
+    "score": 0.7213,
+    "exemple": "9adech el garantie mta3 raspberry ?"
+   },
+   "avec_modele": "general"
+  }
+ ]
+}

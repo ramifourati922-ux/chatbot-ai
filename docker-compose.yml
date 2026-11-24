@@ -46,6 +46,31 @@ services:
       - postgres
     restart: unless-stopped
 
+  # API FastAPI (Dockerfile). Derrière un profil : "docker compose up" ne la
+  # lance pas (comportement inchangé) ; pour la lancer :
+  #   docker compose --profile api up -d --build api
+  # Les variables viennent de .env (env_file) ; seules les adresses des
+  # services sont surchargées ici, avec leur nom de service Compose.
+  api:
+    profiles: ["api"]
+    build: .
+    image: lissstrike-api
+    container_name: chatbot_api
+    env_file: .env
+    environment:
+      # Identifiants lus dans .env (interpolation Compose), aucune valeur ici
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
+      CHROMA_HOST: chromadb
+      CHROMA_PORT: "8000"   # port interne du conteneur ChromaDB (8001 côté hôte)
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+      - chromadb
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   chroma_data:

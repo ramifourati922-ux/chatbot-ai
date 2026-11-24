@@ -1,0 +1,705 @@
+{
+ "services": [
+  {
+   "question": "Faites-vous la réparation d'ordinateurs portables ?",
+   "langue": "fr",
+   "distance_min": 0.601,
+   "score": 0.399,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "sav/garantie.txt",
+    "texte": "Q: Le produit est-il réparé ou remplacé sous garantie ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nJe n’ai pas d’information précise concernant la réparation d’ordinateurs portables chez Liss Strike. Je vous propose de vérifier cela avec notre service SAV ou de vous mettre en relation avec un conseiller qui pourra vous répondre plus en détail.  \n\nSouhaitez‑vous que je vous transfère à un conseiller ?",
+    "intent": "general",
+    "confidence": 0.3992648720741272,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "sav/garantie.txt",
+     "sav/retours.txt",
+     "LS-OU-000030",
+     "sav/retours.txt"
+    ]
+   }
+  },
+  {
+   "question": "Proposez-vous la location de matériel électronique ?",
+   "langue": "fr",
+   "distance_min": 0.448,
+   "score": 0.552,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-OU-000030",
+    "texte": "Établi/plateau de travail électronique"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous ne disposons pas d'information indiquant que Liss Strike propose la location de matériel électronique. Je vous propose de vérifier cette possibilité auprès d’un de nos conseillers ou de vous mettre en relation avec le service client.\n\nN’hésitez pas à me dire si vous souhaitez que je vous transfère vers un conseiller.",
+    "intent": "general",
+    "confidence": 0.5523982048034668,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "LS-OU-000030",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "LS-KP-000011"
+    ]
+   }
+  },
+  {
+   "question": "Avez-vous une boutique à Paris ?",
+   "langue": "fr",
+   "distance_min": 0.589,
+   "score": 0.411,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "sav/livraison.txt",
+    "texte": "Q: Livrez-vous en dehors de Tunis (autres villes/gouvernorats) ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous n’avons pas de boutique à Paris. Liss Strike possède uniquement sa boutique en Tunisie (ouvert du lundi au samedi, de 9 h à 18 h 30).  \n\nSi vous avez d’autres questions concernant nos produits, la livraison ou le service après‑vente, n’hésitez pas à me les poser.",
+    "intent": "general",
+    "confidence": 0.4112815856933594,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "general/faq.txt",
+     "general/faq.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt"
+    ]
+   }
+  },
+  {
+   "question": "Livrez-vous en Algérie ?",
+   "langue": "fr",
+   "distance_min": 0.343,
+   "score": 0.657,
+   "passages_retenus": 4,
+   "candidats_sous_075": 9,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "general/faq.txt",
+    "texte": "Q: Livrez-vous en dehors de Tunis ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous livrons uniquement sur le territoire tunisien (dans les 24 gouvernorats). La livraison en Algérie n’est pas proposée pour le moment.\n\nSi vous avez besoin d’informations complémentaires ou d’une solution alternative, je peux transmettre votre demande à un conseiller.\n\nCordialement,\nService client Liss Strike",
+    "intent": "general",
+    "confidence": 0.6567856073379517,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "general/faq.txt",
+     "ecommerce/paiement.txt"
+    ]
+   }
+  },
+  {
+   "question": "Proposez-vous des formations en robotique ?",
+   "langue": "fr",
+   "distance_min": 0.342,
+   "score": 0.658,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-KP-000333",
+    "texte": "Kit robotique éducatif niveau collège"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous n’avons pas d’information précise dans notre base de connaissances concernant d’éventuelles formations en robotique proposées par Liss Strike. Je vous invite à contacter directement notre service client afin de vérifier la disponibilité de telles formations ou d’obtenir plus de détails.\n\nCordialement,\nLe service client Liss Strike.",
+    "intent": "general",
+    "confidence": 0.6580578684806824,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "LS-KP-000013",
+     "LS-KP-000023",
+     "LS-KP-000333"
+    ]
+   }
+  },
+  {
+   "question": "Concevez-vous des circuits imprimés sur mesure pour les entreprises ?",
+   "langue": "fr",
+   "distance_min": 0.489,
+   "score": 0.511,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-IM-000006",
+    "texte": "Multimètre numérique (professionnelle, True-RMS)"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous ne disposons pas d'information précise concernant la conception de circuits imprimés sur mesure pour les entreprises. Je vous propose de vérifier cette possibilité avec un de nos conseillers ou de vous mettre en relation avec le service dédié.\n\nSouhaitez‑vous que je vous transfère à un conseiller ?",
+    "intent": "general",
+    "confidence": 0.5111249685287476,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "LS-IM-000006",
+     "LS-CO-008411",
+     "LS-CO-008416",
+     "LS-CO-008412"
+    ]
+   }
+  },
+  {
+   "question": "Vendez-vous des téléphones portables reconditionnés ?",
+   "langue": "fr",
+   "distance_min": 0.672,
+   "score": 0.328,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "sav/livraison.txt",
+    "texte": "Q: Peut-on retirer sa commande directement en boutique ?"
+   },
+   "arretee_par_seuil": true,
+   "chat": {
+    "response": "Je ne dispose pas d'informations suffisamment fiables sur ce sujet précis. Je préfère vous mettre en relation avec un conseiller humain plutôt que de vous donner une réponse imprécise.",
+    "intent": "low_rag_confidence",
+    "confidence": 0.32755112648010254,
+    "escalated": true,
+    "escalation_reason": "low_rag_confidence",
+    "sources": []
+   }
+  },
+  {
+   "question": "Acceptez-vous le paiement en cryptomonnaie ?",
+   "langue": "fr",
+   "distance_min": 0.458,
+   "score": 0.542,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "ecommerce/paiement.txt",
+    "texte": "Q: Quels moyens de paiement sont acceptés ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous acceptons les paiements par carte bancaire (Visa/Mastercard) en ligne, ainsi que le paiement à la livraison en espèces, D17 et Flouci. Le paiement en cryptomonnaie n’est pas mentionné parmi nos moyens de paiement.\n\nSi vous le souhaitez, je peux vérifier auprès de notre service et vous mettre en relation avec un conseiller pour plus de précisions.\n\nCordialement,\nService client Liss Strike.",
+    "intent": "general",
+    "confidence": 0.5415480732917786,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/promotions.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ]
+   }
+  },
+  {
+   "question": "Installez-vous des panneaux solaires à domicile ?",
+   "langue": "fr",
+   "distance_min": 0.645,
+   "score": 0.355,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-CO-008319",
+    "texte": "LED UV 8mm (clair haute luminosité)"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nJe suis désolé, mais nous ne proposons pas d'installation de panneaux solaires à domicile. Je ne peux vous aider que sur les sujets liés à Liss Strike (produits électroniques, SAV, commandes, livraisons, garanties, etc.). \n\nSi vous avez une question concernant nos articles ou nos services, n’hésitez pas !",
+    "intent": "general",
+    "confidence": 0.35476571321487427,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "sav/livraison.txt",
+     "LS-EL-000363",
+     "LS-CO-008315",
+     "LS-CO-008319"
+    ]
+   }
+  },
+  {
+   "question": "Développez-vous des applications mobiles sur commande ?",
+   "langue": "fr",
+   "distance_min": 0.618,
+   "score": 0.382,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-CP-000041",
+    "texte": "Raspberry Pi 5 (8Go)"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nJe suis désolé, mais je ne peux répondre qu'aux questions relatives aux produits, aux services et au support de Liss Strike (SAV, commandes, livraisons, garanties, etc.).  \n\nJe vous invite à contacter directement notre service client pour toute demande concernant le développement d’applications mobiles.\n\nCordialement,\nL’équipe Liss Strike.",
+    "intent": "general",
+    "confidence": 0.38223159313201904,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "LS-MO-000009",
+     "LS-CP-000041",
+     "ecommerce/promotions.txt"
+    ]
+   }
+  },
+  {
+   "question": "Proposez-vous un abonnement mensuel de composants ?",
+   "langue": "fr",
+   "distance_min": 0.473,
+   "score": 0.527,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "ecommerce/paiement.txt",
+    "texte": "Q: Peut-on payer en plusieurs fois ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous n’avons pas d’information dans notre base de connaissances concernant un abonnement mensuel de composants. Je vous propose de vérifier cette offre auprès de notre service client ou de vous mettre en relation avec un conseiller qui pourra vous répondre précisément.\n\nCordialement,\nL’équipe Liss Strike.",
+    "intent": "general",
+    "confidence": 0.5274863243103027,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "sav/garantie.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/paiement.txt"
+    ]
+   }
+  },
+  {
+   "question": "Vendez-vous des pièces détachées automobiles ?",
+   "langue": "fr",
+   "distance_min": 0.665,
+   "score": 0.335,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-CN-000998",
+    "texte": "Câble ruban 34 conducteurs (5m)"
+   },
+   "arretee_par_seuil": true,
+   "chat": null
+  },
+  {
+   "question": "Recrutez-vous des stagiaires cet été ?",
+   "langue": "fr",
+   "distance_min": 0.617,
+   "score": 0.383,
+   "passages_retenus": 4,
+   "candidats_sous_075": 10,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "ecommerce/paiement.txt",
+    "texte": "Q: Puis-je commander en tant qu'école, club robotique ou entreprise ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nJe ne peux répondre qu'aux questions relatives à Liss Strike (SAV, commandes, livraisons, produits, paiements, etc.).  \n\nJe ne dispose donc pas d'information concernant le recrutement de stagiaires.  \n\nJe vous invite à contacter directement notre service client ou le service des ressources humaines de Liss Strike pour obtenir une réponse précise.\n\nCordialement,\nService client Liss Strike.",
+    "intent": "general",
+    "confidence": 0.38303065299987793,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt"
+    ]
+   }
+  },
+  {
+   "question": "Livrez-vous par drone ?",
+   "langue": "fr",
+   "distance_min": 0.701,
+   "score": 0.299,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-MO-000001",
+    "texte": "Module relais 1 canal(aux) 5V"
+   },
+   "arretee_par_seuil": true,
+   "chat": null
+  },
+  {
+   "question": "Organisez-vous des ateliers d'électronique pour enfants ?",
+   "langue": "fr",
+   "distance_min": 0.61,
+   "score": 0.39,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-OU-000030",
+    "texte": "Établi/plateau de travail électronique"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nJe n’ai pas d’information précise concernant l’organisation d’ateliers d’électronique pour enfants chez Liss Strike.  \nJe peux vérifier cela pour vous ou vous mettre en relation avec un conseiller qui pourra vous répondre plus en détail.  \n\nSouhaitez‑vous que je vous transfère à un membre de notre équipe ?",
+    "intent": "general",
+    "confidence": 0.38956940174102783,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "LS-OU-000030",
+     "LS-KP-000334",
+     "LS-CP-000044",
+     "LS-CP-000043"
+    ]
+   }
+  },
+  {
+   "question": "Puis-je payer en plusieurs fois sans frais ?",
+   "langue": "fr",
+   "distance_min": 0.261,
+   "score": 0.739,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "ecommerce/paiement.txt",
+    "texte": "Q: Peut-on payer en plusieurs fois ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Oui. Le paiement en plusieurs fois (3 fois) est possible sans frais pour les commandes de plus de 300 DT, à condition d’utiliser une des cartes bancaires partenaires proposées.",
+    "intent": "general",
+    "confidence": 0.7391257882118225,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/reclamations.txt",
+     "ecommerce/paiement.txt"
+    ]
+   }
+  },
+  {
+   "question": "Acceptez-vous les chèques-cadeaux d'autres magasins ?",
+   "langue": "fr",
+   "distance_min": 0.425,
+   "score": 0.575,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "sav/livraison.txt",
+    "texte": "Q: Peut-on retirer sa commande directement en boutique ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous n’acceptons pas les chèques‑cadeaux provenant d’autres magasins.  \n\nSi vous avez besoin de plus d’informations ou d’une assistance supplémentaire, je peux vous mettre en relation avec un conseiller.  \n\nCordialement,\nService client Liss Strike.",
+    "intent": "general",
+    "confidence": 0.5749053955078125,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt"
+    ]
+   }
+  },
+  {
+   "question": "Faites-vous de la maintenance de serveurs ?",
+   "langue": "fr",
+   "distance_min": 0.622,
+   "score": 0.378,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "ecommerce/promotions.txt",
+    "texte": "Q: Existe-t-il une offre de parrainage ?"
+   },
+   "arretee_par_seuil": false,
+   "chat": {
+    "response": "Bonjour,\n\nNous ne proposons pas de service de maintenance de serveurs. Notre boutique se spécialise dans la vente de composants électroniques, cartes programmables, capteurs, modules, outillage et impression 3D, ainsi que le service après‑vente lié à ces produits.\n\nSi vous avez d’autres questions concernant nos produits, vos commandes, la garantie ou le SAV, n’hésitez pas !",
+    "intent": "general",
+    "confidence": 0.3783247470855713,
+    "escalated": false,
+    "escalation_reason": null,
+    "sources": [
+     "general/faq.txt",
+     "sav/garantie.txt",
+     "ecommerce/promotions.txt",
+     "sav/retours.txt"
+    ]
+   }
+  }
+ ],
+ "legitimes": [
+  {
+   "question": "Avez-vous un capteur de distance VL53L0X ?",
+   "langue": "fr",
+   "distance_min": 0.374,
+   "score": 0.626,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-CA-000035",
+    "texte": "Capteur VL53L0X (capteur seul (nu))"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Je cherche des cables Dupont male-femelle",
+   "langue": "fr",
+   "distance_min": 0.457,
+   "score": 0.543,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-CN-000223",
+    "texte": "Câbles Dupont Femelle-Femelle 50cm (lot de 80)"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Vous avez des piles 18650 en stock ?",
+   "langue": "fr",
+   "distance_min": 0.403,
+   "score": 0.597,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-AL-000004",
+    "texte": "Batterie 18650 2200mAh (générique)"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Combien coute un moteur pas-a-pas NEMA17 ?",
+   "langue": "fr",
+   "distance_min": 0.493,
+   "score": 0.507,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-MR-000018",
+    "texte": "Moteur pas-à-pas NEMA17 1.8° (2.5A)"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Avez-vous un afficheur 7 segments 4 chiffres ?",
+   "langue": "fr",
+   "distance_min": 0.328,
+   "score": 0.672,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-AF-000066",
+    "texte": "Afficheur 7 segments 4 chiffre(s) (jaune)"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Je voudrais un controleur LED RGB avec telecommande",
+   "langue": "fr",
+   "distance_min": 0.273,
+   "score": 0.727,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-EL-000461",
+    "texte": "Contrôleur LED RGB (télécommande IR)"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Vous vendez des analyseurs logiques 8 canaux ?",
+   "langue": "fr",
+   "distance_min": 0.298,
+   "score": 0.702,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-IM-000031",
+    "texte": "Analyseur logique 8 canaux"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Avez-vous de l'etain a souder sans plomb ?",
+   "langue": "fr",
+   "distance_min": 0.632,
+   "score": 0.368,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-OU-000025",
+    "texte": "Étain à souder sans plomb (100g)"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Est-ce que la carte Arduino Due est disponible ?",
+   "langue": "fr",
+   "distance_min": 0.401,
+   "score": 0.599,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-CP-000014",
+    "texte": "Carte Arduino Due (compatible (clone))"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Je cherche un module relais 16 canaux",
+   "langue": "fr",
+   "distance_min": 0.255,
+   "score": 0.745,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-MO-000014",
+    "texte": "Module relais 16 canal(aux) 12V"
+   },
+   "arretee_par_seuil": false
+  }
+ ],
+ "hors_sujet": [
+  {
+   "question": "Quelle est la recette du couscous tunisien ?",
+   "langue": "fr",
+   "distance_min": 0.571,
+   "score": 0.429,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "general/faq.txt",
+    "texte": "Q: Où se trouve la boutique Liss Strike ?"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Combien de lunes a la planete Jupiter ?",
+   "langue": "fr",
+   "distance_min": 0.649,
+   "score": 0.351,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "product",
+    "id": "LS-AL-000045",
+    "texte": "Panneau solaire 6V 2W"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Quelle est la capitale de la France ?",
+   "langue": "fr",
+   "distance_min": 0.637,
+   "score": 0.363,
+   "passages_retenus": 4,
+   "candidats_sous_075": 20,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "sav/livraison.txt",
+    "texte": "Q: Livrez-vous en dehors de Tunis (autres villes/gouvernorats) ?"
+   },
+   "arretee_par_seuil": false
+  },
+  {
+   "question": "Raconte-moi une blague",
+   "langue": "fr",
+   "distance_min": 0.727,
+   "score": 0.273,
+   "passages_retenus": 1,
+   "candidats_sous_075": 1,
+   "meilleur_doc": {
+    "type": "policy",
+    "id": "ecommerce/promotions.txt",
+    "texte": "Q: Existe-t-il une offre de parrainage ?"
+   },
+   "arretee_par_seuil": true
+  }
+ ],
+ "scores": {
+  "services": {
+   "min": 0.299,
+   "mediane": 0.405,
+   "max": 0.739
+  },
+  "legitimes": {
+   "min": 0.368,
+   "mediane": 0.613,
+   "max": 0.745
+  },
+  "hors_sujet": {
+   "min": 0.273,
+   "mediane": 0.357,
+   "max": 0.429
+  }
+ },
+ "base_avant_nettoyage": {
+  "users": 17,
+  "conversations": 17,
+  "messages": 34
+ },
+ "nettoyage": {
+  "supprimes": {
+   "messages": 34,
+   "conversations": 17,
+   "users": 17,
+   "sessions_redis": 17
+  },
+  "restants": {
+   "users": 0,
+   "conversations": 0,
+   "messages": 0,
+   "sessions_redis": 0
+  }
+ },
+ "config": {
+  "mode": "advanced",
+  "signal": "cosine",
+  "seuil": 0.35,
+  "RERANK_CANDIDATES": 20,
+  "MAX_RELEVANT_DISTANCE": 0.75,
+  "reranker": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+ }
+}

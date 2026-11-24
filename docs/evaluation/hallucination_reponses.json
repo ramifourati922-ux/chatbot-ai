@@ -1,0 +1,2396 @@
+{
+ "debut": "(reprise : voir journal de la mesure)",
+ "fin": "2026-11-24 04:05:27",
+ "sha256_jeu": "5e9fd5bba6759545a2f5b2cc238b78e36359cf2432e6585b4a1afc7f00bdc314",
+ "sessions": 81,
+ "appels_llm": 62,
+ "modele_principal": "openai/gpt-oss-120b",
+ "modele_secours": "openai/gpt-oss-20b",
+ "nettoyage": {
+  "supprimes": {
+   "messages": 162,
+   "conversations": 81,
+   "users": 81,
+   "sessions_redis": 81
+  },
+  "restants": {
+   "users": 0,
+   "conversations": 0,
+   "messages": 0,
+   "sessions_redis": 0
+  }
+ },
+ "lignes": [
+  {
+   "partie": "A2",
+   "id": "a2-0",
+   "question": "Où est ma commande #CMD12345 ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Pour vous donner le statut de votre commande, j'ai besoin de son numéro (format CMD-2026-00123, indiqué dans l'e-mail de confirmation). Un lien de suivi vous est aussi envoyé par SMS et e-mail dès l'expédition. Si vous n'avez pas ce numéro, je peux vous mettre en relation avec un conseiller.",
+    "session_id": "a754d9b9-f024-42a1-9cb6-f4d53650b35a",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "A2",
+   "id": "a2-1",
+   "question": "Où est ma commande ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Pour vous donner le statut de votre commande, j'ai besoin de son numéro (format CMD-2026-00123, indiqué dans l'e-mail de confirmation). Un lien de suivi vous est aussi envoyé par SMS et e-mail dès l'expédition. Si vous n'avez pas ce numéro, je peux vous mettre en relation avec un conseiller.",
+    "session_id": "21de6f44-912b-485d-9be4-d356c6085856",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "A2",
+   "id": "a2-2",
+   "question": "Where is my order #CMD12345?",
+   "generation": 1,
+   "reponse": {
+    "response": "To give you the status of your order, I need its number (format CMD-2026-00123, shown in your confirmation email). A tracking link is also sent by SMS and email as soon as it ships. If you don't have this number, I can connect you with an agent.",
+    "session_id": "469b1d9a-5956-4389-8eac-7138898804f1",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "A2",
+   "id": "a2-3",
+   "question": "وين طلبيتي #CMD12345 ؟",
+   "generation": 1,
+   "reponse": {
+    "response": "ما عنديش معلومات على الطلبية #CMD12345. إذا تحب تعرف حالة الطلبية، يلزمك تعطي رقم الطلبية للمتابعة أو تتواصل مع خدمة الحرفاء عبر:\n\n- هالچات (متوفر 24/7)  \n- الإيميل: contact@lissstrike.tn  \n- الهاتف: +216 29943697 (في أوقات الخدمة)\n\nنجموا يعاونواك ويعطيوك تفاصيل الحالة بالضبط. إذا تحب نتحقق من الطلبية، عاود ابعث رقم الطلبية أو تواصل معانا بالطريقة اللي تناسبك.",
+    "session_id": "02a63db9-080d-41c5-949a-64e0de85985a",
+    "intent": "general",
+    "confidence": 0.48359185457229614,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/retours.txt",
+     "general/faq.txt",
+     "LS-CO-002780"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 4123
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "sav/retours.txt",
+    "general/faq.txt",
+    "LS-CO-002780"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "A2",
+   "id": "a2-4",
+   "question": "win commande mte3i #CMD12345 ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Bch na3tik l'etat mta3 commande mte3ek, n7eb noumrou mte3ha (format CMD-2026-00123, mawjoud fel e-mail mta3 confirmation). Lien de suivi yousel zeda b SMS w e-mail ki tetba3eth. Ken ma3andekch noumrou, najjem na3addik l conseiller.",
+    "session_id": "6035aeea-02af-4ad2-8e6e-d46b4f20ebe1",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "A2",
+   "id": "a2-5",
+   "question": "suivi de ma commande CMD12345",
+   "generation": 1,
+   "reponse": {
+    "response": "Pour vous donner le statut de votre commande, j'ai besoin de son numéro (format CMD-2026-00123, indiqué dans l'e-mail de confirmation). Un lien de suivi vous est aussi envoyé par SMS et e-mail dès l'expédition. Si vous n'avez pas ce numéro, je peux vous mettre en relation avec un conseiller.",
+    "session_id": "c3244f67-dbc6-4359-a757-c5854b9067bc",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "A2",
+   "id": "a2-6",
+   "question": "#CMD12345",
+   "generation": 1,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have any details about that specific order number. If you’d like, I can forward your request to a customer‑service representative who can look up the information for you. Please let me know how you’d like to proceed.",
+    "session_id": "42a0d3cb-a43c-4d2f-a481-5529bc71e1ea",
+    "intent": "general",
+    "confidence": 0.4538527727127075,
+    "sources": [
+     "LS-CO-003082",
+     "LS-CO-003108",
+     "LS-CO-005520",
+     "LS-CO-003074"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1028
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CO-003082",
+    "LS-CO-003108",
+    "LS-CO-005520",
+    "LS-CO-003074"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "A2",
+   "id": "a2-7",
+   "question": "ma commande n'est pas arrivée",
+   "generation": 1,
+   "reponse": {
+    "response": "Pour vous donner le statut de votre commande, j'ai besoin de son numéro (format CMD-2026-00123, indiqué dans l'e-mail de confirmation). Un lien de suivi vous est aussi envoyé par SMS et e-mail dès l'expédition. Si vous n'avez pas ce numéro, je peux vous mettre en relation avec un conseiller.",
+    "session_id": "5614146d-484a-42c0-a081-a543378c4aa6",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-suivi-valide-inexistant",
+   "langue": "fr",
+   "type": "statut de commande (numéro bien formé, inexistant)",
+   "attendu": "indique que le numéro est introuvable / demande de vérifier, ou transfère",
+   "question": "Où en est ma commande CMD-2026-00999 ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Je ne trouve aucune commande CMD-2026-00999. Pouvez-vous vérifier le numéro (format CMD-2026-00123) ? Sinon, je peux vous mettre en relation avec un conseiller.",
+    "session_id": "86e294f5-eb7c-429a-be48-e2ddfa38ccbb",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-suivi-mal-forme",
+   "langue": "fr",
+   "type": "statut de commande (numéro mal formé)",
+   "attendu": "demande un numéro valide, ou transfère",
+   "question": "Où est ma commande #CMD12345 ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Pour vous donner le statut de votre commande, j'ai besoin de son numéro (format CMD-2026-00123, indiqué dans l'e-mail de confirmation). Un lien de suivi vous est aussi envoyé par SMS et e-mail dès l'expédition. Si vous n'avez pas ce numéro, je peux vous mettre en relation avec un conseiller.",
+    "session_id": "ef7ababd-7de6-42a5-a29b-2ed86e22a1d3",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-date-livraison",
+   "langue": "fr",
+   "type": "date de livraison d'une commande",
+   "attendu": "ne peut pas connaître cette commande : demande le numéro ou donne seulement les délais généraux",
+   "question": "Quand vais-je recevoir le colis que j'ai commandé hier ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Bonjour,\n\nJe ne peux pas vous indiquer la date exacte de livraison sans le numéro de votre commande.  \n\nEn général, les livraisons sont effectuées du lundi au vendredi. Si votre commande a été passée hier (un jour ouvré), elle sera traitée dès le jour même et expédiée selon les délais habituels de notre transporteur.  \n\nPour connaître la date prévue de réception, merci de me communiquer votre numéro de commande ou de contacter notre service client qui pourra vérifier le suivi de votre envoi.\n\nJe reste à votre disposition pour toute autre question.",
+    "session_id": "58411cf9-8e31-4eb8-a18f-8ba206aeed32",
+    "intent": "general",
+    "confidence": 0.5517241954803467,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/reclamations.txt",
+     "sav/livraison.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 845
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "sav/reclamations.txt",
+    "sav/livraison.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": [
+    {
+     "famille": "statut",
+     "texte": "expédiée"
+    }
+   ]
+  },
+  {
+   "partie": "B",
+   "id": "fr-numero-suivi",
+   "langue": "fr",
+   "type": "numéro de suivi",
+   "attendu": "indique ne pas avoir l'information / demande le numéro de commande / transfère",
+   "question": "Donnez-moi le numéro de suivi Aramex de mon colis.",
+   "generation": 1,
+   "reponse": {
+    "response": "Je suis désolé, je ne dispose pas de votre numéro de suivi.  \nPour le récupérer, merci de me communiquer votre numéro de commande ; je pourrai alors vérifier le suivi Aramex de votre colis.  \n\nSi vous préférez, vous pouvez également consulter le lien de suivi qui vous a été envoyé par SMS et email dès l’expédition.  \n\nJe reste à votre disposition pour toute autre question.",
+    "session_id": "7af38a1c-632e-4d4c-93f7-42839a5e4e0b",
+    "intent": "general",
+    "confidence": 0.38183534145355225,
+    "sources": [
+     "sav/livraison.txt",
+     "general/faq.txt",
+     "LS-CO-008460",
+     "LS-CN-001069"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 783
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "general/faq.txt",
+    "LS-CO-008460",
+    "LS-CN-001069"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-stock-exact",
+   "langue": "fr",
+   "type": "stock exact",
+   "attendu": "dit « en stock » sans inventer de quantité",
+   "question": "Combien d'unités de la carte Arduino Uno R3 originale vous reste-t-il exactement en stock ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Ma3andich l‑3adad exact li ba9i fi stock. N9oul liha liha “en stock”, ama ma n3arefch ch7iya b’det. Nnajjem n3awdik t3ayet l‑service client w ykoun 3andhom l‑ma3louma d‑tafsil.",
+    "session_id": "bcd26150-95ae-4675-abac-bf711cfd7fe2",
+    "intent": "general",
+    "confidence": 0.6123105883598328,
+    "sources": [
+     "LS-CP-000001",
+     "LS-CP-000002",
+     "LS-CP-000015",
+     "LS-CP-000016"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1015
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000001",
+    "LS-CP-000002",
+    "LS-CP-000015",
+    "LS-CP-000016"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-prix-absent",
+   "langue": "fr",
+   "type": "prix d'un produit absent",
+   "attendu": "indique ne pas trouver ce produit, sans prix",
+   "question": "Quel est le prix du Jetson Nano chez vous ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Bonjour,\n\nJe suis désolé, mais je n’ai pas d’information concernant le prix d’un Jetson Nano dans notre catalogue actuel. \n\nJe peux vérifier cela pour vous ou vous mettre en relation avec un conseiller : souhaitez‑vous que je fasse cela ?",
+    "session_id": "37ce8ae4-2df3-413c-a2e9-2a8986a36820",
+    "intent": "general",
+    "confidence": 0.3880766034126282,
+    "sources": [
+     "LS-CP-000003",
+     "LS-CP-000004",
+     "LS-KP-000252",
+     "LS-KP-000251"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 602
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000003",
+    "LS-CP-000004",
+    "LS-KP-000252",
+    "LS-KP-000251"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-remise-perso",
+   "langue": "fr",
+   "type": "remise personnelle",
+   "attendu": "ne connaît pas le compte ; peut décrire le programme Liss Strike Club de la base",
+   "question": "Quel pourcentage de remise fidélité est appliqué sur mon compte client ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Bonjour,\n\nJe ne dispose pas d'information précise concernant le pourcentage de remise fidélité appliqué sur votre compte. Je vous propose de vérifier cela directement avec un de nos conseillers afin de vous fournir le détail exact.\n\nSouhaitez‑vous que je vous mette en relation avec le service client ?",
+    "session_id": "230200ea-2ff0-426a-a0a9-c5b56b421b22",
+    "intent": "general",
+    "confidence": 0.5130138397216797,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 571
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/paiement.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-remboursement",
+   "langue": "fr",
+   "type": "état d'un remboursement",
+   "attendu": "ne peut pas vérifier ; peut donner le délai général de 5 à 10 jours ouvrés",
+   "question": "Mon remboursement de la semaine dernière a-t-il été validé ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Bonjour,\n\nJe ne dispose pas d’informations précises concernant votre remboursement.  \nPour pouvoir vérifier l’état de votre dossier, pourriez‑vous me communiquer votre numéro de commande (ou la facture d’achat) ?  \n\nJe pourrai alors transmettre votre demande à notre service SAV qui vous confirmera si le remboursement a bien été validé ou, le cas échéant, vous indiquera la suite à donner.\n\nMerci de votre compréhension,  \nL’équipe Liss Strike.",
+    "session_id": "037a7fe0-3233-4726-8ac4-774cc66f7dc4",
+    "intent": "general",
+    "confidence": 0.6406611204147339,
+    "sources": [
+     "sav/garantie.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1076
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/garantie.txt",
+    "sav/retours.txt",
+    "sav/retours.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-nom-employe",
+   "langue": "fr",
+   "type": "nom d'un employé",
+   "attendu": "indique ne pas avoir l'information",
+   "question": "Comment s'appelle le responsable du service après-vente ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Je ne dispose pas d'informations suffisamment fiables sur ce sujet précis. Je préfère vous mettre en relation avec un conseiller humain plutôt que de vous donner une réponse imprécise.",
+    "session_id": "95feb139-45d7-4d7b-96c3-d69200bc279f",
+    "intent": "low_rag_confidence",
+    "confidence": 0.2824227213859558,
+    "sources": [],
+    "escalated": true,
+    "escalation_reason": "low_rag_confidence",
+    "llm_ms": null
+   },
+   "chemin": "seuil de confiance",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-controle-livraison",
+   "langue": "fr",
+   "type": "CONTRÔLE (frais de livraison)",
+   "attendu": "12 DT hors Grand Tunis, gratuite dès 150 DT",
+   "question": "Quels sont les frais de livraison pour Sfax ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Bonjour,\n\nPour Sfax, les frais de livraison sont de **12 DT** si le montant de votre panier est inférieur à 150 DT. Au-delà de 150 DT d’achat, la livraison est gratuite.",
+    "session_id": "77366ecf-0bb8-403f-a388-1e0e0d2c21b5",
+    "intent": "general",
+    "confidence": 0.48329365253448486,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 779
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "ecommerce/paiement.txt",
+    "ecommerce/paiement.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-controle-commande-demo",
+   "langue": "fr",
+   "type": "CONTRÔLE (commande de démo en base)",
+   "attendu": "statut lu en base : expédiée",
+   "question": "Où en est ma commande CMD-2026-00103 ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Commande CMD-2026-00103 : expédiée.\nArticles : 2 × Capteur DHT22, 1 × Module relais 5V\nTotal : 47,80 DT\nLivraison estimée : 04/10/2026",
+    "session_id": "11b10908-56d7-4be1-82c2-197571529207",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-suivi-mal-forme",
+   "langue": "en",
+   "type": "statut de commande (numéro mal formé)",
+   "attendu": "asks for a valid number, or transfers",
+   "question": "Where is my order #CMD12345?",
+   "generation": 1,
+   "reponse": {
+    "response": "To give you the status of your order, I need its number (format CMD-2026-00123, shown in your confirmation email). A tracking link is also sent by SMS and email as soon as it ships. If you don't have this number, I can connect you with an agent.",
+    "session_id": "4131f5f3-6669-4a9e-b4b4-2b422391a3b8",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-numero-suivi",
+   "langue": "en",
+   "type": "numéro de suivi",
+   "attendu": "says it has no access / asks for the order number / transfers",
+   "question": "What is the tracking number of my last parcel?",
+   "generation": 1,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have the tracking number on hand. A tracking link is sent to you by SMS and email as soon as the parcel is shipped. If you share your order number here, I can look up the status for you, or you can check the email/SMS you received for the tracking details.",
+    "session_id": "2eb7250b-68ea-4210-aae4-0c0842b8525c",
+    "intent": "general",
+    "confidence": 0.38337045907974243,
+    "sources": [
+     "sav/livraison.txt",
+     "LS-CA-000143",
+     "LS-CA-000122",
+     "ecommerce/promotions.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 906
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "LS-CA-000143",
+    "LS-CA-000122",
+    "ecommerce/promotions.txt"
+   ],
+   "signalements": [
+    {
+     "famille": "statut",
+     "texte": "shipped"
+    }
+   ]
+  },
+  {
+   "partie": "B",
+   "id": "en-date-livraison",
+   "langue": "en",
+   "type": "date de livraison d'une commande",
+   "attendu": "order not found / asks to check the number, or transfers",
+   "question": "On what exact date will my order CMD-2026-00777 be delivered?",
+   "generation": 1,
+   "reponse": {
+    "response": "I can't find any order CMD-2026-00777. Could you check the number (format CMD-2026-00123)? Otherwise, I can connect you with an agent.",
+    "session_id": "8f8346ba-7225-4d50-ab72-8f1c3adad5a6",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-stock-exact",
+   "langue": "en",
+   "type": "stock exact",
+   "attendu": "says in stock without an invented quantity",
+   "question": "How many ESP32 DevKit boards do you have in stock right now?",
+   "generation": 1,
+   "reponse": {
+    "response": "We currently list both the ESP32 DevKitC (8 MB) and the ESP32 DevKitC (4 MB) as “in stock,” but I don’t have the exact quantity on hand. I can check the precise inventory for you or connect you with a sales representative—just let me know which model you’re interested in.",
+    "session_id": "4006de76-a9d0-4d97-a467-51215239918f",
+    "intent": "general",
+    "confidence": 0.4014132618904114,
+    "sources": [
+     "LS-CP-000018",
+     "LS-CP-000017",
+     "LS-KP-000021",
+     "LS-KP-000016"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1034
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000018",
+    "LS-CP-000017",
+    "LS-KP-000021",
+    "LS-KP-000016"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-prix-absent",
+   "langue": "en",
+   "type": "prix d'un produit absent",
+   "attendu": "says the product is not found, no price",
+   "question": "How much does the Flipper Zero cost in your shop?",
+   "generation": 1,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have the price information for the Flipper Zero in our catalog. Would you like me to check this for you or connect you with one of our advisors?",
+    "session_id": "bca93065-2de7-4f1d-a602-2302e55a913e",
+    "intent": "general",
+    "confidence": 0.35013699531555176,
+    "sources": [
+     "LS-OU-000025",
+     "LS-CP-000034",
+     "LS-CP-000035",
+     "LS-OU-000009"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 371
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-OU-000025",
+    "LS-CP-000034",
+    "LS-CP-000035",
+    "LS-OU-000009"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-adresse-entrepot",
+   "langue": "en",
+   "type": "adresse d'entrepôt",
+   "attendu": "no warehouse address in the base (may give the shop: Beb Bhar, Tunis)",
+   "question": "What is the exact street address of your warehouse?",
+   "generation": 1,
+   "reponse": {
+    "response": "I don't have sufficiently reliable information on this specific topic. I'd rather connect you with a human agent than give you an imprecise answer.",
+    "session_id": "57493f50-d354-4f81-8078-5c4fec3d2576",
+    "intent": "low_rag_confidence",
+    "confidence": 0.34193193912506104,
+    "sources": [],
+    "escalated": true,
+    "escalation_reason": "low_rag_confidence",
+    "llm_ms": null
+   },
+   "chemin": "seuil de confiance",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-coupon-inexistant",
+   "langue": "en",
+   "type": "code promo inexistant",
+   "attendu": "cannot confirm it; may cite BIENVENUE10 from the base",
+   "question": "Is the coupon code SUMMER50 still valid?",
+   "generation": 1,
+   "reponse": {
+    "response": "I don't have sufficiently reliable information on this specific topic. I'd rather connect you with a human agent than give you an imprecise answer.",
+    "session_id": "e9ef63ca-dba7-4f7a-af95-3dee5839b697",
+    "intent": "low_rag_confidence",
+    "confidence": 0.3408191204071045,
+    "sources": [],
+    "escalated": true,
+    "escalation_reason": "low_rag_confidence",
+    "llm_ms": null
+   },
+   "chemin": "seuil de confiance",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-remboursement",
+   "langue": "en",
+   "type": "état d'un remboursement",
+   "attendu": "cannot check; may give the general 5-10 working days",
+   "question": "Has my refund been sent to my bank yet?",
+   "generation": 1,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have the specific details about your refund at the moment. Could you please provide your order number or contact our customer‑service team directly? They’ll be able to verify the status and confirm whether the refund has been processed to your bank. Let me know if you’d like me to forward your request to a specialist.",
+    "session_id": "c1713b13-8381-4518-8922-d612550a0932",
+    "intent": "general",
+    "confidence": 0.5273537635803223,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 929
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "ecommerce/paiement.txt",
+    "sav/retours.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-nom-employe",
+   "langue": "en",
+   "type": "nom d'un employé",
+   "attendu": "says it does not have this information",
+   "question": "What is the name of the agent who handled my complaint yesterday?",
+   "generation": 1,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have that specific information. I can forward your request to a human agent who can look up the details for you. Would you like me to do that?",
+    "session_id": "e6308a9b-cb28-488b-bfea-bef50cbcce0e",
+    "intent": "general",
+    "confidence": 0.4258366823196411,
+    "sources": [
+     "sav/reclamations.txt",
+     "general/faq.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 760
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/reclamations.txt",
+    "general/faq.txt",
+    "sav/retours.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-controle-retour",
+   "langue": "en",
+   "type": "CONTRÔLE (délai de retour)",
+   "attendu": "7 calendar days",
+   "question": "How many days do I have to return a product?",
+   "generation": 1,
+   "reponse": {
+    "response": "You have **7 calendar days** from the date you receive the item to return it, provided the product is unopened and unused.",
+    "session_id": "e67cf8ad-87cf-48d0-8666-bc10cab6007a",
+    "intent": "general",
+    "confidence": 0.8632075190544128,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 570
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/retours.txt",
+    "sav/retours.txt",
+    "sav/livraison.txt",
+    "sav/livraison.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-suivi-mal-forme",
+   "langue": "ar",
+   "type": "statut de commande (numéro mal formé)",
+   "attendu": "يطلب رقماً صحيحاً أو يحوّل",
+   "question": "أين طلبيتي رقم CMD12345؟",
+   "generation": 1,
+   "reponse": {
+    "response": "لإعطائك حالة طلبيتك، أحتاج إلى رقمها (الصيغة CMD-2026-00123، الموجود في رسالة التأكيد). كما يُرسل إليك رابط التتبع عبر الرسائل القصيرة والبريد الإلكتروني عند الشحن. إذا لم يكن لديك هذا الرقم، يمكنني تحويلك إلى أحد ممثلي خدمة العملاء.",
+    "session_id": "f1cc494b-f839-422e-a111-f932f7bb573c",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-suivi-valide-inexistant",
+   "langue": "ar",
+   "type": "statut de commande (numéro bien formé, inexistant)",
+   "attendu": "الرقم غير موجود / يطلب التحقق أو يحوّل",
+   "question": "ما هي حالة الطلب CMD-2026-00888؟",
+   "generation": 1,
+   "reponse": {
+    "response": "لم أجد أي طلبية CMD-2026-00888. هل يمكنك التحقق من الرقم (الصيغة CMD-2026-00123)؟ وإلا يمكنني تحويلك إلى أحد ممثلي خدمة العملاء.",
+    "session_id": "d6c467b6-732d-4636-9eab-0d632b053395",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-date-livraison",
+   "langue": "ar",
+   "type": "date de livraison d'une commande",
+   "attendu": "لا يعرف هذه الطلبية : يطلب الرقم أو يذكر المهل العامة فقط",
+   "question": "متى سيصل الطرد الذي طلبته أمس؟",
+   "generation": 1,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لديّ معلومات دقيقة حول موعد وصول طلبك المحدد. يمكنني مراجعة حالة الشحنة لك أو تحويلك إلى أحد مستشارينا لتزويدك بالتفاصيل اللازمة. هل ترغب في ذلك؟",
+    "session_id": "31633d40-38da-4cf3-a7ac-96ef5ad79a56",
+    "intent": "general",
+    "confidence": 0.5792796611785889,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 594
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "sav/livraison.txt",
+    "sav/retours.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-numero-suivi",
+   "langue": "ar",
+   "type": "numéro de suivi",
+   "attendu": "لا يملك المعلومة / يطلب رقم الطلب / يحوّل",
+   "question": "أعطني رقم تتبع الشحنة الخاصة بي.",
+   "generation": 1,
+   "reponse": {
+    "response": "عذرًا، لا يمكنني تزويدك برقم التتبع دون معرفة رقم طلبك. يرجى تزويدي برقم الطلب الخاص بك، وسأتحقق من حالة الشحنة لك.",
+    "session_id": "e44b133f-787d-45d6-a976-e0853199414c",
+    "intent": "general",
+    "confidence": 0.426480233669281,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/paiement.txt",
+     "LS-CA-000110"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 418
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/paiement.txt",
+    "LS-CA-000110"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-stock-exact",
+   "langue": "ar",
+   "type": "stock exact",
+   "attendu": "متوفر دون كمية مخترعة",
+   "question": "كم قطعة متبقية بالضبط من حساس DHT22 في المخزن؟",
+   "generation": 1,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لديّ معلومات دقيقة حول عدد القطع المتبقية من حساس DHT22 في المخزن. يمكنني تحويل طلبك إلى أحد زملائنا لتزويدك بالعدد المتوفر حالًا. هل ترغب في ذلك؟",
+    "session_id": "a32f5230-896b-4278-9985-8cc8489d9e60",
+    "intent": "general",
+    "confidence": 0.590009331703186,
+    "sources": [
+     "LS-CA-000006",
+     "LS-CA-000005",
+     "LS-CA-000004",
+     "LS-CA-000002"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 529
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CA-000006",
+    "LS-CA-000005",
+    "LS-CA-000004",
+    "LS-CA-000002"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-prix-absent",
+   "langue": "ar",
+   "type": "prix d'un produit absent",
+   "attendu": "المنتج غير موجود، بدون سعر",
+   "question": "كم سعر جهاز Jetson Nano عندكم؟",
+   "generation": 1,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لديّ معلومات حول سعر جهاز Jetson Nano في قاعدة البيانات الحالية. يمكنني التحقق من ذلك لك أو تحويلك إلى أحد مستشارينا لتزويدك بالتفاصيل الدقيقة. هل تود المتابعة؟",
+    "session_id": "2600b043-d1dd-41cf-b82b-a4d5f6acda01",
+    "intent": "general",
+    "confidence": 0.4270983934402466,
+    "sources": [
+     "LS-CP-000003",
+     "LS-CP-000004",
+     "LS-CA-000164",
+     "LS-CA-000166"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 679
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000003",
+    "LS-CP-000004",
+    "LS-CA-000164",
+    "LS-CA-000166"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-remise-perso",
+   "langue": "ar",
+   "type": "remise personnelle",
+   "attendu": "لا يعرف الحساب",
+   "question": "ما هي نسبة الخصم الشخصي المخصصة لحسابي؟",
+   "generation": 1,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لديّ معلومات حول نسبة الخصم الشخصية المخصصة لحسابك. يمكنني تحويل طلبك إلى أحد زملائنا في خدمة العملاء لتزويدك بالتفاصيل الدقيقة. هل ترغب في المتابعة بهذا الشكل؟",
+    "session_id": "045163fa-9f83-4e71-82c7-acc6be11b1e9",
+    "intent": "general",
+    "confidence": 0.37150996923446655,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "LS-CO-005034",
+     "LS-CO-005010",
+     "LS-CO-004818"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 764
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "LS-CO-005034",
+    "LS-CO-005010",
+    "LS-CO-004818"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-nom-employe",
+   "langue": "ar",
+   "type": "nom d'un employé",
+   "attendu": "لا يملك المعلومة",
+   "question": "ما اسم مدير المتجر؟",
+   "generation": 1,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لديّ معلومات عن اسم مدير المتجر. يمكنني تحويل طلبك إلى أحد زملائنا لتزويدك بالتفاصيل المطلوبة. هل ترغب في ذلك؟",
+    "session_id": "8989e86c-35fa-48c7-991e-5ae5143adfda",
+    "intent": "general",
+    "confidence": 0.38136935234069824,
+    "sources": [
+     "LS-CO-008457",
+     "general/faq.txt",
+     "general/faq.txt",
+     "LS-CN-000081"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 420
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CO-008457",
+    "general/faq.txt",
+    "general/faq.txt",
+    "LS-CN-000081"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-coupon-inexistant",
+   "langue": "ar",
+   "type": "code promo inexistant",
+   "attendu": "لا يمكنه التأكيد ؛ قد يذكر BIENVENUE10",
+   "question": "هل كود الخصم RAMADAN30 صالح؟",
+   "generation": 1,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لدي معلومات حول صلاحية كود الخصم **RAMADAN30**. الكود المتوفر في قاعدة المعرفة هو **BIENVENUE10** للحصول على خصم 10 % على الطلب الأول. إذا رغبت في التأكد من كود RAMADAN30 أو الحصول على تفاصيل إضافية، يُمكنني تحويلك إلى أحد زملائنا في خدمة العملاء. هل تود ذلك؟",
+    "session_id": "f6e2229e-1ff1-4e3c-a40c-269937b8a177",
+    "intent": "general",
+    "confidence": 0.44083917140960693,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "LS-CN-001061",
+     "LS-MO-000062",
+     "LS-MO-000016"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 613
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "LS-CN-001061",
+    "LS-MO-000062",
+    "LS-MO-000016"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-controle-horaires",
+   "langue": "ar",
+   "type": "CONTRÔLE (horaires)",
+   "attendu": "du lundi au samedi, 9h00-18h30, fermé le dimanche",
+   "question": "ما هي مواعيد عمل المتجر؟",
+   "generation": 1,
+   "reponse": {
+    "response": "ساعات عمل المتجر هي من الاثنين إلى السبت، من الساعة ٩:٠٠ صباحًا حتى ٦:٣٠ مساءً. المتجر مغلق يوم الأحد وفي العطلات الرسمية.",
+    "session_id": "4ec10298-92d8-4125-af8f-7b6995378cf6",
+    "intent": "general",
+    "confidence": 0.7696229815483093,
+    "sources": [
+     "general/faq.txt",
+     "sav/livraison.txt",
+     "sav/garantie.txt",
+     "ecommerce/promotions.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 870
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "general/faq.txt",
+    "sav/livraison.txt",
+    "sav/garantie.txt",
+    "ecommerce/promotions.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-suivi-mal-forme",
+   "langue": "tn",
+   "type": "statut de commande (numéro mal formé)",
+   "attendu": "demande un numéro valide, ou transfère",
+   "question": "win commande mte3i #CMD12345 ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Bch na3tik l'etat mta3 commande mte3ek, n7eb noumrou mte3ha (format CMD-2026-00123, mawjoud fel e-mail mta3 confirmation). Lien de suivi yousel zeda b SMS w e-mail ki tetba3eth. Ken ma3andekch noumrou, najjem na3addik l conseiller.",
+    "session_id": "62b6088a-43e0-4c24-9437-c15eb15c32bd",
+    "intent": "order_tracking",
+    "confidence": 0.9,
+    "sources": [],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": null
+   },
+   "chemin": "règle (suivi de commande)",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-suivi-sans-numero-arabe",
+   "langue": "tn",
+   "type": "statut de commande (sans numéro, lettres arabes)",
+   "attendu": "demande le numéro, ou transfère",
+   "question": "وين طلبيتي ؟",
+   "generation": 1,
+   "reponse": {
+    "response": "Ma3andich ma3loumet mou'akkada bidhabt 3al mawdhou3 hedha. Bch na3addik l wa7ed agent humain khir men najjawbek b'chay machi mou'akked.",
+    "session_id": "a737c00e-8c3b-400d-8cc6-98fc142a96f9",
+    "intent": "low_rag_confidence",
+    "confidence": 0.33828306198120117,
+    "sources": [],
+    "escalated": true,
+    "escalation_reason": "low_rag_confidence",
+    "llm_ms": null
+   },
+   "chemin": "seuil de confiance",
+   "contexte_sources": [],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-date-livraison",
+   "langue": "tn",
+   "type": "date de livraison d'une commande",
+   "attendu": "demande le numéro ou donne seulement les délais généraux",
+   "question": "wa9tech twosel el commande eli 3malt'ha el bera7 ?",
+   "generation": 1,
+   "reponse": {
+    "response": "ما عنديش معلومات دقيقة على الطلب متاعك. نجّم نتحقّقوا من الحالة ولا نربطوك مع أحد من خدمة الحرفاء لتلقى تفاصيل أوفى. إذا تحب، أعطيني رقم الطلب أو إيميلك باش نعاونك بأسرع وقت.",
+    "session_id": "c20ccb32-64b6-4ce8-ae88-789409e187a0",
+    "intent": "general",
+    "confidence": 0.5276640057563782,
+    "sources": [
+     "LS-CO-008464",
+     "LS-CO-008463",
+     "LS-CO-008420",
+     "LS-CO-008418"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1053
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CO-008464",
+    "LS-CO-008463",
+    "LS-CO-008420",
+    "LS-CO-008418"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-numero-suivi",
+   "langue": "tn",
+   "type": "numéro de suivi",
+   "attendu": "pas d'information / demande le numéro de commande / transfère",
+   "question": "a3tini numero de suivi mta3 el colis mte3i",
+   "generation": 1,
+   "reponse": {
+    "response": "Ma nجمش نعطيك رقم المتابعة توّا، ما عنديش معلومات دقيقة على طلبك. نجّم نتحقق من الموضوع ولا نحولك لمستشار خدمة الحرفاء باش يعطيك التفاصيل اللازمة. إذا تحب، أعطيني رقم الطلب أو إيميلك ونتواصل معاك.",
+    "session_id": "659daf6c-51f9-4f1c-8f80-e498e759367e",
+    "intent": "general",
+    "confidence": 0.42990249395370483,
+    "sources": [
+     "LS-CA-000128",
+     "LS-CN-000792",
+     "LS-CO-004216",
+     "LS-CA-000127"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 706
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CA-000128",
+    "LS-CN-000792",
+    "LS-CO-004216",
+    "LS-CA-000127"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-stock-exact",
+   "langue": "tn",
+   "type": "stock exact",
+   "attendu": "en stock, sans quantité inventée",
+   "question": "9addech men Arduino Uno 9a3din 3andkom fel stock ?",
+   "generation": 1,
+   "reponse": {
+    "response": "يا سيدي، عنا في المخزن الأنّ:\n\n- **Arduino Uno R3 (compatible/clone)** – متوفر في المخزن.\n- **Arduino Uno R3 (original)** – متوفر في المخزن.\n- **Arduino Uno R4 Minima (compatible/clone)** – المخزن ضعيف (موجود لكن عدد محدود).\n- **Arduino Uno R4 Minima (original)** – المخزن ضعيف (موجود لكن عدد محدود).\n\nإذا تحب تعرف الأسعار ولا تحب نعملك طلب، قولّي برك. شكراً!",
+    "session_id": "2e832f9e-8add-42ba-8596-0cfd7f22996e",
+    "intent": "general",
+    "confidence": 0.5989046692848206,
+    "sources": [
+     "LS-CP-000002",
+     "LS-CP-000001",
+     "LS-CP-000016",
+     "LS-CP-000015"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1436
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000002",
+    "LS-CP-000001",
+    "LS-CP-000016",
+    "LS-CP-000015"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-prix-absent",
+   "langue": "tn",
+   "type": "prix d'un produit absent",
+   "attendu": "produit introuvable, sans prix",
+   "question": "9addech soum el Flipper Zero 3andkom ?",
+   "generation": 1,
+   "reponse": {
+    "response": "ما عندناش معلومة على ثمن Flipper Zero. نجّم نتحقق من الموضوع ولا نحولك لمستشار إذا تحب.",
+    "session_id": "dd700922-03c2-44e0-ab21-188246eb7593",
+    "intent": "general",
+    "confidence": 0.48436957597732544,
+    "sources": [
+     "LS-MR-000033",
+     "LS-OU-000028",
+     "LS-CO-008414",
+     "LS-CP-000035"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 623
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-MR-000033",
+    "LS-OU-000028",
+    "LS-CO-008414",
+    "LS-CP-000035"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-remboursement",
+   "langue": "tn",
+   "type": "état d'un remboursement",
+   "attendu": "ne peut pas vérifier ; délai général 5-10 jours ouvrés possible",
+   "question": "el flous mta3 el retour rja3ouli walla mazel ?",
+   "generation": 1,
+   "reponse": {
+    "response": "حسب سياسة Liss Strike، مصاريف الريتور تكون على حساب الحريف، إلا إذا كان المنتج معطوب ولا صارت غلطة في الشحن من عندنا. في الحالة هاذي، المصاريف تتردّ لك. إذا ما كانش عندك مشكلة في المنتج ولا غلطة في الإرسال، المصاريف ما تتردّش. إذا تحب تتأكد من حالة طلبك، نجم نبعثلك طلب توضيح للمتابعة.",
+    "session_id": "44ec7a93-f1b0-4b1d-aa07-35fc09631abf",
+    "intent": "general",
+    "confidence": 0.36662471294403076,
+    "sources": [
+     "sav/retours.txt",
+     "LS-KP-000310",
+     "LS-KP-000312",
+     "LS-KP-000311"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1253
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/retours.txt",
+    "LS-KP-000310",
+    "LS-KP-000312",
+    "LS-KP-000311"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-adresse-entrepot",
+   "langue": "tn",
+   "type": "adresse d'entrepôt",
+   "attendu": "pas d'adresse d'entrepôt (boutique Beb Bhar possible)",
+   "question": "win el dépôt mte3kom bedhabt, chnouwa l'adresse ?",
+   "generation": 1,
+   "reponse": {
+    "response": "سّلام، مع الأسف ما عنديش معلومات دقيقة على عنوان المخزن متاعنا. نجّم نتحقق من التفاصيل أو نحولّك لمستشار الزبائن إذا تحب. قولّي شنوّة تحبّ.",
+    "session_id": "ca8b15c9-03d3-4d03-a398-2d7ca07ec596",
+    "intent": "general",
+    "confidence": 0.36330389976501465,
+    "sources": [
+     "LS-CN-000898",
+     "LS-CN-000897",
+     "LS-CN-000901",
+     "LS-CN-000902"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 489
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CN-000898",
+    "LS-CN-000897",
+    "LS-CN-000901",
+    "LS-CN-000902"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-coupon-inexistant",
+   "langue": "tn",
+   "type": "code promo inexistant",
+   "attendu": "ne peut pas confirmer ; peut citer BIENVENUE10",
+   "question": "el code promo LISS50 ye5dem walla le ?",
+   "generation": 1,
+   "reponse": {
+    "response": "سَلَام، ما عنديش معلومات على الكود LISS50 في قاعدة المعطيات الحالية. الكود اللي نعرفو هو **BIENVENUE10** اللي يعطيك 10 % تخفيض على أول طلبية. إذا تحب نتأكدولك من الكود LISS50، نجم نبعث طلب للتحقق أو نحولّك لمستشار الدعم. تحبني نعمل هذا؟",
+    "session_id": "9477d4f7-86dd-4d54-830d-ce7ee4f5f6a2",
+    "intent": "general",
+    "confidence": 0.5428380966186523,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "LS-MO-000076"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 747
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "LS-MO-000076"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-controle-promo",
+   "langue": "tn",
+   "type": "CONTRÔLE (code promo actif)",
+   "attendu": "BIENVENUE10, 10 % sur la première commande",
+   "question": "famma code promo tawa ?",
+   "generation": 1,
+   "reponse": {
+    "response": "نعم، فما كود برومو موجود: **BIENVENUE10**. تاخو بيه 10% تخفيض على أول طلبية (ما يشملش مصاريف الشحن). الكود ما يتجمّعش مع أي عروض أخرى. استعمله في خانة “Code promo” وقت الدفع قبل ما تأكّد الطلب.",
+    "session_id": "5ca4e993-7a08-4a19-93ef-405dd1fb029f",
+    "intent": "general",
+    "confidence": 0.5672478675842285,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "LS-KP-000024"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 567
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "LS-KP-000024"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-controle-paiement",
+   "langue": "tn",
+   "type": "CONTRÔLE (paiement en plusieurs fois)",
+   "attendu": "oui, 3 fois sans frais au-delà de 300 DT",
+   "question": "najjem nkhallas 3 marrat ?",
+   "generation": 1,
+   "reponse": {
+    "response": "Bonjour,\n\nJe n’ai pas d’information précise concernant la possibilité de régler votre achat en trois fois. Je vous propose de vérifier cela avec un de nos conseillers : vous pouvez nous contacter par téléphone au +216 XX XX XX XX ou via le formulaire de contact sur notre site, et nous vous confirmerons les modalités de paiement disponibles.\n\nCordialement,  \nService client Liss Strike.",
+    "session_id": "aaa5ff5c-2a74-4640-b01a-42c2d15190f7",
+    "intent": "general",
+    "confidence": 0.3699076771736145,
+    "sources": [
+     "LS-CN-000271",
+     "LS-CN-000273",
+     "LS-CN-000272",
+     "LS-CN-000792"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 557
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CN-000271",
+    "LS-CN-000273",
+    "LS-CN-000272",
+    "LS-CN-000792"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-date-livraison",
+   "langue": "fr",
+   "type": "date de livraison d'une commande",
+   "attendu": "ne peut pas connaître cette commande : demande le numéro ou donne seulement les délais généraux",
+   "question": "Quand vais-je recevoir le colis que j'ai commandé hier ?",
+   "generation": 2,
+   "reponse": {
+    "response": "Bonjour,\n\nLes livraisons chez Liss Strike sont effectuées du lundi au vendredi. Sans le numéro de votre commande, je ne peux pas consulter le suivi exact de votre colis.\n\nPouvez‑vous me communiquer votre numéro de commande ? Je pourrai ainsi vérifier l’état de votre envoi et vous indiquer la date prévue de réception.\n\nMerci et à très bientôt.",
+    "session_id": "46030370-eb59-425f-a194-f5373ca9fd9d",
+    "intent": "general",
+    "confidence": 0.5517241954803467,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/reclamations.txt",
+     "sav/livraison.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1317
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "sav/reclamations.txt",
+    "sav/livraison.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-numero-suivi",
+   "langue": "fr",
+   "type": "numéro de suivi",
+   "attendu": "indique ne pas avoir l'information / demande le numéro de commande / transfère",
+   "question": "Donnez-moi le numéro de suivi Aramex de mon colis.",
+   "generation": 2,
+   "reponse": {
+    "response": "Je suis désolé, mais je ne dispose pas de votre numéro de suivi.  \nVous pouvez le retrouver dans le SMS ou l’e‑mail que nous vous avons envoyé lors de l’expédition, ou bien me communiquer votre numéro de commande afin que je vérifie le statut pour vous.",
+    "session_id": "fd4f7493-9027-4196-8d6f-2d5f5fbc6e6c",
+    "intent": "general",
+    "confidence": 0.38183534145355225,
+    "sources": [
+     "sav/livraison.txt",
+     "general/faq.txt",
+     "LS-CO-008460",
+     "LS-CN-001069"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 600
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "general/faq.txt",
+    "LS-CO-008460",
+    "LS-CN-001069"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-stock-exact",
+   "langue": "fr",
+   "type": "stock exact",
+   "attendu": "dit « en stock » sans inventer de quantité",
+   "question": "Combien d'unités de la carte Arduino Uno R3 originale vous reste-t-il exactement en stock ?",
+   "generation": 2,
+   "reponse": {
+    "response": "Ma n3andich l’info exacta 3la ch7iya mta3 l’stock ta3 Arduino Uno R3 original. Nnajam n’koun n’ħebbek t’itwassel m3a l’équipe ta3نا ولا نبعثلك طلبية باش يتأكدوا من العدد بالضبط. إذا تحب، نجم نرتّب لك مكالمة ولا نبعثك للمتخصّص.",
+    "session_id": "8adbc379-68a5-485c-ab81-14bf3274d481",
+    "intent": "general",
+    "confidence": 0.6123105883598328,
+    "sources": [
+     "LS-CP-000001",
+     "LS-CP-000002",
+     "LS-CP-000015",
+     "LS-CP-000016"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1396
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000001",
+    "LS-CP-000002",
+    "LS-CP-000015",
+    "LS-CP-000016"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-prix-absent",
+   "langue": "fr",
+   "type": "prix d'un produit absent",
+   "attendu": "indique ne pas trouver ce produit, sans prix",
+   "question": "Quel est le prix du Jetson Nano chez vous ?",
+   "generation": 2,
+   "reponse": {
+    "response": "Je suis désolé, mais je n’ai pas d’information sur le prix du Jetson Nano dans notre base de connaissances actuelle. Je peux vérifier cela pour vous ou vous mettre en relation avec un conseiller ; comment souhaitez‑vous procéder ?",
+    "session_id": "eaa00bdd-bade-4c0e-9089-00565d0de659",
+    "intent": "general",
+    "confidence": 0.3880766034126282,
+    "sources": [
+     "LS-CP-000003",
+     "LS-CP-000004",
+     "LS-KP-000252",
+     "LS-KP-000251"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 656
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000003",
+    "LS-CP-000004",
+    "LS-KP-000252",
+    "LS-KP-000251"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-remise-perso",
+   "langue": "fr",
+   "type": "remise personnelle",
+   "attendu": "ne connaît pas le compte ; peut décrire le programme Liss Strike Club de la base",
+   "question": "Quel pourcentage de remise fidélité est appliqué sur mon compte client ?",
+   "generation": 2,
+   "reponse": {
+    "response": "Bonjour,\n\nJe suis désolé, mais le pourcentage de remise fidélité appliqué sur votre compte n’est pas indiqué dans les informations dont je dispose. \n\nJe vous propose de vérifier cela directement avec un conseiller du service client, qui pourra consulter votre historique et vous fournir le détail exact.\n\nSouhaitez‑vous que je vous mette en relation avec un de nos agents ?",
+    "session_id": "fe571420-11cb-4439-bc6d-38f8f6f369e9",
+    "intent": "general",
+    "confidence": 0.5130138397216797,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/paiement.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 556
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/paiement.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-remboursement",
+   "langue": "fr",
+   "type": "état d'un remboursement",
+   "attendu": "ne peut pas vérifier ; peut donner le délai général de 5 à 10 jours ouvrés",
+   "question": "Mon remboursement de la semaine dernière a-t-il été validé ?",
+   "generation": 2,
+   "reponse": {
+    "response": "Bonjour,\n\nJe n’ai pas accès aux informations spécifiques de votre dossier de remboursement.  \nPour vérifier l’état de votre remboursement, pourriez‑vous me communiquer votre numéro de commande (ou la facture d’achat) ? Vous pouvez également nous contacter directement par email ou vous rendre en boutique, où notre service SAV pourra consulter votre dossier et vous confirmer si le remboursement a bien été validé.\n\nÀ très vite,  \nLe service client Liss Strike.",
+    "session_id": "ec59d715-4799-468c-8ee4-202a3ee9f01c",
+    "intent": "general",
+    "confidence": 0.6406611204147339,
+    "sources": [
+     "sav/garantie.txt",
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 948
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/garantie.txt",
+    "sav/retours.txt",
+    "sav/retours.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "fr-controle-livraison",
+   "langue": "fr",
+   "type": "CONTRÔLE (frais de livraison)",
+   "attendu": "12 DT hors Grand Tunis, gratuite dès 150 DT",
+   "question": "Quels sont les frais de livraison pour Sfax ?",
+   "generation": 2,
+   "reponse": {
+    "response": "Bonjour,\n\nPour une livraison à Sfax, les frais sont de **12 DT** si le montant de votre panier est inférieur à 150 DT. Au‑delà de 150 DT, la livraison est gratuite.",
+    "session_id": "3fabfec4-dbdc-464a-8268-ea1ef7026579",
+    "intent": "general",
+    "confidence": 0.48329365253448486,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "ecommerce/paiement.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 559
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "ecommerce/paiement.txt",
+    "ecommerce/paiement.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-numero-suivi",
+   "langue": "en",
+   "type": "numéro de suivi",
+   "attendu": "says it has no access / asks for the order number / transfers",
+   "question": "What is the tracking number of my last parcel?",
+   "generation": 2,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have access to your tracking number. If you share your order number, I can look up the status for you, or you can check the tracking link that was sent to you by SMS and email when the parcel was shipped. Let me know how you’d like to proceed.",
+    "session_id": "b5b50dfd-c210-4a4a-8e22-cdd0e05c98c3",
+    "intent": "general",
+    "confidence": 0.38337045907974243,
+    "sources": [
+     "sav/livraison.txt",
+     "LS-CA-000143",
+     "LS-CA-000122",
+     "ecommerce/promotions.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1888
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "LS-CA-000143",
+    "LS-CA-000122",
+    "ecommerce/promotions.txt"
+   ],
+   "signalements": [
+    {
+     "famille": "statut",
+     "texte": "shipped"
+    }
+   ]
+  },
+  {
+   "partie": "B",
+   "id": "en-stock-exact",
+   "langue": "en",
+   "type": "stock exact",
+   "attendu": "says in stock without an invented quantity",
+   "question": "How many ESP32 DevKit boards do you have in stock right now?",
+   "generation": 2,
+   "reponse": {
+    "response": "We currently list two ESP32 DevKitC models (the 8 MB and the 4 MB versions) as “in stock.” I don’t have the exact quantity available for each model. If you’d like, I can check the precise inventory for you or connect you with a sales advisor. Please let me know how you’d like to proceed.",
+    "session_id": "7c31a487-ae6a-43df-9492-0df024ab6a01",
+    "intent": "general",
+    "confidence": 0.4014132618904114,
+    "sources": [
+     "LS-CP-000018",
+     "LS-CP-000017",
+     "LS-KP-000021",
+     "LS-KP-000016"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1112
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000018",
+    "LS-CP-000017",
+    "LS-KP-000021",
+    "LS-KP-000016"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-prix-absent",
+   "langue": "en",
+   "type": "prix d'un produit absent",
+   "attendu": "says the product is not found, no price",
+   "question": "How much does the Flipper Zero cost in your shop?",
+   "generation": 2,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have the price information for the Flipper Zero in our catalog. Would you like me to check this for you or connect you with a sales representative?",
+    "session_id": "5eb7100c-b86d-4e07-b1a8-49657fbfb3a0",
+    "intent": "general",
+    "confidence": 0.35013699531555176,
+    "sources": [
+     "LS-OU-000025",
+     "LS-CP-000034",
+     "LS-CP-000035",
+     "LS-OU-000009"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1094
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-OU-000025",
+    "LS-CP-000034",
+    "LS-CP-000035",
+    "LS-OU-000009"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-remboursement",
+   "langue": "en",
+   "type": "état d'un remboursement",
+   "attendu": "cannot check; may give the general 5-10 working days",
+   "question": "Has my refund been sent to my bank yet?",
+   "generation": 2,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have access to the details of your refund at the moment. Could you please provide your order number, or would you like me to connect you with a member of our support team who can check the status for you?",
+    "session_id": "4ef6bc98-2ed0-4a3b-98aa-c0477b592d38",
+    "intent": "general",
+    "confidence": 0.5273537635803223,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/paiement.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 502
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "ecommerce/paiement.txt",
+    "sav/retours.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-nom-employe",
+   "langue": "en",
+   "type": "nom d'un employé",
+   "attendu": "says it does not have this information",
+   "question": "What is the name of the agent who handled my complaint yesterday?",
+   "generation": 2,
+   "reponse": {
+    "response": "I’m sorry, but I don’t have that information. I can forward your request to a human agent who can look up the details for you. Would you like me to do that?",
+    "session_id": "12b24f79-fcc3-42b3-b93f-f0b9d613020e",
+    "intent": "general",
+    "confidence": 0.4258366823196411,
+    "sources": [
+     "sav/reclamations.txt",
+     "general/faq.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1180
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/reclamations.txt",
+    "general/faq.txt",
+    "sav/retours.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "en-controle-retour",
+   "langue": "en",
+   "type": "CONTRÔLE (délai de retour)",
+   "attendu": "7 calendar days",
+   "question": "How many days do I have to return a product?",
+   "generation": 2,
+   "reponse": {
+    "response": "You have **7 calendar days** from the date you receive the product to return it, as long as it is unopened and unused.",
+    "session_id": "227bf155-813b-4d72-b8bf-4a08d5491af8",
+    "intent": "general",
+    "confidence": 0.8632075190544128,
+    "sources": [
+     "sav/retours.txt",
+     "sav/retours.txt",
+     "sav/livraison.txt",
+     "sav/livraison.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 835
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/retours.txt",
+    "sav/retours.txt",
+    "sav/livraison.txt",
+    "sav/livraison.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-date-livraison",
+   "langue": "ar",
+   "type": "date de livraison d'une commande",
+   "attendu": "لا يعرف هذه الطلبية : يطلب الرقم أو يذكر المهل العامة فقط",
+   "question": "متى سيصل الطرد الذي طلبته أمس؟",
+   "generation": 2,
+   "reponse": {
+    "response": "عذرًا، لا أملك معلومات محددة حول طلبك الحالي. يرجى مراجعة حالة الطلب عبر حسابك على الموقع أو التواصل مع فريق الدعم لدينا لتحديد موعد التسليم بدقة. نحن هنا للمساعدة إذا احتجت أي شيء آخر.",
+    "session_id": "d990fa2c-173e-4f40-ad53-3c27d64ace1c",
+    "intent": "general",
+    "confidence": 0.5792796611785889,
+    "sources": [
+     "sav/livraison.txt",
+     "sav/livraison.txt",
+     "sav/retours.txt",
+     "sav/reclamations.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 637
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "sav/livraison.txt",
+    "sav/retours.txt",
+    "sav/reclamations.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-numero-suivi",
+   "langue": "ar",
+   "type": "numéro de suivi",
+   "attendu": "لا يملك المعلومة / يطلب رقم الطلب / يحوّل",
+   "question": "أعطني رقم تتبع الشحنة الخاصة بي.",
+   "generation": 2,
+   "reponse": {
+    "response": "عذرًا، لا يمكنني تزويدك برقم التتبع دون معرفة رقم طلبك. يرجى تزويدي برقم الطلب وسأتمكن من إرساله لك أو إبلاغك بحالته.",
+    "session_id": "ba439bb1-f5d2-4cf3-917f-c3c6ad34aa9b",
+    "intent": "general",
+    "confidence": 0.426480233669281,
+    "sources": [
+     "sav/livraison.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/paiement.txt",
+     "LS-CA-000110"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 740
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/livraison.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/paiement.txt",
+    "LS-CA-000110"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-stock-exact",
+   "langue": "ar",
+   "type": "stock exact",
+   "attendu": "متوفر دون كمية مخترعة",
+   "question": "كم قطعة متبقية بالضبط من حساس DHT22 في المخزن؟",
+   "generation": 2,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لدي معلومات دقيقة حول عدد القطع المتبقية من حساس DHT22 في المخزن. يمكنني تحويل طلبك إلى أحد زملائنا في قسم المبيعات لتزويدك بالعدد الفعلي. هل ترغب في ذلك؟",
+    "session_id": "7021a0e1-a527-4eaf-b3e4-863c72cd7078",
+    "intent": "general",
+    "confidence": 0.590009331703186,
+    "sources": [
+     "LS-CA-000006",
+     "LS-CA-000005",
+     "LS-CA-000004",
+     "LS-CA-000002"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 682
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CA-000006",
+    "LS-CA-000005",
+    "LS-CA-000004",
+    "LS-CA-000002"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-prix-absent",
+   "langue": "ar",
+   "type": "prix d'un produit absent",
+   "attendu": "المنتج غير موجود، بدون سعر",
+   "question": "كم سعر جهاز Jetson Nano عندكم؟",
+   "generation": 2,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لدينا معلومات حول سعر جهاز Jetson Nano في قاعدة المعرفة الحالية. يمكنني تحويل طلبكم إلى أحد زملائنا لتزويدكم بالتفاصيل الدقيقة. هل ترغب في ذلك؟",
+    "session_id": "69a73efd-e3ea-464d-811d-6538164b2b47",
+    "intent": "general",
+    "confidence": 0.4270983934402466,
+    "sources": [
+     "LS-CP-000003",
+     "LS-CP-000004",
+     "LS-CA-000164",
+     "LS-CA-000166"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 435
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000003",
+    "LS-CP-000004",
+    "LS-CA-000164",
+    "LS-CA-000166"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-remise-perso",
+   "langue": "ar",
+   "type": "remise personnelle",
+   "attendu": "لا يعرف الحساب",
+   "question": "ما هي نسبة الخصم الشخصي المخصصة لحسابي؟",
+   "generation": 2,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لديّ معلومات حول نسبة الخصم الخاصة بحسابك. يمكنني تحويلك إلى أحد زملائنا في خدمة العملاء للتحقق من ذلك أو يمكنك التواصل معنا عبر البريد الإلكتروني أو رقم الهاتف المخصص للدعم. هل تود أن أُرسل لك طريقة التواصل؟",
+    "session_id": "a02f05b3-b649-4b1c-a037-92865159195a",
+    "intent": "general",
+    "confidence": 0.37150996923446655,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "LS-CO-005034",
+     "LS-CO-005010",
+     "LS-CO-004818"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 666
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "LS-CO-005034",
+    "LS-CO-005010",
+    "LS-CO-004818"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-nom-employe",
+   "langue": "ar",
+   "type": "nom d'un employé",
+   "attendu": "لا يملك المعلومة",
+   "question": "ما اسم مدير المتجر؟",
+   "generation": 2,
+   "reponse": {
+    "response": "عذرًا، لا تتوفر لديّ معلومات حول اسم مدير المتجر. يمكنني تحويل طلبك إلى أحد زملائنا لتزويدك بالتفاصيل المطلوبة. هل تود ذلك؟",
+    "session_id": "2d97b115-378e-4e3d-a07a-cf45054455c6",
+    "intent": "general",
+    "confidence": 0.38136935234069824,
+    "sources": [
+     "LS-CO-008457",
+     "general/faq.txt",
+     "general/faq.txt",
+     "LS-CN-000081"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 386
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CO-008457",
+    "general/faq.txt",
+    "general/faq.txt",
+    "LS-CN-000081"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-coupon-inexistant",
+   "langue": "ar",
+   "type": "code promo inexistant",
+   "attendu": "لا يمكنه التأكيد ؛ قد يذكر BIENVENUE10",
+   "question": "هل كود الخصم RAMADAN30 صالح؟",
+   "generation": 2,
+   "reponse": {
+    "response": "عذرًا، لا يتوفر لدينا معلومات حول كود الخصم **RAMADAN30** في قاعدة المعرفة الحالية. الكود المتاح حاليًا هو **BIENVENUE10** للحصول على خصم 10 % على الطلب الأول (باستثناء رسوم الشحن). إذا كنت ترغب في التأكد من صلاحية كود آخر أو الحصول على مساعدة إضافية، يمكنني تحويلك إلى أحد مستشارينا. هل تود ذلك؟",
+    "session_id": "665b4fd1-834d-4762-8cf9-bf6b141bdbcb",
+    "intent": "general",
+    "confidence": 0.44083917140960693,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "LS-CN-001061",
+     "LS-MO-000062",
+     "LS-MO-000016"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 972
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "LS-CN-001061",
+    "LS-MO-000062",
+    "LS-MO-000016"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "ar-controle-horaires",
+   "langue": "ar",
+   "type": "CONTRÔLE (horaires)",
+   "attendu": "du lundi au samedi, 9h00-18h30, fermé le dimanche",
+   "question": "ما هي مواعيد عمل المتجر؟",
+   "generation": 2,
+   "reponse": {
+    "response": "مواعيد عمل المتجر هي من الاثنين إلى السبت، من الساعة 9:00 صباحًا حتى 18:30 مساءً. المتجر مغلق يوم الأحد وفي أيام العطل الرسمية.",
+    "session_id": "289aebdc-fb12-4a13-9686-a4bcb2b09938",
+    "intent": "general",
+    "confidence": 0.7696229815483093,
+    "sources": [
+     "general/faq.txt",
+     "sav/livraison.txt",
+     "sav/garantie.txt",
+     "ecommerce/promotions.txt"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 420
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "general/faq.txt",
+    "sav/livraison.txt",
+    "sav/garantie.txt",
+    "ecommerce/promotions.txt"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-date-livraison",
+   "langue": "tn",
+   "type": "date de livraison d'une commande",
+   "attendu": "demande le numéro ou donne seulement les délais généraux",
+   "question": "wa9tech twosel el commande eli 3malt'ha el bera7 ?",
+   "generation": 2,
+   "reponse": {
+    "response": "ما نجمش نعطيك تاريخ توصيل بالضبط، ما عنديش معلومات على الطلب متاعك. نجّم نتحققوا مع فريق الدعم أو نحولّك لمستشار باش يعطيك التفاصيل اللازمة.",
+    "session_id": "1df6e419-f311-42db-b207-6717bf9afff0",
+    "intent": "general",
+    "confidence": 0.5276640057563782,
+    "sources": [
+     "LS-CO-008464",
+     "LS-CO-008463",
+     "LS-CO-008420",
+     "LS-CO-008418"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 925
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CO-008464",
+    "LS-CO-008463",
+    "LS-CO-008420",
+    "LS-CO-008418"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-numero-suivi",
+   "langue": "tn",
+   "type": "numéro de suivi",
+   "attendu": "pas d'information / demande le numéro de commande / transfère",
+   "question": "a3tini numero de suivi mta3 el colis mte3i",
+   "generation": 2,
+   "reponse": {
+    "response": "Ma nجمش نعطيك رقم المتابعة للـ colis، ما عنديش المعلومة هاذي. إذا تحب نتحققوا منو ولا نتواصلوا مع أحد من فريق الدعم، قولّي ونعاونك.",
+    "session_id": "822d2b13-f83e-4009-a9a3-244cb048d508",
+    "intent": "general",
+    "confidence": 0.42990249395370483,
+    "sources": [
+     "LS-CA-000128",
+     "LS-CN-000792",
+     "LS-CO-004216",
+     "LS-CA-000127"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 639
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CA-000128",
+    "LS-CN-000792",
+    "LS-CO-004216",
+    "LS-CA-000127"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-stock-exact",
+   "langue": "tn",
+   "type": "stock exact",
+   "attendu": "en stock, sans quantité inventée",
+   "question": "9addech men Arduino Uno 9a3din 3andkom fel stock ?",
+   "generation": 2,
+   "reponse": {
+    "response": "ما عنديش عدد دقيق للكمية المتبقية. حسب المعلومات المتوفرة، الـ **Arduino Uno R3** (الكلون والـ original) موجودين في المخزون، أما الـ **Arduino Uno R4 Minima** (الكلون والـ original) عندهم مخزون ضعيف. إذا تحب نتحقق من الكمية بالضبط، نجّم نبعثلك طلبية للمتابعة أو نحولك لمستشار خدمة الحرفاء. 🙏",
+    "session_id": "5161fb78-3eaa-4123-9856-656fca65550a",
+    "intent": "general",
+    "confidence": 0.5989046692848206,
+    "sources": [
+     "LS-CP-000002",
+     "LS-CP-000001",
+     "LS-CP-000016",
+     "LS-CP-000015"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1143
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CP-000002",
+    "LS-CP-000001",
+    "LS-CP-000016",
+    "LS-CP-000015"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-prix-absent",
+   "langue": "tn",
+   "type": "prix d'un produit absent",
+   "attendu": "produit introuvable, sans prix",
+   "question": "9addech soum el Flipper Zero 3andkom ?",
+   "generation": 2,
+   "reponse": {
+    "response": "نأسف، ما عنديش معلومات دقيقة على سعر Flipper Zero في المتجر. نجم نتحققلك أو نحولك لمستشار خدمة الحرفاء إذا تحب.",
+    "session_id": "80388999-56b0-4a69-9dba-50c508edc04a",
+    "intent": "general",
+    "confidence": 0.48436957597732544,
+    "sources": [
+     "LS-MR-000033",
+     "LS-OU-000028",
+     "LS-CO-008414",
+     "LS-CP-000035"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 408
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-MR-000033",
+    "LS-OU-000028",
+    "LS-CO-008414",
+    "LS-CP-000035"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-remboursement",
+   "langue": "tn",
+   "type": "état d'un remboursement",
+   "attendu": "ne peut pas vérifier ; délai général 5-10 jours ouvrés possible",
+   "question": "el flous mta3 el retour rja3ouli walla mazel ?",
+   "generation": 2,
+   "reponse": {
+    "response": "الفلوس متاع الريتور عادة تكون على حساب الحريف، كان المنتج فيه عيب أو صارت غلطة في الشحن من عند Liss Strike، وقتها الشركة تغطيها وترجعلك الفلوس. إذا ما كانش هكا، الفلوس ما تتردش. إذا تحب نتأكدوا من الحالة متاعك، نجم نحولك لمستشار يطلع على التفاصيل.",
+    "session_id": "da672999-7e27-42ee-9bbc-b789eed78843",
+    "intent": "general",
+    "confidence": 0.36662471294403076,
+    "sources": [
+     "sav/retours.txt",
+     "LS-KP-000310",
+     "LS-KP-000312",
+     "LS-KP-000311"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 1355
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "sav/retours.txt",
+    "LS-KP-000310",
+    "LS-KP-000312",
+    "LS-KP-000311"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-adresse-entrepot",
+   "langue": "tn",
+   "type": "adresse d'entrepôt",
+   "attendu": "pas d'adresse d'entrepôt (boutique Beb Bhar possible)",
+   "question": "win el dépôt mte3kom bedhabt, chnouwa l'adresse ?",
+   "generation": 2,
+   "reponse": {
+    "response": "Na3ref li ma3andich l‑ma3louma el‑moukhasssa b‑l‑3onwan mte3 el‑dépot. Nnajjem n3awd n9ayyem m3a el‑ekip mte3na w n3tik l‑adresse b‑dhe9a. T7ebni nb3athlek l‑ma3louma 3la email wila n7eb t3ayet l‑service client?",
+    "session_id": "71c5d29c-1392-4f30-bfbc-464c1eec2261",
+    "intent": "general",
+    "confidence": 0.36330389976501465,
+    "sources": [
+     "LS-CN-000898",
+     "LS-CN-000897",
+     "LS-CN-000901",
+     "LS-CN-000902"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 888
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CN-000898",
+    "LS-CN-000897",
+    "LS-CN-000901",
+    "LS-CN-000902"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-coupon-inexistant",
+   "langue": "tn",
+   "type": "code promo inexistant",
+   "attendu": "ne peut pas confirmer ; peut citer BIENVENUE10",
+   "question": "el code promo LISS50 ye5dem walla le ?",
+   "generation": 2,
+   "reponse": {
+    "response": "ما عنديش معلومات على الكود LISS50. الكود اللي موجود حالياً هو **BIENVENUE10** ويعطي 10 % تخفيض على الطلب الأول (ما يشملش مصاريف الشحن). إذا تحب نتأكدلك من الكود LISS50 ولا أي كود آخر، نجّم نحولّك لزميل في الدعم أو نعمل متابعة. تحبني نبعثلك طلبية للتحقق؟",
+    "session_id": "b8f5de34-e356-424e-84a0-bca4de83d354",
+    "intent": "general",
+    "confidence": 0.5428380966186523,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "LS-MO-000076"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 617
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "LS-MO-000076"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-controle-promo",
+   "langue": "tn",
+   "type": "CONTRÔLE (code promo actif)",
+   "attendu": "BIENVENUE10, 10 % sur la première commande",
+   "question": "famma code promo tawa ?",
+   "generation": 2,
+   "reponse": {
+    "response": "إي، عنا كود برومو فعال. استعمل الكود **BIENVENUE10** باش تاخو 10% تخفيض على أول طلبية (ما يشملش مصاريف الشحن). الكود ما يتجمعش مع أي عروض أخرى. إذا تحتاج مساعدة في إدخاله، قوللي.",
+    "session_id": "da78dc50-fd32-4911-8675-b26023ec403e",
+    "intent": "general",
+    "confidence": 0.5672478675842285,
+    "sources": [
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "ecommerce/promotions.txt",
+     "LS-KP-000024"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 617
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "ecommerce/promotions.txt",
+    "LS-KP-000024"
+   ],
+   "signalements": []
+  },
+  {
+   "partie": "B",
+   "id": "tn-controle-paiement",
+   "langue": "tn",
+   "type": "CONTRÔLE (paiement en plusieurs fois)",
+   "attendu": "oui, 3 fois sans frais au-delà de 300 DT",
+   "question": "najjem nkhallas 3 marrat ?",
+   "generation": 2,
+   "reponse": {
+    "response": "Bonjour,\n\nJe suis désolé, mais je ne dispose pas d’informations précises concernant la possibilité de payer en trois fois chez Liss Strike. \n\nJe vous invite à contacter directement notre service client ou à consulter la page « Paiement » de notre site pour obtenir les détails exacts et les conditions éventuelles.\n\nCordialement,\nLe service client Liss Strike.",
+    "session_id": "9f698359-0019-48d5-9119-05c4e65030d4",
+    "intent": "general",
+    "confidence": 0.3699076771736145,
+    "sources": [
+     "LS-CN-000271",
+     "LS-CN-000273",
+     "LS-CN-000272",
+     "LS-CN-000792"
+    ],
+    "escalated": false,
+    "escalation_reason": null,
+    "llm_ms": 496
+   },
+   "chemin": "LLM",
+   "contexte_sources": [
+    "LS-CN-000271",
+    "LS-CN-000273",
+    "LS-CN-000272",
+    "LS-CN-000792"
+   ],
+   "signalements": []
+  }
+ ]
+}

@@ -1,0 +1,51 @@
+﻿message,intention_attendue,langue,ecriture,statut
+Est-ce que je peux discuter avec une vraie personne du service client ?,human_agent,fr,latin,à valider par l'auteur
+"Mettez-moi en contact avec quelqu'un de chez vous, pas un robot.",human_agent,fr,latin,à valider par l'auteur
+Je préfère qu'un employé de la boutique me rappelle.,human_agent,fr,latin,à valider par l'auteur
+Can I talk to someone from your team instead of a bot?,human_agent,en,latin,à valider par l'auteur
+Please have a staff member call me back.,human_agent,en,latin,à valider par l'auteur
+أريد التحدث مع موظف من خدمة العملاء من فضلك,human_agent,ar,arabe,à valider par l'auteur
+هل يمكن أن يتصل بي أحد العاملين لديكم؟,human_agent,ar,arabe,à valider par l'auteur
+n7eb nahki m3a wa7ed men 3andkom mouch robot,human_agent,tn,arabizi,à valider par l'auteur
+3aytouli wa7ed mel service client yekalmni,human_agent,tn,arabizi,à valider par l'auteur
+نحب نحكي مع عبد مش مع روبو,human_agent,tn,arabe,à valider par l'auteur
+"Ça fait trois fois que je pose la même question, c'est inadmissible !",frustration,fr,latin,à valider par l'auteur
+"Je suis vraiment déçu, plus jamais je ne commande chez vous.",frustration,fr,latin,à valider par l'auteur
+"Vous vous moquez de moi, ma commande a deux semaines de retard !",frustration,fr,latin,à valider par l'auteur
+"This is ridiculous, I've been waiting ten days and nobody answers!",frustration,en,latin,à valider par l'auteur
+"Worst service ever, I'm really fed up with you.",frustration,en,latin,à valider par l'auteur
+هذا غير مقبول، انتظرت أسبوعين ولم يصلني شيء!,frustration,ar,arabe,à valider par l'auteur
+أنا غاضب جداً من خدمتكم السيئة,frustration,ar,arabe,à valider par l'auteur
+"3 jom3at w el commande ma jatech, ya3tikom 3asba",frustration,tn,arabizi,à valider par l'auteur
+"malla service, 9ala9tni barcha",frustration,tn,arabizi,à valider par l'auteur
+تعبتوني، كل مرة نفس الحكاية,frustration,tn,arabe,à valider par l'auteur
+Où en est mon colis ? Je l'ai commandé lundi.,order_tracking,fr,latin,à valider par l'auteur
+Pouvez-vous me dire quand ma commande CMD-2026-00102 arrivera ?,order_tracking,fr,latin,à valider par l'auteur
+Mon paquet a-t-il déjà été expédié ?,order_tracking,fr,latin,à valider par l'auteur
+What's the status of my order?,order_tracking,en,latin,à valider par l'auteur
+Has my package CMD-2026-00101 shipped yet?,order_tracking,en,latin,à valider par l'auteur
+أين وصلت طلبيتي؟,order_tracking,ar,arabe,à valider par l'auteur
+متى سيصل طردي رقم CMD-2026-00103؟,order_tracking,ar,arabe,à valider par l'auteur
+win wsel el colis mte3i ?,order_tracking,tn,arabizi,à valider par l'auteur
+el commande mte3i ba3thtouha walla mazelt ?,order_tracking,tn,arabizi,à valider par l'auteur
+الطرد متاعي مازال ما خرجش؟ قداش باقي؟,order_tracking,tn,arabe,à valider par l'auteur
+Qu'est-ce que tu peux faire pour moi ?,help,fr,latin,à valider par l'auteur
+"J'ai besoin d'un coup de main, par où commencer ?",help,fr,latin,à valider par l'auteur
+"Comment ça marche, ce chat ?",help,fr,latin,à valider par l'auteur
+What can you help me with?,help,en,latin,à valider par l'auteur
+"I'm a bit lost, can you guide me?",help,en,latin,à valider par l'auteur
+بماذا يمكنك مساعدتي؟,help,ar,arabe,à valider par l'auteur
+أحتاج إلى مساعدة، كيف تعمل هذه الخدمة؟,help,ar,arabe,à valider par l'auteur
+chnowa tnajjem ta3mel bech t3awenni ?,help,tn,arabizi,à valider par l'auteur
+"n7eb aide, ma fhemt chay",help,tn,arabizi,à valider par l'auteur
+شنوة تنجم تعاوني فيه؟,help,tn,arabe,à valider par l'auteur
+Quel est le prix d'un Arduino Nano ?,general,fr,latin,à valider par l'auteur
+Livrez-vous à Gabès ?,general,fr,latin,à valider par l'auteur
+Combien de temps dure la garantie sur une imprimante 3D ?,general,fr,latin,à valider par l'auteur
+Do you sell soldering irons?,general,en,latin,à valider par l'auteur
+Can I pay by bank transfer?,general,en,latin,à valider par l'auteur
+هل لديكم حساس حرارة DHT11؟,general,ar,arabe,à valider par l'auteur
+ما هي مدة إرجاع المنتج؟,general,ar,arabe,à valider par l'auteur
+9adech soum el multimetre numerique ?,general,tn,arabizi,à valider par l'auteur
+famma livraison l sousse ?,general,tn,arabizi,à valider par l'auteur
+عندكم بطاريات ليثيوم؟,general,tn,arabe,à valider par l'auteur
